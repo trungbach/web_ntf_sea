@@ -1,0 +1,75 @@
+.headerUser {
+  border-radius: 20px;
+  margin: 9px 20px 0px 20px;
+  background: white;
+  box-shadow: 3px 2px 16px #00000029;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+
+  .titleHeaderUserrr{
+    background-color:#FF7272;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 2px solid;
+    border-color: white;
+  }
+
+  .titleHeaderUserr{
+    background-color:#467DED;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  .titleHeaderUser {
+    font-size: 18px;
+    font-weight: normal;
+    color: #000000;
+    line-height: 23px;
+  }
+  .caretDown {
+    float: right;
+    margin-right: 30px;
+    margin-top: 2px;
+  }
+  
+  .adminDropdown {
+    float: right;
+    margin-right: 5px;
+    margin-top: 1px;
+    cursor: pointer;
+  }
+
+  .activeAdmin {
+    background-color: #35445e !important;
+
+  }
+  .adminDropdown1{
+    display: flex;
+  }
+
+  .adButton{
+    border: none !important;
+    cursor: pointer;
+    margin: 24px;
+    margin-right: 0px;
+  }
+}
+  

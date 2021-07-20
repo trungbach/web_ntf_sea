@@ -1,0 +1,254 @@
+html,
+body,
+#root {
+  height: 100%;
+  display: flex;
+  width: 100%;
+  background: #f6f6f6;
+}
+
+body {
+  margin: 0;
+}
+
+.spinLoading {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.fade-enter {
+  opacity: 0;
+  z-index: 1;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 250ms linear;
+}
+
+.fade-appear {
+  opacity: 0;
+  z-index: 1;
+}
+
+.fade-appear.fade-appear-active {
+  opacity: 1;
+  transition: opacity 250ms linear;
+}
+
+
+* {
+ font-family: 'muli';
+ font-size: 13px;
+}
+
+@font-face {
+  font-family: 'muli';
+  src: local('muli'), url(./assets/fonts/muli/Mulish-Light.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'muli-bold';
+  src: local('muli-bold'), url(./assets/fonts/muli/Mulish-Bold.ttf) format('truetype');
+}
+
+.color-text-primary{
+  color: #467DED;
+  cursor: pointer;
+}
+
+/* .ant-select-focused .ant-select-selection,
+.ant-select-selection:focus,
+.ant-select-selection:active,
+.ant-select-open .ant-select-selection {
+  border-color: transparent !important;
+  box-shadow: none !important;
+  background-color: #1597E8;
+  color: white;
+} */
+
+.ant-select-focused .ant-select-selection,
+.ant-select-selection:focus,
+.ant-select-selection:active,
+.ant-select-open .ant-select-selection {
+  border-color: transparent !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.ant-select-selection{
+  border-color: transparent !important;
+  background-color: transparent !important;
+}
+
+.ant-select-dropdown-menu-item-active{
+  background-color: #1597E8 !important;
+  color: white !important;
+}
+
+/* .ant-select-focused .ant-select-selection,
+.ant-select-selection:focus,
+.ant-select-selection:active,
+.ant-select-open .ant-select-selection > span{
+  color: white !important;
+} */
+
+.center-horizontal {
+  display: flex;
+  justify-content: center;
+}
+
+.center-vertical {
+  display: flex !important;
+  align-items: center;
+}
+
+.m-auto {
+  margin: auto;
+}
+
+.ant-select-selection{
+  border: none !important;
+}
+
+.ant-form-item{
+  margin-bottom: 10px !important;
+}
+
+.ant-btn{
+  border-radius: 13px !important;
+}
+
+.ant-input{
+  border-radius: 13px !important;
+
+  padding: 0px 14px !important;}
+
+.forgot{
+  border-radius: 0px !important;
+}
+.send{
+  border-radius: 25px !important;
+  background: #467DED !important;
+  color: white !important;
+}
+
+.back{
+  border-radius: 25px !important;
+  background: #C4C4C4 !important;
+  margin-right: 10px;
+  width: 100% !important;
+}
+
+
+.continue{
+  border-radius: 25px !important;
+  background: #467DED !important;
+  color: white !important;
+  width: 100% !important;
+}
+
+.forgotAccount{
+  border-radius: 0px !important;
+  width: 90% !important;
+  height: 30px !important;
+}
+
+.ForgotPassword > input {
+  border-radius: 0px !important;
+  width: 80% !important;
+  height: 30px;
+
+}
+
+.ForgotPassword > span {
+  right: 60px !important;
+}
+.formlabel > .ant-col > label {
+  color: white;
+}
+
+.forgotbtnForm{
+  display: flex;
+  align-items: center;
+}
+
+.forgotbtnForm > button{
+  border-radius: 0px !important;
+}
+
+.ant-modal-title{
+  display: flex;
+  justify-content: center;
+  font-family: 'muli-bold';
+}
+.searchAccount{
+  width: 50% !important;
+}
+.searchAccount > input {
+  border-radius: 10px !important;
+}
+
+.icon-size {
+  width: 20px;
+  height: 20px;
+}
+
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+  padding: 10px 5px 10px 5px !important;
+}
+
+.ant-spin-nested-loading > .ant-spin-container > div > .ant-table-content > .ant-table-body > table > tbody > tr:hover > td {
+  background-color: unset;
+}
+
+/* .ant-spin-nested-loading > .ant-spin-container > div > .ant-table-content > .ant-table-scroll > .ant-table-body > table > tbody > tr:hover > td {
+  background-color: unset;
+} */
+.typeAccount{
+  cursor: pointer;
+  margin-right: 1rem;
+  border-radius: 15px;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.optionAccount{
+    border: 1px solid #E6E6E6;
+    border-radius: 13px;
+    height: 35px;
+}
+
+.optionAccount > span {
+  display: flex;
+}
+
+.importDate > input{
+  width: 50%;
+  border-radius: 10px;
+}
+
+.selectDelete > div{
+  height: auto;
+}
+
+/* ::-webkit-scrollbar {
+  width: 0px;
+} */
+
+/* .ant-menu.ant-menu-dark .ant-menu-item-selected, .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
+  background-color: transparent !important;
+} */
+
+.ant-time-picker-input {
+  border-radius: 13px !important;
+}
+
+

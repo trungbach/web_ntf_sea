@@ -1,0 +1,22 @@
+const pageSize = 20;
+const DATE_TIME = 'HH:mm DD/MM/YYYY';
+const DATE = 'DD/MM/YYYY';
+const DATE1 = 'YYYY/MM/DD';
+const ROLE_ADMIN = 'ROLE_ADMIN';
+const ROLE_PARENT = 'ROLE_PARENT';
+const ROLE_PROTECTOR = 'ROLE_PROTECTOR';
+const ROLE_SCHOOL = 'ROLE_SCHOOL';
+const GO_SCHOOL = 'TO_SCHOOL';
+const GO_HOME = 'GO_HOME';
+
+export {
+  pageSize,
+  DATE_TIME,
+  DATE,
+  ROLE_ADMIN,
+  ROLE_PARENT,
+  ROLE_PROTECTOR,
+  ROLE_SCHOOL,
+  GO_HOME,
+  GO_SCHOOL,
+};

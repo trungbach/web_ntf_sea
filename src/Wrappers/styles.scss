@@ -1,0 +1,19 @@
+.fullScreen {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.fullSpace {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    width: 100%;
+    background-color: white;
+    padding: 6px 26px 6px 26px;
+    bottom: 0;
+}
