@@ -1,21 +1,28 @@
-import Image from 'next/image';
-import Layout from '../components/Layout';
-import Banner from '../components/Banner';
-import FeatureExclusive from '../components/FeatureExclusive';
-import FeatureSell from '../components/FeatureSell';
+import Banner from '@/components/HomeFeature/Banner';
+import FeatureExclusive from '@/components/HomeFeature/FeatureExclusive';
+import FeatureSell from '@/components/HomeFeature/FeatureSell';
+import FeatureResource from '@/components/HomeFeature/FeatureResource';
+import FeatureCategory from '@/components/HomeFeature/FeatureCategory';
+import FeatureConnect from '@/components/HomeFeature/FeatureConnect';
 import styles from '../styles/Home.module.css'
-import {server} from '../config'
-import FeatureTrending from '../components/FeatureTrending';
-
+import FeatureTrending from '@/components/HomeFeature/FeatureTrending';
+import Footer from '@/components/Footer'
 export default function Home() {
 
   return (
-    <div className={styles.content}>
-      <Banner />
-      <FeatureExclusive />
-      <FeatureTrending />
-      <FeatureSell />
-    </div>
+    <>
+      <div className={styles.content}>
+        <Banner />
+        <FeatureExclusive />
+        <FeatureTrending />
+        <FeatureSell />
+        <FeatureResource />
+        <FeatureCategory />
+        <FeatureConnect />
+      </div>
+      <Footer />
+    </>
+
   )
 }
 

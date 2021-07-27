@@ -6,6 +6,6 @@ module.exports = {
   },
   reactStrictMode: true,
   images: {
-    domains: ['opensea.io'],
+    domains: ['opensea.io', "storage.googleapis.com", "lh3.googleusercontent.com"],
   },
 }

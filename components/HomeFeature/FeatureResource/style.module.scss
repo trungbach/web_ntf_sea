@@ -1,0 +1,47 @@
+@import '@/styles/base.scss';
+
+.featureResource {
+    margin-top: 8rem;
+    margin-bottom: 12rem;
+    .slider {
+        position: relative;
+        .sliderArrow {
+            padding: 0 1rem;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            .arrowBtn {
+                border: none;
+                outline: none;
+                background: transparent;
+                transform: translateX(-50%);
+                top: 55%;
+                z-index: 1;
+                svg {
+                    font-size: 3.3rem;
+                    fill: #c0bcd9;
+                }
+            }
+            .arrowBtn:last-child {
+                float: right;
+                transform: translateX(50%);
+            }
+        }
+       
+        .trendingItem {
+           display: block;
+           padding:0 1rem;
+           :global {
+              .ant-card-body {
+                  padding: 0;
+                  position: relative;
+              }
+           }
+        }
+        .trendingItemContent {
+            text-align: center;
+            padding: 4rem;
+        }
+    }
+
+}

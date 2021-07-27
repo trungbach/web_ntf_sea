@@ -7,19 +7,25 @@ body {
 }
 
 :root {
-  --primary-color: rgb(32, 129, 226)
+  --primary-color: rgb(32, 129, 226);
+  --background-color: #FBFDFF;
 }
 
 html {
   font-size: 62.5%;
+  line-height: 1.5;
 }
 
 body {
   font-size: 1.4rem;
 }
 
+#__next {
+  height: 100%;
+}
+
 a {
-  color: inherit;
+  /* color: inherit; */
   text-decoration: none;
 }
 
@@ -35,6 +41,86 @@ ul {
 .slick-dots {
   bottom: -4.8rem;
 }
-/* .slick-active {
-  background-color: var(--primary-color);
+
+.ant-select-item {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 1.6rem;
+}
+
+.ant-select-item:hover {
+    transition: all 0.2s ease 0s;
+    box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+    background-color: rgb(251, 253, 255);
+    opacity: 1;
+}
+
+.ant-select-item:not(:last-child) {
+  border-bottom: 1px solid rgb(229, 232, 235);
+}
+
+.ant-select-item-option-content  {
+  font-weight: 600;
+  font-size: 14px;
+  color: rgb(4, 17, 29);
+  
+}
+.ant-select:hover .ant-select-selector {
+  border-color: #d9d9d9 !important;
+}
+.ant-select-selector {
+  display: flex;
+  align-items: center;
+  height: auto !important;
+  padding: 11px !important;
+  font-weight: 600;
+  font-size: 14px;
+  color: rgb(4, 17, 29);
+}
+.ant-select-selector img{
+  padding-right: 2rem !important;
+}
+
+.ant-select-selection-item {
+  display: flex;
+  align-items: center;
+}
+
+.ant-collapse-header {
+  font-size: 1.6rem;
+  font-weight: 600;
+  background-color: #fff;
+  padding: 20px !important;
+  user-select: none;
+}
+
+.ant-collapse-content {
+    border-top: 1px solid rgb(229, 232, 235);
+    color: rgb(53, 56, 64);
+    background-color: rgb(251, 253, 255);
+    padding: 20px;
+    border-radius: 0px 0px 5px 5px;
+}
+
+.ant-collapse-content .ant-collapse-content-box {
+  padding: 0;
+}
+
+.ant-select {
+  width: 15rem;
+}
+
+@media (min-width: 815px) {
+  .ant-select {
+    width: 24rem;
+  }
+}
+
+/* .ant-select-dropdown-hidden {
+  display: block !important;
 } */
+
+.textRanking {
+  font-size: 1.6rem;
+  color: rgb(53, 56, 64);
+}

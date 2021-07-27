@@ -69,6 +69,11 @@
     }
 }
 
+.menuMarket {
+    max-height: 70vh;
+    overflow-y:  auto;
+}
+
 .menuMarket, .menuStats, .menuResource, .menuUser {
     :global {
         .ant-dropdown-menu-item {
@@ -102,4 +107,3 @@
         }
     }
 }
-    

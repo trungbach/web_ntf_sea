@@ -1,0 +1,253 @@
+/* .detailContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-areas: 
+            "imgDetail owner"
+            "imgDetail priceDetail"     
+            "description priceDetail"
+            "history history" ;      
+    @media screen and (max-width: 1200px) {
+        & {
+            padding: 3rem;
+        }
+    }
+    @media screen and (max-width: 768px) {
+        & {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(5, 1fr);
+            grid-template-areas: 
+                "owner"
+                "imgDetail"
+                "priceDetail"
+                "description"
+                "history"
+        }
+    }
+    .owner {
+        grid-area: owner;
+    }
+    .imgDetail {
+        grid-area: imgDetail;
+    }
+    .priceDetail {
+        grid-area: priceDetail;
+    }
+    .description {
+        grid-area: description;
+    }
+    .history {
+        grid-area: history;
+    }
+} */
+.detail {
+    padding-top: 3rem;
+    font-size: 1.6rem;
+    @media screen and (max-width: 1200px) {
+        & {
+            padding: 3rem;
+        }
+    }
+    :global {
+        .ant-collapse {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            overflow: hidden;
+        }
+    }
+    .detailContainer {
+        display: flex;
+        svg {
+            font-size: 2.5rem;
+        }
+        :global {
+            .ant-collapse {
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                overflow: hidden;
+            }
+            .ant-collapse-arrow, .ant-select-arrow {
+                svg {
+                    font-size: 1.5rem;
+                }
+            }
+        }
+        .detailLeft {
+            flex: 0.45;
+            .imgDetail {
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin-bottom: 2rem;
+                .favorite {
+                    padding: 1.5rem 2rem;
+                    text-align: right;
+                }
+            }
+            .about {
+                .description {
+                    .descriptionHead {
+                        display: flex;
+                        align-items: center;
+                        & > div {
+                            margin-right: 1rem !important;
+                            margin-bottom: 1rem !important;
+                            img {
+                                border-radius: 50%;
+                            }
+                        }
+                    }
+                    p {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        font-size: 1.4rem;
+                    }
+                }
+                .aboutPixel {
+                    .social {
+                        display: flex;
+                        align-items: center;
+                        span {
+                            height: 50px;
+                            width: 50px;
+                            align-items: center;
+                            flex-direction: column;
+                            font-size: 14px;
+                            justify-content: center;
+                            padding: 10px 0px;
+                            text-align: center;
+                            color: rgb(138, 147, 155);
+                            display: inline-flex;
+                            border: 1px solid rgb(229, 232, 235);
+                            border-radius: 5px;
+                        }
+                    }
+                }
+                .detailsAddress {
+                    & > div {
+                        display: flex;
+                        justify-content: space-between;
+                        
+                    }
+                }
+            }
+        }
+        .detailRight {
+            flex: 0.55;
+            padding-left: 2rem;
+            /* .customCollapse {
+                .customCollapsePanel {
+                    margin-bottom: 1.5rem;
+                }
+            } */
+            .owner {
+                & > div:first-child {
+                    display: flex;
+                    justify-content:space-between;
+                }
+                .action {
+                    display: flex;
+                    align-items:center;
+                    span {
+                        cursor: pointer;
+                        display: inline-flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 0.5rem;
+                        border: 1px solid #ccc;
+                        a {
+                            display: contents;
+                        }
+                        a:hover {
+                            color: inherit;
+                        }
+                        &:hover {
+                            box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+                            transition: all 0.2s ease 0s;
+                        }
+                        
+                    }
+                }
+            }
+            .priceDetail {
+                margin-top: 3rem;
+                .imgOwner {
+                    display: flex;
+                    align-items: center;
+                    margin-right: 3rem;
+                    & > div {
+                        margin-right: 1rem !important;
+                    }
+                    img {
+                        border-radius: 50%;
+                    }
+                }
+                svg {
+                    margin-right: 1rem;
+                }
+                .currentPrice {
+                    margin-top: 3rem;
+                    & > div:first-child {
+                        padding: 2rem;
+                        margin-bottom: 2rem;
+                        border-radius: 5px;
+                        border: 1px solid rgb(229, 232, 235);
+                        background-color: var(--background-color);
+                        .numberPrice {
+                            & > div {
+                                width: 1rem;
+                                margin-right: 1rem;
+                            }
+                            .hightlightNumber {
+                                font-size: 3rem;
+                                font-weight: 600;
+                                margin: 0 1rem;
+                            }
+                        }
+                    }
+                    & > div:last-child {
+                        :global {
+                            
+                        }
+                    }
+                    .buyNow {
+                        width: 100%;
+                        
+                        button {
+                            display: inline-flex;
+                            flex-direction: row;
+                            align-items: center;
+                            border-radius: 5px;
+                            justify-content: center;
+                            font-size: 16px;
+                            font-weight: 600;
+                            padding: 12px 20px;
+                            background-color: rgb(32, 129, 226);
+                            border: 1px solid rgb(32, 129, 226);
+                            color: rgb(255, 255, 255);
+                            margin-right: 8px;
+                            margin-top: 8px;
+                            height: auto;
+                            @media (min-width:1024px) {
+                                & {
+                                    width: 300px;
+                                }
+                            }
+                            &:hover {
+                                color: rgb(255, 255, 255);
+                                background-color: rgb(24, 104, 183);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        @media (max-width: 768px) {
+            &  {
+                flex-direction: column;
+            }
+        }
+    }
+    .history {
+        margin: 2rem 0;
+    }
+}

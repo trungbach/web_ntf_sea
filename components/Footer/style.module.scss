@@ -1,4 +1,167 @@
 .footer {
     background-color: rgb(24, 104, 183);
     color: #fff;
+    /* position: absolute; */
+    /* left: 0; */
+    bottom: 0;
+    width: 100%;
+    .footerTop {
+        padding-bottom: 4rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid rgba(229, 232, 235, 0.25);
+        padding-top: 4rem;
+        & > div:first-child {
+            @media (min-width: 1200px) {
+                & {
+                    padding-right: 7rem;
+                }
+            }
+        }
+        & > div:last-child {
+            @media (min-width: 1200px) {
+                & {
+                    padding-left: 7rem;
+                }
+            }
+        }
+        .footerTitle {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+        .footerText {
+            font-size: 1.6rem;
+            color: rgb(251, 253, 255);
+        }
+        .formSignup {
+            margin-top: 3rem;
+            display: flex;
+            input {
+                margin-right: 5px;
+                border-radius: 5px;
+            }
+            button {
+                &:hover {
+                    filter: brightness(1.1);
+                    background-color: rgb(32, 129, 226);
+                }
+                background-color: rgb(32, 129, 226);
+                display: inline-flex;
+                flex-direction: row;
+                align-items: center;
+                border-radius: 5px;
+                justify-content: center;
+                font-size: 16px;
+                font-weight: 600;
+                padding: 12px 20px;
+                border: 1px solid rgb(32, 129, 226);
+                color: rgb(255, 255, 255);
+                height: 50px;
+                width: 162px;
+            }
+        }
+        ul {
+            display: flex;
+            padding: 0;
+            li {
+                margin-right: 12px;
+                width: 54px;
+                height: 54px;
+                margin-top: 8px;
+                display: inline-flex;
+                flex-direction: row;
+                align-items: center;
+                border-radius: 5px;
+                justify-content: center;
+                font-size: 16px;
+                font-weight: 600;
+                padding: 12px 20px;
+                background-color: rgb(32, 129, 226);
+                border: 1px solid rgb(32, 129, 226);
+                color: rgb(255, 255, 255);
+                cursor: pointer;
+                &:hover {
+                    filter: brightness(1.1);
+                    border: 1px solid rgba(0, 0, 0, 0);
+                    background-color: rgb(32, 129, 226);
+                    transition: all 0.2s ease 0s;
+                    box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+                    a {
+                        color: #fff;
+                        font-weight: 500;
+                    }
+                }
+                a {
+                    display: block;
+                }
+                :global {
+                    .MuiSvgIcon-root {
+                        font-size: 2.7rem;
+                    }
+                }
+            }
+        }
+    }
+    .footerBottom {
+        & > div:first-child {
+            img {
+                width: 4.4rem;
+                height: 4.4rem;
+            }
+            a {
+                display: block;
+                color: rgb(255, 255, 255);
+                font-size: 20px;
+                font-weight: 600;
+                margin-bottom: 8px;
+                margin-top: 8px;
+            }
+            p {
+                font-size: 16px;
+                color: rgb(251, 253, 255);
+            }
+        }
+        .navFooter {
+            @media (min-width: 1200px) {
+                padding-left: 7rem;
+            }
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            div {
+                h4 {
+                    color: #fff;
+                }
+                a {
+                    display: block;
+                    color: rgb(251, 253, 255);
+                    font-size: 1.4rem;
+                    margin-top: 1.2rem;
+                    &:hover {
+                        color: #fff;
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+        padding-bottom: 4rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid rgba(229, 232, 235, 0.25);
+        padding-top: 4rem;
+        
+    }
+    .copyright {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.2rem;
+        padding-bottom: 20px;
+        & > div a:first-child {
+            padding-right: 1rem;
+        }
+        a:hover {
+            color: #fff;
+            font-weight: 500;
+        }
+    }
 }

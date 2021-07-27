@@ -1,0 +1,81 @@
+.collection {
+    margin-bottom: 6rem;
+    .banner {
+        & > div {
+            width: 100%;
+        }
+    }
+
+    .content {
+        margin-top: 4rem;
+        .heading {
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+            margin: 0 auto;
+            h1 {
+                font-weight: 600;
+                font-size: 4rem;
+                letter-spacing: 0px;
+                color: rgb(4, 17, 29);
+                max-width: 600px;
+                margin: 0 auto 5rem;
+                text-align: center;
+            }
+
+            p {
+                line-height: 1.7;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
+                color: rgb(112, 122, 131);
+                font-size: 1.6rem;
+            }
+        }
+        .filter {
+            margin-bottom: 3.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .filterSelect {
+                margin: 0 1.5rem;
+            }
+            & > div:first-child {
+                flex: 1;
+            }
+            :global {
+                .ant-select, button {
+                    height: 4.5rem;
+                }
+                .ant-select-selector {
+                    height: 4.5rem !important;
+                    width: 20rem;
+                }
+                .ant-input-affix-wrapper {
+                    &:hover {
+                        transition: all 0.2s ease 0s;
+                        box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+                        background-color: rgb(251, 253, 255);
+                        opacity: 1;
+                        border-color: rgb(112, 122, 131);
+                    }
+                    height: 4.5rem;
+                    border-radius: 0.4rem;
+                    .anticon-search {
+                        font-size: 2rem;
+                        user-select: none;
+                        color: rgb(112, 122, 131);
+                    }
+                    input {
+                        margin-left: 1.6rem;
+                        color: rgba(4, 17, 29, 0.75);
+                        font-size: 1.6rem;
+                        background-color: transparent;
+                    }
+                }
+                
+            }
+        }
+    }
+}

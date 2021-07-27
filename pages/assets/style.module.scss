@@ -1,0 +1,29 @@
+.assets {
+    display: flex;
+    overflow-y: hidden;
+    .mainAsset {
+        flex: 1;
+        overflow-y: scroll;
+        height:100vh;       
+        padding: 4rem;
+        .heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4rem;
+            .filter {
+                & > div {
+                    width: 200px;
+                }
+                & > div:first-child {
+                    margin-right: 1rem;
+                }
+            }
+        }
+        .assetsList {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    }
+}

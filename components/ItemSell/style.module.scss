@@ -1,0 +1,70 @@
+.sellItemContainer {
+    transition: all 0.1s ease 0s;
+    padding: 0.7rem;
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+.sellItem {
+    
+    :global {
+        .ant-card {
+            border-radius: 0.7rem;
+        }
+        .ant-card-body {
+            padding: 1rem;
+        }
+    }
+    .itemFavorite {
+        position: absolute;
+        top: 1rem;
+        right: 2rem;
+    }
+    .itemImg {
+        margin-top: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        & > div {
+            width: 100%;
+            border-radius: 0.7rem;
+            img {
+                object-fit: cover;
+            }
+        }
+    }
+    .sellItemContent {
+        padding-top: 1rem;
+        & > div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .itemPrice {
+                text-align: right;
+                & > div > div{
+                    width: 1rem;
+                }
+            }
+            .itemType > div {
+                width: 2rem;
+            }
+            .itemCoin {
+                font-size: 1.1rem;
+                & > div {
+                    width: 0.7rem;
+                }
+            } 
+            .itemPrice, .itemCoin {
+                span {
+                    color: rgb(53, 56, 64);
+                }
+            }
+            .ownerName {
+                font-size: 1.2rem;
+            }
+        }
+        & > div:first-child {
+            margin-bottom: 1.5rem;
+        }
+    }
+}

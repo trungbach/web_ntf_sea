@@ -3,6 +3,8 @@ import styles from './style.module.scss';
 import {Input, Button} from 'antd';
 import MailOutlinedIcon from '@material-ui/icons/MailOutlined';
 import Link from 'next/link'
+import Image from 'next/image'
+import openseaWhite from '../../public/opensea-white.svg'
 const Footer = () => {
     return (
         <footer className={styles.footer}>
@@ -10,12 +12,12 @@ const Footer = () => {
                 <div className={`row ${styles.footerTop} `}>
                     <div className="col-12 col-md-6">
                         <div className={styles.footerTitle}>Stay in the loop</div>
-                        <div>Join our mailing list to stay in the loop with our newest feature releases,
+                        <div className={styles.footerText}>Join our mailing list to stay in the loop with our newest feature releases,
                              NFT drops, and tips and tricks for navigating OpenSea.
                         </div>
                         <div className={styles.formSignup}>
                             <Input clearfix={true} type="email" placeholder="Your email address" />
-                            <Button type="primary">Sign up</Button>
+                            <Button>Sign up</Button>
                         </div>
                     </div>
                     <div className="col-12 col-md-6">
@@ -52,7 +54,7 @@ const Footer = () => {
                                <li>
                                     <Link href='/'>
                                     <a>
-                                    <svg fill="#FFFFFF" viewBox="0 0 24 16" style={{width: '30px'}}><path clip-rule="evenodd" d="M18.28 15.456c.317.168.725.21 1.09.107.363-.104.631-.337.712-.62.854-3.013 2.928-10.64 3.706-13.38.06-.207-.04-.421-.256-.56A1 1 0 0022.748.9C18.625 2.045 5.921 5.62.729 7.06c-.329.092-.543.33-.532.59.012.262.246.488.583.564 2.329.522 5.385 1.25 5.385 1.25s1.428 3.234 2.173 4.88c.093.206.309.369.593.425.283.055.586-.003.798-.153l3.046-2.157s3.513 1.933 5.506 2.997zM7.45 9.054L9.1 13.14l.367-2.587 10.02-6.778c.106-.072.12-.193.032-.278-.088-.085-.249-.104-.37-.047L7.45 9.054z" fill-rule="evenodd"></path></svg>
+                                    <svg fill="#FFFFFF" viewBox="0 0 24 16" style={{width: '30px'}}><path clipRule="evenodd" d="M18.28 15.456c.317.168.725.21 1.09.107.363-.104.631-.337.712-.62.854-3.013 2.928-10.64 3.706-13.38.06-.207-.04-.421-.256-.56A1 1 0 0022.748.9C18.625 2.045 5.921 5.62.729 7.06c-.329.092-.543.33-.532.59.012.262.246.488.583.564 2.329.522 5.385 1.25 5.385 1.25s1.428 3.234 2.173 4.88c.093.206.309.369.593.425.283.055.586-.003.798-.153l3.046-2.157s3.513 1.933 5.506 2.997zM7.45 9.054L9.1 13.14l.367-2.587 10.02-6.778c.106-.072.12-.193.032-.278-.088-.085-.249-.104-.37-.047L7.45 9.054z" fillRule="evenodd"></path></svg>
                                     </a>
                                 </Link>
                                </li>
@@ -67,11 +69,62 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className={`row ${styles.footerBottom}`}>
-                    <div className="col-3"></div>
-                    <div className={`col-9 ${styles.navFooter}`}></div>
+                    <div className="col-3">
+                        <Image src={openseaWhite} alt="opensea-white" />
+                        <Link href='/'>OpenSea</Link>
+                        <p>
+                            The world’s first and largest digital marketplace for 
+                            crypto collectibles and non-fungible tokens (NFTs). 
+                            Buy, sell, and discover exclusive digital assets.
+                        </p>
+                    </div>
+                    <div className={`col-9 ${styles.navFooter}`}>
+                        <div>
+                            <h4>Marketplace</h4>
+                            <Link href='/'>All NTFs</Link>
+                            <Link href='/'>New</Link>
+                            <Link href='/'>Art</Link>
+                            <Link href='/'>Music</Link>
+                            <Link href='/'>Domain Names</Link>
+                            <Link href='/'>Virtual Worlds</Link>
+                            <Link href='/'>Trading Cards</Link>
+                            <Link href='/'>Collectibles</Link>
+                            <Link href='/'>Sports</Link>
+                            <Link href='/'>Utility</Link>
+                        </div>
+                        <div>
+                            <h4>My Account</h4>
+                            <Link href='/'>My Profile</Link>
+                            <Link href='/'>My Collections</Link>
+                            <Link href='/'>My Favorites</Link>
+                            <Link href='/'>My Account Settings</Link>
+                            <h4 className='mt-5'>Rankings</h4>
+                            <Link href='/'>Rankings</Link>
+                            <Link href='/'>Activity</Link>
+                        </div>
+                        <div>
+                            <h4>Resources</h4>
+                            <Link href='/'>Help Center</Link>
+                            <Link href='/'>Partners</Link>
+                            <Link href='/'>Suggestions</Link>
+                            <Link href='/'>Discord Community</Link>
+                            <Link href='/'>Blog</Link>
+                            <Link href='/'>Docs</Link>
+                            <Link href='/'>Newsletter</Link>
+                        </div>
+                        <div>
+                            <h4>Company</h4>
+                            <Link href='/'>About</Link>
+                            <Link href='/'>Careers</Link>
+                        </div>
+                    </div>
                 </div>
                 <div className={styles.copyright}>
-                    
+                    <div>&#169; 2018 - 2021 Ozone Networks, Inc</div>
+                    <div>
+                        <Link href='/'>Privacy Policy</Link>
+                        <Link href='/'>Terms of Service</Link>
+                    </div>
                 </div>
             </div>
         </footer>

@@ -1,0 +1,82 @@
+.rankings {
+    .heading {
+        text-align: center;
+        h1 {
+            margin: 40px 0px 20px;
+            font-weight: 600;
+            font-size: 4rem;
+            letter-spacing: 0px;
+            color: rgb(4, 17, 29);
+        }
+        p {
+            font-weight: 400;
+            font-size: 1.6rem;
+            color: rgb(112, 122, 131);
+        }
+    }
+    .filter {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem 0;
+        & > div {
+            :global {
+                .ant-select {
+                    margin: 1rem;
+                    svg {
+                        margin-right: 2rem;
+                    }
+                    @media (min-width:815px) {
+                        width: 24rem;
+                    }
+                    &:hover {
+                        transition: all 0.2s ease 0s;
+                        box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+                        background-color: rgb(251, 253, 255);
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+        
+    }
+    :global {
+        .ant-table {
+            th {
+                background-color: #fff;
+                font-weight: 600;
+                font-size: 1.6rem;
+                color: rgb(4, 17, 29);
+            }
+            .ant-table-tbody {
+                tr {
+                    cursor: pointer;
+                }
+                tr:hover {
+                    border-radius: 5px;
+                    border-bottom: 1px solid transparent;
+                    box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+                }
+                td {
+                    padding: 2.5rem;
+                }
+            }
+        }
+    }
+}
+
+.dropdownMarket {
+    :global {
+        .ant-select-item-option-content {
+            display: flex;
+            align-items: center;
+            img {
+                padding-right: 2rem !important;
+            }
+            svg {
+                margin-right: 2rem;
+            }
+        }
+    }
+}
+

@@ -2,7 +2,7 @@ import React from 'react';
 import {Input } from 'antd';
 import Image from 'next/image'
 import {SearchOutlined  } from '@ant-design/icons'
-import { Menu, Dropdown, Button, Space } from 'antd';
+import { Menu, Dropdown } from 'antd';
 import opensea from '../../public/opensea.svg'
 import styles from './style.module.scss'
 import all from '../../public/allnfts-light.svg';
@@ -172,7 +172,7 @@ const Header = () => {
 
     return (
 
-        <nav className={` ${styles.nav} navbar navbar-expand-lg sticky-top`}>
+        <nav className={` ${styles.nav} navbar navbar-expand-lg fixed-top`}>
             <div className="container-fluid">
                 <Link href='/'>
                     <a className={`navbar-brand ${styles.logo}`} >
@@ -202,7 +202,7 @@ const Header = () => {
                         <Dropdown overlay={menuUser} placement="bottomRight">
                             <a className="nav-link" href="#"><AccountCircleOutlinedIcon /></a>
                         </Dropdown>
-                        <a className="nav-link" href="#"><AccountBalanceWalletOutlinedIcon /></a>
+                        <a className="nav-link" href="#"  data-toggle="modal" data-target="#modalWallet"><AccountBalanceWalletOutlinedIcon /></a>
                     </div>
                 </div>
             </div>
