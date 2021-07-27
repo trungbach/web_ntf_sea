@@ -42,7 +42,7 @@ const Listing = () => {
           title: '',
           dataIndex: '',
           key: 'buy',
-          render: text => <Button className={styles.buyListing}>Buy <ChevronRightIcon /></Button>
+          render: text => {<Button className={styles.buyListing}>Buy <ChevronRightIcon /></Button>}
         },
         {
             title: 'Expiration',
