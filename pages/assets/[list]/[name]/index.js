@@ -99,7 +99,7 @@ const DetailItem = () => {
                                     Your Pixelglyph can act as your anonymous avatar across the internet and within your favorite dApps.
                                 </p>
                                 <p>
-                                    Each Pixelglyph you own will allow you to redeem a ".glyph" NFT. Learn more at pixelglyphs.io
+                                    Each Pixelglyph you own will allow you to redeem a &quot;.glyph&quot; NFT. Learn more at pixelglyphs.io
                                 </p>
                                 <div className={styles.social}>
                                     <Tooltip title='Activity'>
