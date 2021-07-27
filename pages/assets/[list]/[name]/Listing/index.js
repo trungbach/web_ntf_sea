@@ -21,7 +21,7 @@ const Listing = () => {
                         fontSize: "1.6rem",
                         color: 'rgb(4, 17, 29)'}
                     },
-                    children: <div><Image src={ether} alt='ether'></Image>{text} <span>ETH</span></div> ,
+                    children: <div className={styles.imgPrice}><Image src={ether} alt='ether'></Image>{text} <span>ETH</span></div> ,
               };
             }
         },
@@ -34,7 +34,7 @@ const Listing = () => {
                     props: {
                         className: "textRanking"
                     },
-                    children: text,
+                    children: `$${text}`,
               };
             }
         },
@@ -42,20 +42,7 @@ const Listing = () => {
           title: '',
           dataIndex: '',
           key: 'buy',
-          render: text => {
-              return {
-                    props: {
-                      style: {
-                        fontWeight: "400",
-                        fontSize: "14px",
-                        marginLeft: "8px",
-                        position: "relative",
-                        color: 'rgb(235, 87, 87)'
-                    }
-                    },
-                    children: <Button>Buy <ChevronRightIcon /></Button>,
-              };
-            }
+          render: text => <Button className={styles.buyListing}>Buy <ChevronRightIcon /></Button>
         },
         {
             title: 'Expiration',

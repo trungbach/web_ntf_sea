@@ -64,6 +64,28 @@ const DetailItem = () => {
 
         <div className={styles.detailContainer}>
             <div className={styles.detailLeft}>
+                <div className={`${styles.owner} d-block d-md-none mb-5`}>
+                    <div>
+                        <div>
+                            <Link href='/'><a>AIR22</a></Link>
+                        </div>
+                        <div className={styles.action}>
+                            <Tooltip title='Refresh metadata'>
+                                <span><RefreshIcon /></span>
+                            </Tooltip>
+                            <Tooltip title='View on AIR22'>
+                                <span><Link href='/'><a style={{color: 'inherit'}}><LaunchIcon /></a></Link></span>
+                            </Tooltip>
+                            <Tooltip title='Share'>
+                                <span><ShareIcon /></span>
+                            </Tooltip>
+                            <Tooltip title='More'>
+                                <span><MoreVertIcon /></span>
+                            </Tooltip>
+                        </div>
+                    </div>
+                    <header><h1>Mystic Toten</h1></header>
+                </div>
                 <div className={styles.imgDetail}>
                     <div className={styles.favorite}>
                         <FavoriteBorderIcon /> <span>5</span>
@@ -72,7 +94,7 @@ const DetailItem = () => {
                         <Image src={imgDetail} alt='imgDetail' />
                     </div> 
                 </div>
-                <div className={styles.about}>
+                <div className={`${styles.about} d-none d-md-block`}>
                     <Collapse  expandIconPosition="right" defaultActiveKey={['1']} onChange={callback}>
                         <Panel header={<div><SubjectOutlinedIcon /> Description</div>} key="1">
                             <div className={styles.description}>
@@ -88,8 +110,8 @@ const DetailItem = () => {
                         </Panel>
                         <Panel header={<div><VerticalSplitRoundedIcon /> About PixelGlyphs</div>} key="2">
                             <div className={styles.aboutPixel}>
-                                <div className='d-flex align-items-center'>
-                                    <Image style={{margin: '0 1rem 1rem 0'}} width={60} height={60} src='https://lh3.googleusercontent.com/CVNrW79CrsCsF_oiNHicb7p6dy6uO6suXgNZUvGBniFi2zYC2WPbZ7YEY5Nm99TDE1ph389Sa3ql0_GKWO0OmZpUXr6I8W4MmtG0=w128' alt='des' />
+                                <div className='d-flex align-items-start'>
+                                    <Image  width={60} height={60} src='https://lh3.googleusercontent.com/CVNrW79CrsCsF_oiNHicb7p6dy6uO6suXgNZUvGBniFi2zYC2WPbZ7YEY5Nm99TDE1ph389Sa3ql0_GKWO0OmZpUXr6I8W4MmtG0=w128' alt='des' />
                                     <span>Pixelglyphs are a set of 10,000 unique on-chain avatar NFTs created using a cellular automaton on the Ethereum blockchain.</span>
                                 </div>
                                 <p>
@@ -137,7 +159,7 @@ const DetailItem = () => {
                 </div>
             </div>
             <div className={styles.detailRight}>
-                <div className={styles.owner}>
+                <div className={`${styles.owner} d-none d-md-block`}>
                     <div>
                         <div>
                             <Link href='/'><a>AIR22</a></Link>
@@ -147,7 +169,7 @@ const DetailItem = () => {
                                 <span><RefreshIcon /></span>
                             </Tooltip>
                             <Tooltip title='View on AIR22'>
-                                <span><Link href='/'><a><LaunchIcon /></a></Link></span>
+                                <span><Link href='/'><a style={{color: 'inherit'}}><LaunchIcon /></a></Link></span>
                             </Tooltip>
                             <Tooltip title='Share'>
                                 <span><ShareIcon /></span>
@@ -186,7 +208,7 @@ const DetailItem = () => {
                                 className={styles.customCollapse}
                         >
                             <Panel className={styles.customCollapsePanel} header={<div><TimelineOutlinedIcon /> Price history</div>} key="1">
-                                <div>
+                                <div className={styles.priceHistory}>
                                     <Select
                                     labelInValue
                                     defaultValue={{ value: 'lucy' }}
@@ -201,39 +223,112 @@ const DetailItem = () => {
                                         <Option value="jackss">Last Year</Option>
                                         <Option value="lucy">All Time</Option>
                                     </Select>
-                                    <Image src={noTrading} alt='no-trading'></Image>
+                                    <div className={styles.noTraffic}>
+                                        <Image src={noTrading} alt='no-trading'></Image>
+                                    </div>
                                 </div>
                             </Panel>
                             <Panel header={<div><LocalOfferIcon /> Listings</div>} key="2">
                                 <Listing />
                             </Panel>
                             <Panel header={<div><TocIcon /> Offers</div>}  key="3">
-                                <div className={styles.offers}>
+                                <div className={styles.noTraffic}>
                                     <Image src={noOffer} alt='no-offer' />
                                     <div>No offers yet</div>
                                 </div>
                                 <div className={styles.makeOffer}>
-                                    <Button>Make Offer</Button>
+                                    <Button className={styles.primaryButton}>Make Offer</Button>
                                 </div>
                             </Panel>
                         </Collapse>
                     </div>
                 </div>
+                <div className={`${styles.about} d-block d-md-none mt-5`}>
+                    <Collapse  expandIconPosition="right" defaultActiveKey={['1']} onChange={callback}>
+                        <Panel header={<div><SubjectOutlinedIcon /> Description</div>} key="1">
+                            <div className={styles.description}>
+                                <div className={styles.descriptionHead}>
+                                    <Image width={30} height={30} src='https://storage.googleapis.com/opensea-static/opensea-profile/25.png' alt='avatar' />
+                                    <span>Created by <Link href='/'><a>1B9BB7</a></Link></span>
+                                </div>
+                                <p>
+                                    10,000 unique on-chain avatar NFTs generated using a cellular automaton.
+                                </p>
+                            </div>
+                            
+                        </Panel>
+                        <Panel header={<div><VerticalSplitRoundedIcon /> About PixelGlyphs</div>} key="2">
+                            <div className={styles.aboutPixel}>
+                                <div className='d-flex align-items-start'>
+                                    <Image  width={60} height={60} src='https://lh3.googleusercontent.com/CVNrW79CrsCsF_oiNHicb7p6dy6uO6suXgNZUvGBniFi2zYC2WPbZ7YEY5Nm99TDE1ph389Sa3ql0_GKWO0OmZpUXr6I8W4MmtG0=w128' alt='des' />
+                                    <span>Pixelglyphs are a set of 10,000 unique on-chain avatar NFTs created using a cellular automaton on the Ethereum blockchain.</span>
+                                </div>
+                                <p>
+                                    Your Pixelglyph is created at random during the minting process. The cellular automaton algorithm runs on-chain, an NFT first. Pixel data and colors are stored on-chain. Your Pixelglyph can be re-created at any time using code.
+                                </p>
+                                <p>
+                                    Your Pixelglyph can act as your anonymous avatar across the internet and within your favorite dApps.
+                                </p>
+                                <p>
+                                    Each Pixelglyph you own will allow you to redeem a &quot;.glyph&quot; NFT. Learn more at pixelglyphs.io
+                                </p>
+                                <div className={styles.social}>
+                                    <Tooltip title='Activity'>
+                                        <span><PlaylistPlayIcon /></span>
+                                    </Tooltip>
+                                    <Tooltip title='Website'>
+                                        <span><WebIcon /></span>
+                                    </Tooltip>
+                                    <Tooltip title='Discord'>
+                                        <span><i className="fab fa-discord"></i></span>
+                                    </Tooltip>
+                                    <Tooltip title='Twitter'>
+                                        <span><i className="fab fa-twitter"></i></span>
+                                    </Tooltip>
+                                </div>
+                            </div>
+                        </Panel>
+                        <Panel header={<div><BallotRoundedIcon /> Details</div>}  key="3">
+                            <div className={styles.detailsAddress}>
+                                <div>
+                                    <p>Contract Address</p>
+                                    <Link href='/'><a>0xdf38d...4ea6</a></Link>
+                                </div>
+                                <div>
+                                    <p>Token ID</p>
+                                    <p>6577</p>
+                                </div>
+                                <div>
+                                    <p>Blockchain</p>
+                                    <p>Ethereum</p>
+                                </div>
+                            </div>
+                        </Panel>
+                    </Collapse>
+                </div>
             </div>
         </div>
-        <div className={styles.history}>
+            <div className={styles.history}>
                 <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']} onChange={callback}>
                     <Panel header={<div><SwapVertRoundedIcon /> Trading History</div>} key="1">
-                      <TradingHistory />
+                        <TradingHistory />
                     </Panel>
                     <Panel header={<div><ViewModuleRoundedIcon /> More from this collection</div>} key="2">
-                        <ul className={styles.moreFromCollection}>
-                           {listFromCollection}
-                        </ul>
+                        <div className={styles.moreFromCollection}>
+                            {listFromCollection}
+                        </div>
                     </Panel>
                 </Collapse>
             </div>
+            <div className={styles.viewCollection}>
+                <Link href='/collection/art'>
+                    <a className={styles.primaryButton}>
+                    View Collection
+                    </a>
+                </Link>
+            </div>
         </div>
+       
         <Footer />
     </>
     );

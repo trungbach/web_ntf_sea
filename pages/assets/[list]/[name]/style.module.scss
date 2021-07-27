@@ -1,51 +1,40 @@
-/* .detailContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(4, 1fr);
-    grid-template-areas: 
-            "imgDetail owner"
-            "imgDetail priceDetail"     
-            "description priceDetail"
-            "history history" ;      
-    @media screen and (max-width: 1200px) {
-        & {
-            padding: 3rem;
-        }
-    }
-    @media screen and (max-width: 768px) {
-        & {
-            grid-template-columns: 1fr;
-            grid-template-rows: repeat(5, 1fr);
-            grid-template-areas: 
-                "owner"
-                "imgDetail"
-                "priceDetail"
-                "description"
-                "history"
-        }
-    }
-    .owner {
-        grid-area: owner;
-    }
-    .imgDetail {
-        grid-area: imgDetail;
-    }
-    .priceDetail {
-        grid-area: priceDetail;
-    }
-    .description {
-        grid-area: description;
-    }
-    .history {
-        grid-area: history;
-    }
-} */
+@import "@/styles/base.scss";
+
 .detail {
     padding-top: 3rem;
     font-size: 1.6rem;
-    @media screen and (max-width: 1200px) {
+    @media screen and (max-width: 1200px) and (min-width: 768px) {
         & {
             padding: 3rem;
+        }
+    }
+    .owner {
+        & > div:first-child {
+            display: flex;
+            justify-content:space-between;
+        }
+        .action {
+            display: flex;
+            align-items:center;
+            span {
+                cursor: pointer;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0.5rem;
+                border: 1px solid #ccc;
+                a {
+                    display: contents;
+                }
+                a:hover {
+                    color: inherit;
+                }
+                &:hover {
+                    box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+                    transition: all 0.2s ease 0s;
+                }
+                
+            }
         }
     }
     :global {
@@ -54,22 +43,34 @@
             border-top-right-radius: 10px;
             overflow: hidden;
         }
+        .ant-table-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .ant-table-content {
+            overflow: auto;
+            padding-bottom: 3rem;
+        }
     }
-    .detailContainer {
-        display: flex;
+    .detailContainer, .history {
         svg {
             font-size: 2.5rem;
         }
+        :global {
+            .ant-collapse-arrow, .ant-select-arrow {
+                svg {
+                    font-size: 1.5rem;
+                }
+            }
+        }
+    }
+    .detailContainer {
+        display: flex;
         :global {
             .ant-collapse {
                 border-top-left-radius: 10px;
                 border-top-right-radius: 10px;
                 overflow: hidden;
-            }
-            .ant-collapse-arrow, .ant-select-arrow {
-                svg {
-                    font-size: 1.5rem;
-                }
             }
         }
         .detailLeft {
@@ -103,6 +104,9 @@
                     }
                 }
                 .aboutPixel {
+                    & > div:first-child > div{
+                        margin: 0 2rem 2rem 0 !important;
+                    }
                     .social {
                         display: flex;
                         align-items: center;
@@ -134,40 +138,11 @@
         .detailRight {
             flex: 0.55;
             padding-left: 2rem;
-            /* .customCollapse {
-                .customCollapsePanel {
-                    margin-bottom: 1.5rem;
-                }
-            } */
-            .owner {
-                & > div:first-child {
-                    display: flex;
-                    justify-content:space-between;
-                }
-                .action {
-                    display: flex;
-                    align-items:center;
-                    span {
-                        cursor: pointer;
-                        display: inline-flex;
-                        justify-content: center;
-                        align-items: center;
-                        padding: 0.5rem;
-                        border: 1px solid #ccc;
-                        a {
-                            display: contents;
-                        }
-                        a:hover {
-                            color: inherit;
-                        }
-                        &:hover {
-                            box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
-                            transition: all 0.2s ease 0s;
-                        }
-                        
-                    }
-                }
+            @media (max-width: 768px) {
+                padding-left: 0;
+                margin-top: 2rem;
             }
+            
             .priceDetail {
                 margin-top: 3rem;
                 .imgOwner {
@@ -186,6 +161,15 @@
                 }
                 .currentPrice {
                     margin-top: 3rem;
+                    :global {
+                        .ant-collapse-content {
+                            padding: 0;
+                        }
+                    }
+                    .makeOffer {
+                        padding: 1rem;
+                        border-top: 1px solid rgb(229, 232, 235);
+                    }
                     & > div:first-child {
                         padding: 2rem;
                         margin-bottom: 2rem;
@@ -211,8 +195,9 @@
                     }
                     .buyNow {
                         width: 100%;
-                        
+                          
                         button {
+                            width: 100%;
                             display: inline-flex;
                             flex-direction: row;
                             align-items: center;
@@ -239,6 +224,9 @@
                         }
                     }
                 }
+                .priceHistory {
+                    padding: 2rem 2rem 3rem 2rem;
+                }
             }
         }
         @media (max-width: 768px) {
@@ -249,5 +237,27 @@
     }
     .history {
         margin: 2rem 0;
+        :global {
+            .ant-collapse-content {
+                padding: 0;
+            }
+            .ant-collapse-item:last-child {
+                .ant-collapse-content-box {
+                    overflow-x: auto;
+                } 
+            }
+        }
+        .moreFromCollection {
+            display: inline-flex;
+            & > div > a {
+                width: 290px;
+            }
+        }
+    }
+    .viewCollection {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
     }
 }

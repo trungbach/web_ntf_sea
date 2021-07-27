@@ -1,13 +1,12 @@
 import React from 'react';
-import {Select, Table, Input} from 'antd'
+import {Table, Checkbox, Dropdown} from 'antd'
 import Link from 'next/link'
 import Image from 'next/image'
 import styles from './style.module.scss'
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import ether from '@/public/ether.png'
 import LaunchIcon from '@material-ui/icons/Launch';
-
-const {Option} = Select
-const {Checkbox} = Input
+import { DownOutlined } from '@ant-design/icons';
 const TradingHistory = () => {
     const columns = [
         {
@@ -16,7 +15,7 @@ const TradingHistory = () => {
           key: 'event',
           render: text => {
               return {
-                    children: <div><Image src={ether} alt='ether'></Image>{text} <span>ETH</span></div> ,
+                    children: <div className={styles.eventHistory}><LocalOfferIcon />{text} <span>ETH</span></div> ,
               };
             }
         },
@@ -26,10 +25,7 @@ const TradingHistory = () => {
           key: 'price',
           render: text => {
               return {
-                    props: {
-                        className: "textRanking"
-                    },
-                    children: <div><Image src={ether} alt='ether'></Image>{text} <span>4</span></div>,
+                    children: <div className={styles.tablePrice}><Image width={16} height={16} src={ether} alt='ether'></Image>{text} <span>4</span></div>,
               };
             }
         },
@@ -48,7 +44,7 @@ const TradingHistory = () => {
                         color: 'rgb(235, 87, 87)'
                     }
                     },
-                    children: <Link href='/'><a><Image src={ether} alt='ether'></Image>{text} <span>MadMax</span></a></Link>,
+                    children: <Link href='/' ><a className={styles.wrapperFrom}><Image width={24} height={24} src='https://lh3.googleusercontent.com/QQHaL2b4P4q9XOLtxP0WeLG2mydwnz75tQkfFd-d3Xi4lT7S5_-fEY5pFtDclWAThI0Xms4ONvEAdtxrxkFeho0lT-IipPU8v9j3Zt4=s44' alt='ether'></Image>{text} <span>MadMax</span></a></Link>,
               };
             }
         },
@@ -64,7 +60,7 @@ const TradingHistory = () => {
                         fontSize: "14px",
                     }
                     },
-                    children: <Link href='/'><a><Image src={ether} alt='ether'></Image>{text} <span>MadMax</span></a></Link>,
+                    children: <Link href='/' ><a className={styles.wrapperFrom}><Image width={24} height={24} src='https://lh3.googleusercontent.com/QQHaL2b4P4q9XOLtxP0WeLG2mydwnz75tQkfFd-d3Xi4lT7S5_-fEY5pFtDclWAThI0Xms4ONvEAdtxrxkFeho0lT-IipPU8v9j3Zt4=s44' alt='ether'></Image>{text} <span>MadMax</span></a></Link>,
               };
             }
         },
@@ -138,23 +134,25 @@ const TradingHistory = () => {
           date: '10 months ago'
       },
     ];
+
     const handleChange = () => {}
 
+    const filterDropdown = (
+      <div>
+          <Checkbox value="A">Listings</Checkbox>
+          <Checkbox value="B">Sale</Checkbox>
+          <Checkbox value="C">Bids</Checkbox>
+          <Checkbox value="D">Transfers</Checkbox>
+      </div>
+    );
     return (
         <div className={styles.tradingHistory}>
-             <Select
-            labelInValue
-            defaultValue={{ value: 'lucy' }}
-            dropdownClassName={styles.selectPrice}
-            onChange={handleChange}
-            >
-                <Option value="jackss"><Checkbox value="A">Listings</Checkbox></Option>
-                <Option value="jackss"><Checkbox value="B">Sale</Checkbox></Option>
-                <Option value="jackss"><Checkbox value="C">Bids</Checkbox></Option>
-                <Option value="jackss"><Checkbox value="D">Transfers</Checkbox></Option>
-                <Option value="lucy">Filter</Option>
-            </Select> 
-            <Table columns={columns} dataSource={data} pagination={false}></Table>
+          <Dropdown overlayClassName={styles.dropdownCustom} overlay={filterDropdown} trigger={['click']}>
+            <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+              Filter  <DownOutlined />
+            </a>
+          </Dropdown>
+          <Table columns={columns} dataSource={data} pagination={false}></Table>
     </div>
     );
 }
