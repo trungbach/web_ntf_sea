@@ -11,6 +11,11 @@
         border-bottom: 1px solid rgba(229, 232, 235, 0.25);
         padding-top: 4rem;
         & > div:first-child {
+            @media (max-width: 1200px) {
+                & {
+                    text-align: center;
+                }
+            }
             @media (min-width: 1200px) {
                 & {
                     padding-right: 7rem;
@@ -18,9 +23,12 @@
             }
         }
         & > div:last-child {
+            margin-top: 3rem;
+            text-align: center;
             @media (min-width: 1200px) {
                 & {
                     padding-left: 7rem;
+                    margin-top: 0;
                 }
             }
         }
@@ -37,6 +45,11 @@
         .formSignup {
             margin-top: 3rem;
             display: flex;
+            @media (max-width: 1200px) {
+                width: 80%;
+                margin-right: auto;
+                margin-left: auto;
+            }
             input {
                 margin-right: 5px;
                 border-radius: 5px;
@@ -63,6 +76,7 @@
         }
         ul {
             display: flex;
+            justify-content: center;
             padding: 0;
             li {
                 margin-right: 12px;
@@ -105,6 +119,10 @@
     }
     .footerBottom {
         & > div:first-child {
+            @media (max-width: 993px) {
+                text-align: center;
+                margin-bottom: 3rem;
+            }
             img {
                 width: 4.4rem;
                 height: 4.4rem;
@@ -126,9 +144,13 @@
             @media (min-width: 1200px) {
                 padding-left: 7rem;
             }
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
             div {
+                @media (max-width: 993px) {
+                    & {
+                        text-align: center;
+                        margin-bottom: 2rem;
+                    }
+                }
                 h4 {
                     color: #fff;
                 }
@@ -151,6 +173,11 @@
         
     }
     .copyright {
+        @media screen and (max-width: 576px) {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -158,6 +185,9 @@
         padding-bottom: 20px;
         & > div a:first-child {
             padding-right: 1rem;
+        }
+        a {
+            color: inherit;
         }
         a:hover {
             color: #fff;

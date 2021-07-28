@@ -10,7 +10,7 @@ const Footer = () => {
         <footer className={styles.footer}>
             <div className="container">
                 <div className={`row ${styles.footerTop} `}>
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-xl-6">
                         <div className={styles.footerTitle}>Stay in the loop</div>
                         <div className={styles.footerText}>Join our mailing list to stay in the loop with our newest feature releases,
                              NFT drops, and tips and tricks for navigating OpenSea.
@@ -20,7 +20,7 @@ const Footer = () => {
                             <Button>Sign up</Button>
                         </div>
                     </div>
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-xl-6">
                         <div className={styles.footerTitle}>Join the community</div>
                         <ul>
                             <li>
@@ -69,7 +69,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className={`row ${styles.footerBottom}`}>
-                    <div className="col-3">
+                    <div className="col-lg-3 col-12">
                         <Image src={openseaWhite} alt="opensea-white" />
                         <Link href='/'>OpenSea</Link>
                         <p>
@@ -78,8 +78,8 @@ const Footer = () => {
                             Buy, sell, and discover exclusive digital assets.
                         </p>
                     </div>
-                    <div className={`col-9 ${styles.navFooter}`}>
-                        <div>
+                    <div className={`col-lg-9 col-12 row ${styles.navFooter}`}>
+                        <div className='col-6 col-md-3'>
                             <h4>Marketplace</h4>
                             <Link href='/'>All NTFs</Link>
                             <Link href='/'>New</Link>
@@ -92,7 +92,7 @@ const Footer = () => {
                             <Link href='/'>Sports</Link>
                             <Link href='/'>Utility</Link>
                         </div>
-                        <div>
+                        <div  className='col-6 col-md-3'>
                             <h4>My Account</h4>
                             <Link href='/'>My Profile</Link>
                             <Link href='/'>My Collections</Link>
@@ -102,7 +102,7 @@ const Footer = () => {
                             <Link href='/'>Rankings</Link>
                             <Link href='/'>Activity</Link>
                         </div>
-                        <div>
+                        <div  className='col-6 col-md-3'>
                             <h4>Resources</h4>
                             <Link href='/'>Help Center</Link>
                             <Link href='/'>Partners</Link>
@@ -112,7 +112,7 @@ const Footer = () => {
                             <Link href='/'>Docs</Link>
                             <Link href='/'>Newsletter</Link>
                         </div>
-                        <div>
+                        <div  className='col-6 col-md-3'>
                             <h4>Company</h4>
                             <Link href='/'>About</Link>
                             <Link href='/'>Careers</Link>

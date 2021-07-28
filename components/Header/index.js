@@ -26,7 +26,7 @@ const Header = () => {
     const menuMarket = (
         <Menu className={styles.menuMarket}>
             <Menu.Item key={1}>
-                <Link href="https://www.antgroup.com">
+                <Link href="/assets">
                     <a>
                         <Image width={24} height={24} src={all} alt='all'></Image>
                         All NTFs
@@ -34,58 +34,83 @@ const Header = () => {
                 </Link>
             </Menu.Item>
             <Menu.Item key={2}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-                    <Image width={24} height={24} src={newlight} alt='new'></Image>
-                    New
-                </a>
+                <Link href='/collection/art'>
+                    <a>
+                        <Image width={24} height={24} src={newlight} alt='new'></Image>
+                        New
+                    </a>
+                </Link>
             </Menu.Item>
             <Menu.Item key={3}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                <Image width={24} height={24} src={art} alt='art'></Image>
-                    Art
-                </a>
+                <Link href='/collection/art'>
+                     <a>
+                        <Image width={24} height={24} src={art} alt='art'></Image>
+                        Art
+                    </a>
+                </Link>
+               
             </Menu.Item>
             <Menu.Item key={4}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                <Image width={24} height={24} src={music} alt='music'></Image>
-                    Music
-                </a>
+                <Link href='/collection/music'>
+                    <a>
+                        <Image width={24} height={24} src={music} alt='music'></Image>
+                        Music
+                    </a>
+                </Link>
             </Menu.Item>
             <Menu.Item key={5}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+                <Link href='/collection/domain-names'>
+                <a>
                 <Image width={24} height={24} src={domain} alt='domain'></Image>
                     Domain Names
-                </a>
+                </a>    
+                </Link>
+                
             </Menu.Item>
             <Menu.Item key={6}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+                <Link href='/collection/virtual-worlds'>
+                <a>
                 <Image width={24} height={24} src={virtual} alt='virtual'></Image>
                     Virtual Worlds
-                </a>
+                </a>    
+                </Link>
+                
             </Menu.Item>
             <Menu.Item key={7}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+                <Link href='/collection/trading-cards'>
+                <a>
                 <Image width={24} height={24} src={trading} alt='trading'></Image>
                     Trading Cards
-                </a>
+                </a>    
+                </Link>
+                
             </Menu.Item>
             <Menu.Item key={8}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+                <Link href='/collection/collectibles'>
+                <a>
                 <Image width={24} height={24} src={collectibles} alt='collectibles'></Image>
                     Collectibles
-                </a>
+                </a>    
+                </Link>
+                
             </Menu.Item>
             <Menu.Item key={9}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+                <Link href='/collection/sports'>
+                <a>
                 <Image width={24} height={24} src={sports} alt='sports'></Image>
                     Sports
-                </a>
+                </a>    
+                </Link>
+                
             </Menu.Item>
             <Menu.Item key={10}>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+                <Link href='/collection/utility'>
+                <a>
                 <Image width={24} height={24} src={utility} alt='utility'></Image>
                     Utility
-                </a>
+                </a>    
+                </Link>
+                
             </Menu.Item>
         </Menu>
     )
@@ -93,14 +118,18 @@ const Header = () => {
     const menuStats = (
         <Menu className={styles.menuStats}>
             <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                   Rankings
-                </a>
+                <Link href='/rankings'>
+                    <a>
+                    Rankings
+                    </a>
+                </Link>
             </Menu.Item>
             <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                   Activity
-                </a>
+                <Link href='/activity'>
+                    <a>
+                        Activity
+                    </a>
+                </Link>
             </Menu.Item>
         </Menu>
     )
@@ -196,9 +225,9 @@ const Header = () => {
                         <Dropdown overlay={menuStats} placement="bottomLeft">
                             <a className="nav-link" href="#">Stats</a>
                         </Dropdown>
-                        <Dropdown overlay={menuResource} placement="bottomLeft">
+                        {/* <Dropdown overlay={menuResource} placement="bottomLeft">
                             <a className="nav-link" href="#">Resources</a>
-                        </Dropdown>
+                        </Dropdown> */}
                         <Dropdown overlay={menuUser} placement="bottomRight">
                             <a className="nav-link" href="#"><AccountCircleOutlinedIcon /></a>
                         </Dropdown>

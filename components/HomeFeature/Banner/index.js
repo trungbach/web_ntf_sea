@@ -13,7 +13,7 @@ const Banner = () => {
             <div className={styles.bannerContent}>
                 <div className='container h-100'>
                     <div className='row h-100'> 
-                        <div className="col-6 d-flex justify-content-center flex-column position-relative">
+                        <div className="col-md-6 col-12 d-flex justify-content-center flex-column position-relative">
                             <div className={styles.bannerTitle}>
                                 <h1>
                                     Discover, collect, and sell extraordinary NFTs
@@ -23,14 +23,14 @@ const Banner = () => {
                                 </span>
                             </div>
                             <div className={styles.cta}>
-                                <Link href='/'>Explore</Link>
-                                <Link href='/collections'>Create</Link>
+                                <Link href='/assets'><a className={styles.secondaryButton}>Explore</a></Link>
+                                {/* <Link href='/collections'>Create</Link> */}
                             </div>
-                            <div className={styles.getFeatured}>
+                            {/* <div className={styles.getFeatured}>
                                 <span>Get featured on the homepage</span>
-                            </div>
+                            </div> */}
                         </div>
-                        <div className={`col-6 ${styles.bannerRight}`}>
+                        <div className={`col-md-6 col-12 ${styles.bannerRight}`}>
                             <div className={styles.hotItem}>
                                 <Link href={`/assets/1`}>
                                     <a>

@@ -1,5 +1,12 @@
 @import "@/styles/base.scss";
 
+.featureExclusive {
+    margin-top: 8rem;
+    margin-bottom: 12rem;
+    @media (max-width: 576px) {
+        margin-top: 4rem;
+    }
+}
 .listExclusive {
     margin-top: 4rem;
     & > div {
@@ -39,6 +46,32 @@
             font-size: 1.4rem;
             padding: 4px 10px;
             border: none;
+        }
+    }
+}
+
+.slider {
+    position: relative;
+    .sliderArrow {
+        padding: 0 1rem;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        .arrowBtn {
+            border: none;
+            outline: none;
+            background: transparent;
+            transform: translateX(-50%);
+            top: 45%;
+            z-index: 1;
+            svg {
+                font-size: 3.3rem;
+                fill: #222;
+            }
+        }
+        .arrowBtn:last-child {
+            float: right;
+            transform: translateX(50%);
         }
     }
 }

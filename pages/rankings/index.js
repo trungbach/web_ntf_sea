@@ -250,19 +250,6 @@ const Rankings = () => {
                         </Option>
                     </Select>
                     </div>
-                    <div>
-                        <Select
-                        labelInValue
-                        dropdownClassName={styles.dropdownMarket}
-                        defaultValue={{ value: 'lucy' }}
-                        onChange={handleChange}
-                        >
-                            <Option value="lucy"><LinkIcon />All chains</Option>
-                            <Option value="jack"><Image width={24} height={24} src={ethereum} alt="ethereum" /> Ethereum</Option>
-                            <Option value="jacks"><Image  width={24} height={24} src={polygon} alt="polygon" /> Polygon</Option>
-                            <Option value="jackss"><Image width={24} height={24} src={klaytn} alt="klaytn" />Klaytn</Option>
-                        </Select>
-                    </div>
                 </div>
                 <Table columns={columns} dataSource={data}
                 onRow={(record, rowIndex) => {

@@ -12,7 +12,7 @@ import itemThumb from '@/public/itemThumb.png';
 const ItemSell = () => {
     return (
         <div className={styles.sellItemContainer}>
-            <Link href='/' >
+            <Link href='/assets/item/id' >
                     <a className={styles.sellItem}>
                         <Card
                             hoverable

@@ -36,6 +36,11 @@
          }
          a {
              display: block;
+             @media (max-width: 993px) {
+                 & {
+                     text-align: center;
+                 }
+             }
          }
          svg {
             height: 25px;

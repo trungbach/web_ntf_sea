@@ -14,11 +14,31 @@
             color: rgb(112, 122, 131);
         }
     }
+    :global {
+        .ant-table-wrapper {
+            overflow-x: auto;
+        }
+    }
     .filter {
         display: flex;
         justify-content: center;
         align-items: center;
         margin: 2rem 0;
+        @media screen and (max-width: 576px) {
+            & {
+                flex-direction: column;
+                & > div {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    :global {
+                        .ant-select {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
         & > div {
             :global {
                 .ant-select {

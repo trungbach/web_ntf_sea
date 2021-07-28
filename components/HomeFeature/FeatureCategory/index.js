@@ -7,20 +7,22 @@ import styles from './style.module.scss'
 const FeatureCategory = () => {
 
     const categoryItem = (
-        <Link href='/' >
-            <a  className={styles.categoryItem}>
-                <Card
-                    hoverable
-                    cover={<Image  alt="hot asset" src={art} />}
-                >
-                    <div className={styles.categoryItemContent}>
-                        <h3>
-                            Art
-                        </h3>
-                    </div>
-                </Card>
-            </a>
-        </Link>
+        <div className='col-12 col-md-6 col-lg-4 mb-4'>
+            <Link href='/' >
+                <a  className={styles.categoryItem}>
+                    <Card
+                        hoverable
+                        cover={<Image  alt="hot asset" src={art} />}
+                    >
+                        <div className={styles.categoryItemContent}>
+                            <h3>
+                                Art
+                            </h3>
+                        </div>
+                    </Card>
+                </a>
+            </Link>
+        </div>
     )
 
     return (
@@ -29,7 +31,7 @@ const FeatureCategory = () => {
                 <h2 className={styles.titleHome}>
                     Browse by category
                 </h2>
-                <div className={styles.listCategory}>
+                <div className={`row {styles.listCategory}`}>
                     {categoryItem}
                     {categoryItem}
                     {categoryItem}
@@ -41,7 +43,7 @@ const FeatureCategory = () => {
                     {categoryItem}
                 </div>
             </div>
-            <div>
+            <div className='mt-5'>
                 <Link href='/assets'>
                     <a className={styles.exploreLink}>
                         Explore the marketplace
