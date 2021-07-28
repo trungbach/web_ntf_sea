@@ -33,8 +33,8 @@ import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import ItemSell from '@/components/ItemSell'
 import Footer from '@/components/Footer'
 import noOffer from '@/public/noOffer.svg'
-import Listing from './Listing'
-import TradingHistory from './TradingHistory';
+import Listing from '@/components/Listing'
+import TradingHistory from '@/components/TradingHistory';
 const { Panel } = Collapse;
 const {Option} = Select
 const DetailItem = () => {
