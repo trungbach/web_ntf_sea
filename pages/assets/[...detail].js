@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './name.module.scss'
+import styles from './detail.module.scss'
 import Link from 'next/link'
 import Image from 'next/image'
 import {Tooltip, Button, Collapse, Select, Table, Checkbox} from 'antd'
