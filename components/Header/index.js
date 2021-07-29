@@ -220,7 +220,7 @@ const Header = () => {
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div className={`navbar-nav ${styles.navRight}`}>
                         <Dropdown overlay={menuMarket} placement="bottomLeft">
-                            <a className="nav-link" aria-current="page" href="/assets">Marketplace</a>
+                            <a className="nav-link" aria-current="page" href="#">Marketplace</a>
                         </Dropdown>
                         <Dropdown overlay={menuStats} placement="bottomLeft">
                             <a className="nav-link" href="#">Stats</a>
