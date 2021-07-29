@@ -273,18 +273,26 @@ const DetailItem = () => {
                                     Each Pixelglyph you own will allow you to redeem a &quot;.glyph&quot; NFT. Learn more at pixelglyphs.io
                                 </p>
                                 <div className={styles.social}>
-                                    <Tooltip title='Activity'>
-                                        <span><PlaylistPlayIcon /></span>
-                                    </Tooltip>
-                                    <Tooltip title='Website'>
-                                        <span><WebIcon /></span>
-                                    </Tooltip>
-                                    <Tooltip title='Discord'>
+                                    <Link href='/'><a>
+                                        <Tooltip title='Activity'>
+                                            <span><PlaylistPlayIcon /></span>
+                                        </Tooltip>
+                                    </a></Link>
+                                    <Link href='/'><a>
+                                        <Tooltip title='Website'>
+                                            <span><WebIcon /></span>
+                                        </Tooltip>
+                                    </a></Link>
+                                    <Link href='/'><a>
+                                        <Tooltip title='Discord'>
                                         <span><i className="fab fa-discord"></i></span>
-                                    </Tooltip>
-                                    <Tooltip title='Twitter'>
-                                        <span><i className="fab fa-twitter"></i></span>
-                                    </Tooltip>
+                                        </Tooltip>
+                                    </a></Link>
+                                    <Link href='/'><a>
+                                        <Tooltip title='Activity'>
+                                            <span><PlaylistPlayIcon /></span>
+                                        </Tooltip>
+                                </a></Link>
                                 </div>
                             </div>
                         </Panel>

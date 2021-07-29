@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState,useEffect, useRef} from 'react';
 import { Layout, Collapse, Button, Select, Input, Checkbox  } from 'antd';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import styles from './style.module.scss';
@@ -26,17 +26,16 @@ const SideFilter = () => {
         console.log(key);
     }
 
-    const [collapsed, setCollapsed] = useState(false)
+    const [widthScreen, setWidthScreen] = useState()
 
-    const text = `
-    A dog is a type of domesticated animal.
-    Known for its loyalty and faithfulness,
-    it can be found as a welcome guest in many households across the world.
-  `;
+    useEffect(() => {
+        setWidthScreen(window.screen.width)
+    },[])
+
+    const [collapsed, setCollapsed] = useState(false)
 
     const onCollapse = collapsed => {
          sideRef.current.style.height = collapsed ? '100vh' : 'auto';
-        //  sideRef.current.style.borderRight = '1px solid #ccc';
          document.getElementsByClassName('ant-layout-sider-children')[0].style.overflowY = collapsed ? 'hidden !important' : 'auto !important'; 
          document.getElementById('collapseDiv').style.display = collapsed ? 'none' : 'block'; 
         setCollapsed(collapsed);
@@ -77,7 +76,7 @@ const SideFilter = () => {
 
     return (
         <div ref={sideRef} className={styles.sideFilter}>
-            <Sider width={338} collapsedWidth={60} theme="light" collapsible collapsed={collapsed} onCollapse={onCollapse}>
+            <Sider width={widthScreen >= 768 ? '380px' : '100%'} collapsedWidth={widthScreen >= 768 ? '60px' : '0px'} theme="light" collapsible collapsed={collapsed} onCollapse={onCollapse}>
                 <div id='collapseDiv'>
                     <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']} onChange={callback}>
                         <div className={styles.filterTitle}><FilterListIcon /> Filter

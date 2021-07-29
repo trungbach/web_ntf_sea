@@ -10,6 +10,11 @@
         margin-bottom: 2rem;
         border-bottom: 1px solid rgba(229, 232, 235, 0.25);
         padding-top: 4rem;
+        .mailIcon {
+            svg {
+                fill: #fff;
+            }
+        }
         & > div:first-child {
             @media (max-width: 1200px) {
                 & {

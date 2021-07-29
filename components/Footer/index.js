@@ -16,7 +16,7 @@ const Footer = () => {
                              NFT drops, and tips and tricks for navigating OpenSea.
                         </div>
                         <div className={styles.formSignup}>
-                            <Input clearfix={true} type="email" placeholder="Your email address" />
+                            <Input allowClear  type="email" placeholder="Your email address" />
                             <Button>Sign up</Button>
                         </div>
                     </div>
@@ -60,7 +60,7 @@ const Footer = () => {
                                </li>
                                <li>
                                    <Link href='/'>
-                                    <a>
+                                    <a className={styles.mailIcon}>
                                      <MailOutlinedIcon />
                                     </a>
                                 </Link>

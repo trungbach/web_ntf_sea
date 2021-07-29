@@ -13,7 +13,7 @@ const FeatureSell = () => {
                 Create and sell your NFTs
             </h2>
             <div className="row">
-                <div className="col-12 col-md-6 col-3 mb-4 mb-lg-0">
+                <div className="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
                     <div className={styles.sellItems}>
                         <Image src={walletFeature} alt="wallet" />
                         <h4>Set up your wallet</h4>
@@ -24,7 +24,7 @@ const FeatureSell = () => {
                         </p>
                     </div>
                 </div>
-                <div className="col-12 col-md-6 col-3 mb-4 mb-lg-0">
+                <div className="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
                     <div className={styles.sellItems}>
                         <Image src={collectionFeature} alt="collectionFeature" />
                         <h4>Create your collection</h4>
@@ -34,7 +34,7 @@ const FeatureSell = () => {
                         </p>
                     </div>
                 </div>
-                <div className="col-12 col-md-6 col-3 mb-4 mb-lg-0">
+                <div className="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
                     <div className={styles.sellItems}>
                         <Image src={nftFeature} alt="nftFeature" />
                         <h4>Add your NFTs</h4>
@@ -44,7 +44,7 @@ const FeatureSell = () => {
                         </p>
                     </div>
                 </div>
-                <div className="col-12 col-md-6 col-3 mb-4 mb-lg-0">
+                <div className="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
                     <div className={styles.sellItems}>
                         <Image src={saleFeature} alt="saleFeature" />
                         <h4>List them for sale</h4>

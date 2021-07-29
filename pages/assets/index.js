@@ -1,7 +1,8 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import styles from './style.module.scss';
 import SideFilter from '@/components/SideFilter';
-import {Select} from 'antd'
+import SideFilterMobile from '@/components/SideFilterMobile';
+import {Select, Button} from 'antd'
 import ItemSell from '@/components/ItemSell'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
@@ -11,13 +12,18 @@ const Assets = () => {
 
     const handleChangeTypeItem = () => {}
     const handleChangeSortBy = () => {}
-
+    const [isShowSideBar, setIsShowSideBar] = useState(false);
     return (
+        
         <div className={styles.assets}> 
             <SideFilter />
+            <SideFilterMobile isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
+            <div className={styles.showFilter}>
+                <Button className={styles.buttonShowFilter} onClick={() =>setIsShowSideBar(true)}>Filter</Button>
+            </div>
             <div className={styles.mainAsset}>
                 <div className={styles.heading}>
-                    <div className={styles.totalResult}>
+                    <div className={`${styles.totalResult} d-none d-md-block`}>
                         17.159.512 results
                     </div>
                     <div className={styles.filter}>
