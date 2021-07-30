@@ -76,7 +76,7 @@ const SideFilter = () => {
 
     return (
         <div ref={sideRef} className={styles.sideFilter}>
-            <Sider width={widthScreen >= 768 ? '380px' : '100%'} collapsedWidth={widthScreen >= 768 ? '60px' : '0px'} theme="light" collapsible collapsed={collapsed} onCollapse={onCollapse}>
+            <Sider width={widthScreen >= 768 ? '340px' : '100%'} collapsedWidth={widthScreen >= 768 ? '60px' : '0px'} theme="light" collapsible collapsed={collapsed} onCollapse={onCollapse}>
                 <div id='collapseDiv'>
                     <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']} onChange={callback}>
                         <div className={styles.filterTitle}><FilterListIcon /> Filter

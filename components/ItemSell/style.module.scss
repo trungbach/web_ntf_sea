@@ -7,6 +7,7 @@
 }
 .sellItem {
     display: block;
+    max-width: 26rem;
     :global {
         .ant-card {
             border-radius: 0.7rem;

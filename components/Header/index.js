@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Input } from 'antd';
 import Image from 'next/image'
-import Script from 'next/script';
 import {SearchOutlined  } from '@ant-design/icons'
 import { Menu, Dropdown } from 'antd';
 import opensea from '../../public/opensea.svg'
@@ -18,11 +17,14 @@ import utility from '../../public/utility-light.svg';
 import virtual from '../../public/virtual-worlds-light.svg';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
+import Wallet from '@/components/Wallet'
 import Link from 'next/link'
 
 const Header = () => {
 
     const onChange = () => {}
+
+    const [isShowWallet, setIsShowWallet] = useState(false)
 
     const menuMarket = (
         <Menu className={styles.menuMarket}>
@@ -203,7 +205,6 @@ const Header = () => {
     return (
 
         <nav className={` ${styles.nav} navbar navbar-expand-lg fixed-top`}>
-            {/* <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></Script> */}
             <div className="container-fluid">
                 <Link href='/'>
                     <a className={`navbar-brand ${styles.logo}`} >
@@ -233,10 +234,14 @@ const Header = () => {
                         <Dropdown overlay={menuUser} placement="bottomRight">
                             <a className="nav-link" href="#"><AccountCircleOutlinedIcon /></a>
                         </Dropdown>
-                        <a className="nav-link" href="#"  data-toggle="modal" data-target="#modalWallet"><AccountBalanceWalletOutlinedIcon /></a>
+
+                        <span type='button' title='Wallet' className={`nav-link ${styles.walletBtn}`} onClick={() =>setIsShowWallet(!isShowWallet)}>
+                            <AccountBalanceWalletOutlinedIcon />
+                        </span>
                     </div>
                 </div>
             </div>
+            <Wallet isShowWallet={isShowWallet} setIsShowWallet={setIsShowWallet} />
         </nav>
     );
 }

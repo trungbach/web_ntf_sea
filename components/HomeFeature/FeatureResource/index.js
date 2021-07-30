@@ -13,14 +13,14 @@ const FeatureResource = () => {
         infinite: false,
         speed: 500,
         slidesToShow: 3,
-        slidesToScroll: 3,
+        slidesToScroll: 1,
         initialSlide: 0,
         responsive: [
           {
             breakpoint: 768,
             settings: {
               slidesToShow: 2,
-              slidesToScroll: 2,
+              slidesToScroll: 1,
               infinite: true,
               dots: true
             }

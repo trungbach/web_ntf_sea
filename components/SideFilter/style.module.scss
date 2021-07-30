@@ -1,5 +1,6 @@
 .sideFilter {
     border-right: 1px solid #d9d9d9;
+    overflow-y: auto;
     @media (max-width: 768px) {
         display: none;
     }
@@ -11,7 +12,6 @@
             justify-content: flex-end;
             .ant-layout-sider-children {
                 height: auto;
-                overflow-y: auto;
                 .ant-collapse {
                     margin-bottom: 2.6rem;
                     border-right: none;
