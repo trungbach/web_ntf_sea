@@ -6,7 +6,8 @@ class MyDocument extends Document {
       <Html lang='en'>
         <Head>
             <meta httpEquiv="content-language" content="en-US" />
-        </Head>
+      
+         </Head>
         <body>
           <Main />
           <NextScript />

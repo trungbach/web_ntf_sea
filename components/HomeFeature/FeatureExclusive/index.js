@@ -60,7 +60,7 @@ const FeatureExclusive = () => {
 
     const exclusiveItem = (
         <div className="p-4">
-            <Link href='/'>
+            <Link href='/category/coca-cola'>
                 <a>
                     <Card
                         hoverable

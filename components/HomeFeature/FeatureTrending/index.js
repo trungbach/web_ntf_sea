@@ -108,7 +108,7 @@ const FeatureTrending = () => {
       };
 
     const trendingItem = (
-        <Link href='/' >
+        <Link href='/category/coca-cola' >
             <a  className={styles.trendingItem}>
                 <Card
                     hoverable

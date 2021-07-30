@@ -8,7 +8,7 @@ const FeatureCategory = () => {
 
     const categoryItem = (
         <div className='col-12 col-md-6 col-lg-4 mb-4'>
-            <Link href='/' >
+            <Link href='/collection/art' >
                 <a  className={styles.categoryItem}>
                     <Card
                         hoverable
