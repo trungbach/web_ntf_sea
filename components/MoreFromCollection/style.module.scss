@@ -1,0 +1,6 @@
+.moreFromCollection {
+    display: inline-flex;
+    & > div > a {
+        width: 290px;
+    }
+}

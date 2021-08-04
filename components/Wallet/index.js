@@ -2,11 +2,11 @@ import React, {useState, useEffect} from 'react';
 import { Tooltip} from 'antd';
 import styles from './style.module.scss';
 import Image from 'next/image'
-import Link from 'next/link'
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import metamask from '@/public/metamask.png'
 import Web3 from 'web3'
+import {checkPublicAddress, verifySignature} from '@/pages/api/login'
 
 const Wallet = ({isShowWallet, setIsShowWallet}) => {
 
@@ -17,22 +17,19 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
     },[])
 
     const [metamaskInstalled, setMetamaskInstalled] = useState(false)
-    const [account, setAccount] = useState('')
-    const [socialNetwork, setSocialNework] = useState()
-    const [postCount, setPostCount] = useState(0)
-    const [posts, setPosts] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [account, setAccount] = useState()
+    const [publicAddress, setPublicAddress] = useState()
+    const [loading, setLoading] = useState(false)
 
     const checkMetamask = async() => {
         const isMetaInstalled = typeof window.web3 !== 'undefined'
         setMetamaskInstalled(isMetaInstalled)
         if(isMetaInstalled) {
-          await loadWeb3()
-          await loadBlockchainData()
+          await handleLogin()
         } else window.open("https://metamask.io/download.html", "_blank")
     }
 
-    const  loadWeb3 = async() => {
+    const  handleLogin = async() => {
         if (window.ethereum) {
           window.web3 = new Web3(window.ethereum)
           await window.ethereum.enable()
@@ -40,39 +37,24 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
         else if (window.web3) {
           window.web3 = new Web3(window.web3.currentProvider)
         }
-        else {
-          // DO NOTHING...
-        }
-      }
-    
-      const loadBlockchainData = async() => {
-        const web3 = window.web3
-        // Load account
-        const accounts = await web3.eth.getAccounts()
-        console.log(web3.eth)
-        console.log(accounts)
-        setAccount(accounts[0])
-        const networkId = await web3.eth.net.getId()
-        const publicAddress = await web3.eth.getCoinbase()
-        console.log(publicAddress)
-        console.log('networkid',networkId)
-        // const networkData = SocialNetwork.networks[networkId]
-        // if(networkData) {
-        //   const socialNetwork = web3.eth.Contract(SocialNetwork.abi, networkData.address)
-        //   setSocialNework(socialNetwork)
-        //   const postCount = await socialNetwork.methods.postCount().call()
-        //   setPostCount(postCount)
-        //   // Load posts
-        //   for (var i = 1; i <= postCount; i++) {
-        //     const post = await socialNetwork.methods.posts(i).call()
-        //     setPosts([...posts, post])
-        //   }
-        //   // Sort posts. Show highest tipped posts first
-        //   setPosts([...posts.sort((a,b) => b.tipAmount - a.tipAmount)])
-        //   setLoading(false)
-        // } else {
-        //   window.alert('SocialNetwork contract not deployed to detected network.')
-        // }
+
+        const publicAddress = await web3.eth.getCoinbase().toLowerCase()
+
+        const resNonce = await checkPublicAddress({public_address: publicAddress})
+        setAccount(JSON.parse(resNonce.text).data)
+
+        const {nonce} = JSON.parse(resNonce.text).data
+
+        // handleSignMessage
+        web3.eth.personal.sign(
+            web3.utils.fromUtf8(`I am signing my one-time nonce: ${nonce}`),
+            publicAddress,
+            async (err, signature) => {
+                console.log(signature)
+                const resSignature = await verifySignature({public_address: publicAddress, signature});
+                console.log(resSignature)
+              }
+          )
       }
 
     return (
@@ -85,11 +67,13 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
                     </div>
                     <div className={styles.content}>
                         <p>Connect with one of our available 
-                            <Tooltip placement="bottomRight" title={<div>A crypto wallet is an application or hardware device that 
-                                                                        allows individuals to store and retrieve digital assets. 
-                                                                        <Link href="https://openseahelp.zendesk.com/hc/en-us/articles/1500007978402-Wallets-supported-by-OpenSea" rel="nofollow noopener" target="_blank">Learn more</Link>
-                                                                    </div>}>
-                                <span className={styles.tooltip}>&nbsp; wallet <InfoOutlinedIcon />&nbsp;</span>
+                            <Tooltip placement="bottomRight" 
+                                    title={<div>A crypto wallet is an application or hardware device that 
+                                                allows individuals to store and retrieve digital assets. 
+                                                <a href="https://openseahelp.zendesk.com/hc/en-us/articles/1500007978402-Wallets-supported-by-OpenSea" 
+                                                    rel="nofollow noreferrer noopener" target="_blank">Learn more</a>
+                                            </div>}>
+                                    <span className={styles.tooltip}>&nbsp; wallet <InfoOutlinedIcon />&nbsp;</span>
                             </Tooltip>
                             providers or create a new one.
                         </p>

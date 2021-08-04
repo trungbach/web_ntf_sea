@@ -6,7 +6,7 @@ module.exports = {
   },
   reactStrictMode: true,
   images: {
-    domains: ['opensea.io', "storage.googleapis.com", "lh3.googleusercontent.com"],
+    domains: ['opensea.io', "storage.googleapis.com", "lh3.googleusercontent.com", "img.favpng.com", "www.designyourway.net"],
   },
   trailingSlash: true,
   // exportPathMap: async function (

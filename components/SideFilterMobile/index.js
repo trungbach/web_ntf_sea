@@ -33,15 +33,15 @@ const SideFilterMobile = ({isShowSideBar, setIsShowSideBar}) => {
                                 <CloseIcon />
                             </div>
                         </div>
-                        <Panel header="Status" key="1">
+                        {/* <Panel header="Status" key="1">
                             <div className={styles.filterList}>
                                 <div>Buy Now</div>
                                 <div>On Auction</div>
                                 <div>New</div>
                                 <div>Has Offers</div>
                             </div>
-                        </Panel>
-                        <Panel header="Price" key="2">
+                        </Panel> */}
+                        <Panel header="Price" key="1">
                             <div className={styles.filterPrice}>
                                 <Select
                                 labelInValue
@@ -60,22 +60,7 @@ const SideFilterMobile = ({isShowSideBar, setIsShowSideBar}) => {
                                 <div type="button" className={styles.applyPrice}>Apply</div>
                             </div>
                         </Panel>
-                        <Panel header="Chains" key="3">
-                            <div className={styles.filterCollections} >
-                                <ul>
-                                    <li>
-                                        <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
-                                    </li>
-                                    <li>
-                                        <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
-                                    </li>
-                                    <li>
-                                        <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
-                                    </li>
-                                </ul>
-                            </div>
-                        </Panel>
-                        <Panel header="On Sale In" key="4">
+                        <Panel header="On Sale In" key="2">
                             <div className={styles.filterCollections}>
                                 <Input prefix={<SearchOutlined />} placeholder="Filter" allowClear onChange={onChangeCollections} />
                                 <ul style={{overflowY: 'scroll'}}>

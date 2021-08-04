@@ -30,7 +30,7 @@ import ether from '@/public/ether.png'
 import noTrading from '@/public/noTrading.svg'
 import WebIcon from '@material-ui/icons/Web';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
-import ItemSell from '@/components/ItemSell'
+import MoreFromCollection from '@/components/MoreFromCollection'
 import Footer from '@/components/Footer'
 import noOffer from '@/public/noOffer.svg'
 import Listing from '@/components/Listing'
@@ -43,20 +43,7 @@ const DetailItem = () => {
          console.log(key);
     }
 
-    const listFromCollection = (
-        <>
-            <ItemSell />
-            <ItemSell />
-            <ItemSell />
-            <ItemSell />
-            <ItemSell />
-            <ItemSell />
-            <ItemSell />
-            <ItemSell />
-            <ItemSell />
-            <ItemSell />
-        </>
-    )
+    
     const handleChange = () => {}
     return (
     <>
@@ -322,9 +309,7 @@ const DetailItem = () => {
                         <TradingHistory />
                     </Panel>
                     <Panel header={<div><ViewModuleRoundedIcon /> More from this collection</div>} key="2">
-                        <div className={styles.moreFromCollection}>
-                            {listFromCollection}
-                        </div>
+                        <MoreFromCollection />
                     </Panel>
                 </Collapse>
             </div>

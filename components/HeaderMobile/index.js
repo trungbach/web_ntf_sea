@@ -42,7 +42,7 @@ const HeaderMobile = () => {
                 </Link>
             </Menu.Item>
             <Menu.Item key={2}>
-                <Link href='/collection/art'>
+                <Link href='/category/art'>
                     <a>
                         <Image width={24} height={24} src={newlight} alt='new'></Image>
                         New
@@ -50,7 +50,7 @@ const HeaderMobile = () => {
                 </Link>
             </Menu.Item>
             <Menu.Item key={3}>
-                <Link href='/collection/art'>
+                <Link href='/category/art'>
                      <a>
                         <Image width={24} height={24} src={art} alt='art'></Image>
                         Art
@@ -59,7 +59,7 @@ const HeaderMobile = () => {
                
             </Menu.Item>
             <Menu.Item key={4}>
-                <Link href='/collection/music'>
+                <Link href='/category/music'>
                     <a>
                         <Image width={24} height={24} src={music} alt='music'></Image>
                         Music
@@ -67,7 +67,7 @@ const HeaderMobile = () => {
                 </Link>
             </Menu.Item>
             <Menu.Item key={5}>
-                <Link href='/collection/domain-names'>
+                <Link href='/category/domain-names'>
                 <a>
                 <Image width={24} height={24} src={domain} alt='domain'></Image>
                     Domain Names
@@ -76,7 +76,7 @@ const HeaderMobile = () => {
                 
             </Menu.Item>
             <Menu.Item key={6}>
-                <Link href='/collection/virtual-worlds'>
+                <Link href='/category/virtual-worlds'>
                 <a>
                 <Image width={24} height={24} src={virtual} alt='virtual'></Image>
                     Virtual Worlds
@@ -85,7 +85,7 @@ const HeaderMobile = () => {
                 
             </Menu.Item>
             <Menu.Item key={7}>
-                <Link href='/collection/trading-cards'>
+                <Link href='/category/trading-cards'>
                 <a>
                 <Image width={24} height={24} src={trading} alt='trading'></Image>
                     Trading Cards
@@ -94,7 +94,7 @@ const HeaderMobile = () => {
                 
             </Menu.Item>
             <Menu.Item key={8}>
-                <Link href='/collection/collectibles'>
+                <Link href='/category/collectibles'>
                 <a>
                 <Image width={24} height={24} src={collectibles} alt='collectibles'></Image>
                     Collectibles
@@ -103,7 +103,7 @@ const HeaderMobile = () => {
                 
             </Menu.Item>
             <Menu.Item key={9}>
-                <Link href='/collection/sports'>
+                <Link href='/category/sports'>
                 <a>
                 <Image width={24} height={24} src={sports} alt='sports'></Image>
                     Sports
@@ -112,7 +112,7 @@ const HeaderMobile = () => {
                 
             </Menu.Item>
             <Menu.Item key={10}>
-                <Link href='/collection/utility'>
+                <Link href='/category/utility'>
                 <a>
                 <Image width={24} height={24} src={utility} alt='utility'></Image>
                     Utility
@@ -151,7 +151,7 @@ const HeaderMobile = () => {
             </Menu.Item>
             <Menu.Item>
                 <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                   My Collections
+                   My categorys
                 </a>
             </Menu.Item>
             <Menu.Item>
@@ -181,7 +181,7 @@ const HeaderMobile = () => {
                     </a>
                 </Link>
                 <form className={`${styles.form} d-flex`}>
-                        <Input prefix={<SearchOutlined />} placeholder="Search items, collections, and accounts" allowClear onChange={onChange} />
+                        <Input prefix={<SearchOutlined />} placeholder="Search items, categorys, and accounts" allowClear onChange={onChange} />
                 </form>
                 <button className={`${styles.buttonCollapse} navbar-toggler`} onClick={() => setShowCollapse(!showCollapse)}>
                     <MenuIcon />

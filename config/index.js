@@ -1,3 +1,11 @@
-const dev = process.env.NODE_ENV !== 'production'
+// const dev = process.env.NODE_ENV !== 'production'
 
-export const server = dev ? 'http://localhost:3000' : 'http://yourwebsite.com'
+// export const server = dev ? 'http://localhost:3000' : 'http://yourwebsite.com'
+
+const config = {
+    // API_DOMAIN: process.env.API_DOMAIN,
+    API_DOMAIN: 'http://139.177.188.72:3333',
+};
+
+export default config;
+  

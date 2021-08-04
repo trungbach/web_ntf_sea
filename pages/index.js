@@ -7,8 +7,10 @@ import FeatureConnect from '@/components/HomeFeature/FeatureConnect';
 import styles from '../styles/Home.module.css'
 import FeatureTrending from '@/components/HomeFeature/FeatureTrending';
 import Footer from '@/components/Footer'
-export default function Home() {
+import {getListCategory, getCategoryById} from '@/pages/api/category'
 
+export default function Home({listCategory}) {
+  console.log(listCategory)
   return (
     <>
       <div className={styles.content}>
@@ -17,7 +19,7 @@ export default function Home() {
         <FeatureTrending />
         <FeatureSell />
         <FeatureResource />
-        <FeatureCategory />
+        <FeatureCategory listCategory={listCategory} />
         <FeatureConnect />
       </div>
       <Footer />
@@ -26,24 +28,13 @@ export default function Home() {
   )
 }
 
-// export const getStaticProps = async () => {
-//   const res = await fetch(`${server}/api/articles`)
-//   const articles = await res.json()
+export async function getStaticProps({params}) {
 
-//   return {
-//     props: {
-//       articles
-//     }
-//   }
-// }
+  const listCategory = await getListCategory();
 
-// export const getStaticProps = async () => {
-//   const res = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=6`)
-//   const articles = await res.json()
-
-//   return {
-//     props: {
-//       articles
-//     }
-//   }
-// }
+  return {
+      props: {
+         listCategory
+      }
+  }
+}

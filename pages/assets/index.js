@@ -4,6 +4,7 @@ import SideFilter from '@/components/SideFilter';
 import SideFilterMobile from '@/components/SideFilterMobile';
 import {Select, Button} from 'antd'
 import ItemSell from '@/components/ItemSell'
+import LoadingItem from '@/components/LoadingItem'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
 const {Option} = Select
@@ -56,6 +57,26 @@ const Assets = () => {
                     </div>
                 </div>
                 <div className={styles.assetsList}>
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    <LoadingItem />
+                    {/* <ItemSell />
                     <ItemSell />
                     <ItemSell />
                     <ItemSell />
@@ -74,8 +95,7 @@ const Assets = () => {
                     <ItemSell />
                     <ItemSell />
                     <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
+                    <ItemSell /> */}
                 </div>
             </div>
         </div>

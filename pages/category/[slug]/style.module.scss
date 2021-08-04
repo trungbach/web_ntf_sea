@@ -3,9 +3,8 @@
 .collection {
     margin-bottom: 6rem;
     .banner {
-        & > div {
-            width: 100%;
-        }
+        position: relative;
+        height: 22rem;
     }
     .content {
         .heading {

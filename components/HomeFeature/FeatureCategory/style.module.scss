@@ -3,11 +3,14 @@
 .featureCategory {
     margin-bottom: 8rem;
     .listCategory {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-gap: 2rem;
         margin-bottom: 5rem;
         .categoryItem {
+            :global {
+                .ant-card-cover {
+                    position: relative;
+                    height: 16rem;
+                }
+            }
             h3 {
                 text-align: center;
             }
