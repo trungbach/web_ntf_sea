@@ -12,11 +12,14 @@ import ItemSell from '@/components/ItemSell'
 import Footer from '@/components/Footer'
 import NavBar from '@/components/SideBar';
 import {getListCategory, getCategoryBySlug} from '@/pages/api/category'
+import { useRouter } from 'next/router'
 
 const {Option} = Select;
 
 const CategoryName = ({category}) => {
     console.log(category)
+    const router = useRouter()
+    
     const [isSeeMore, setIsSeeMore] = useState(false);
     const [heightDesc, setHeightDesc] = useState(-1);
     const [isShowSideBar, setIsShowSideBar] = useState(false);
@@ -89,6 +92,10 @@ const CategoryName = ({category}) => {
             </div>
        )
    }) 
+
+   if (router.isFallback) {
+    return <div>Loading...</div>
+    }
 
     return (
         <>
@@ -163,16 +170,14 @@ export default CategoryName;
 export async function getStaticPaths() {
     const listCategory = await getListCategory();
     return {
-        paths: listCategory?.map(category => ({params: { slug: category.slug }})) || [],
+        paths: listCategory?.map(category => ({params: { id: (category.id).toString() }})) || [],
         fallback: true
     }
 }
 
 export async function getStaticProps({params}) {
 
-    const listCategory = await getListCategory();
-    const {id} = listCategory.find(category => category.slug === params.slug)
-    const category = await getCategoryBySlug({id})
+    const category = await getCategoryBySlug({id: params.id})
 
     return {
         props: {
