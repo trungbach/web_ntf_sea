@@ -6,9 +6,13 @@ module.exports = {
   },
   reactStrictMode: true,
   images: {
-    domains: ['opensea.io', "storage.googleapis.com", "lh3.googleusercontent.com", "img.favpng.com", "www.designyourway.net"],
+    domains: ['opensea.io', "storage.googleapis.com", "lh3.googleusercontent.com", "img.favpng.com", "www.designyourway.net", "thedreamwithinpictures.com", 'ipfs.infura.io', 'payload.cargocollective.com', 'upload.wikimedia.org'],
   },
   trailingSlash: true,
+  react: {
+    useSuspense: false,
+    wait: true,
+  },
   // exportPathMap: async function (
   //   defaultPathMap,
   //   { dev, dir, outDir, distDir, buildId }

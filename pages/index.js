@@ -7,7 +7,7 @@ import FeatureConnect from '@/components/HomeFeature/FeatureConnect';
 import styles from '../styles/Home.module.css'
 import FeatureTrending from '@/components/HomeFeature/FeatureTrending';
 import Footer from '@/components/Footer'
-import {getListCategory, getCategoryById} from '@/pages/api/category'
+import {getListCategory} from '@/pages/api/category'
 
 export default function Home({listCategory}) {
   console.log(listCategory)

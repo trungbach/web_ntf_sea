@@ -13,15 +13,17 @@ import Footer from '@/components/Footer'
 import NavBar from '@/components/SideBar';
 import {getListCategory, getCategoryBySlug} from '@/pages/api/category'
 import { useRouter } from 'next/router'
-
+import {useCollection} from '@/lib/useCollection'
 const {Option} = Select;
 
 const CategoryName = ({category}) => {
-    console.log(category)
     const router = useRouter()
-    
+    const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
+    const {data} = useCollection(`category_id=${category.id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}`)
+    console.log(data)
     const [isSeeMore, setIsSeeMore] = useState(false);
     const [heightDesc, setHeightDesc] = useState(-1);
+    const [searchText, setSearchText] = useState('');
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const refDesc = useRef();
 
@@ -43,55 +45,26 @@ const CategoryName = ({category}) => {
     setIsSeeMore(false)
   }
 
-  const onChange = () => {}
   const handleChange = () => {}
 
-  const collection = [
-      { 
-          url: 'url'
-      },
-      { 
-        url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-  ]
-
-   const listCollection = collection.map((item, index) => {
+   const listItem = data?.map((item, index) => {
        return (
             <div key={index} className="col-12 col-md-4 col-lg-3 mb-4">
-                <ItemSell />
+                <ItemSell item={item} />
             </div>
        )
-   }) 
+   }) || ''
+
+   const setPrice = (minPrice, maxPrice) => {
+    setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
+}
+
+    const onKeyDown = e => {
+    if(e.key === "Enter") {
+        setFilterObj({...filterObj, key: searchText})
+    }
+    }
+
 
    if (router.isFallback) {
     return <div>Loading...</div>
@@ -107,7 +80,7 @@ const CategoryName = ({category}) => {
 
             <div onClick={()=>setIsShowSideBar(false)} className={styles.overlay} style={{display: isShowSideBar ? 'block' : 'none'}}></div>
 
-            <NavBar isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
+            <NavBar setPrice={setPrice} isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
 
             <div className={`${styles.content} container`}>
                 <div className={styles.heading}>
@@ -131,7 +104,7 @@ const CategoryName = ({category}) => {
                 </div>
                 <div className={styles.filter}>
                     <div>
-                        <Input prefix={<SearchOutlined />} placeholder="Search" onChange={onChange} />
+                        <Input prefix={<SearchOutlined />} placeholder="Search" onChange={e => setSearchText(e.target.value)}  onKeyPress={onKeyDown} />
                     </div>
                     <div className={styles.filterSelect}>
                         <Select
@@ -156,7 +129,7 @@ const CategoryName = ({category}) => {
                     </div>
                 </div>
                 <div className='row'>
-                    {listCollection}
+                    {listItem}
                 </div> 
             </div>
         </div>
@@ -169,9 +142,10 @@ export default CategoryName;
 
 export async function getStaticPaths() {
     const listCategory = await getListCategory();
+    console.log(listCategory?.map(category => ({params: { id: (category.id).toString() }})))
     return {
         paths: listCategory?.map(category => ({params: { id: (category.id).toString() }})) || [],
-        fallback: true
+        fallback: false
     }
 }
 

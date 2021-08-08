@@ -35,9 +35,27 @@ import Footer from '@/components/Footer'
 import noOffer from '@/public/noOffer.svg'
 import Listing from '@/components/Listing'
 import TradingHistory from '@/components/TradingHistory';
-const { Panel } = Collapse;
-const {Option} = Select
-const DetailItem = () => {
+import {getDetailItem, getMoreFromCollection} from '@/pages/api/detail'
+
+export async function getServerSideProps({ params }) {
+    console.log(params.detail)
+    const item = await getDetailItem({ id: params.detail[1] })
+
+
+    const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
+    return {
+        props: {
+            item,
+            moreFromCollection
+        }
+    }
+}
+
+const DetailItem = ({item, moreFromCollection}) => {
+
+    console.log(moreFromCollection)
+    const { Panel } = Collapse;
+    const {Option} = Select
 
     function callback(key) {
          console.log(key);
@@ -71,14 +89,14 @@ const DetailItem = () => {
                             </Tooltip>
                         </div>
                     </div>
-                    <header><h1>Mystic Toten</h1></header>
+                    <header><h1>{item?.name}</h1></header>
                 </div>
                 <div className={styles.imgDetail}>
                     <div className={styles.favorite}>
-                        <FavoriteBorderIcon /> <span>5</span>
+                        <FavoriteBorderIcon /> <span>{item.number_favorites}</span>
                     </div>
-                    <div>
-                        <Image src={imgDetail} alt='imgDetail' />
+                    <div style={{position: 'relative', height: '45rem'}}>
+                        <Image layout='fill' src={item.image_url} alt={item.image_url} />
                     </div> 
                 </div>
                 <div className={`${styles.about} d-none d-md-block`}>
@@ -309,7 +327,7 @@ const DetailItem = () => {
                         <TradingHistory />
                     </Panel>
                     <Panel header={<div><ViewModuleRoundedIcon /> More from this collection</div>} key="2">
-                        <MoreFromCollection />
+                        <MoreFromCollection moreFromCollection={moreFromCollection} />
                     </Panel>
                 </Collapse>
             </div>

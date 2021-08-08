@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Image from 'next/image'
 import {Select, Table} from 'antd';
 const {Option} = Select;
@@ -19,8 +19,14 @@ import klaytn from '@/public/klaytn.png';
 import LinkIcon from '@material-ui/icons/Link';
 import {useRouter} from 'next/router'
 import Footer from '@/components/Footer'
-const Rankings = () => {
+import moment from 'moment'
+import {useRanking} from '@/lib/useRanking'
+import {getRankingCollection} from '@/pages/api/ranking'
+import {getListCategory} from '@/pages/api/category'
 
+const Rankings = ({ rankingCollection, listCategory }) => {
+    const [rangeTime, setRangeTime] = useState([moment('2021-08-01 00:00:00').format('YYYY-MM-DD HH:mm:ss'), moment('2021-10-01 23:59:59').format('YYYY-MM-DD HH:mm:ss')])
+    const { data } = useRanking(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}`, rankingCollection)
     const router = useRouter();
     const columns = [
         {
@@ -130,53 +136,26 @@ const Rankings = () => {
         },
       ];
 
-      const data = [
-        {
-          collection: 'Bored Ape Yacht Club',
+      const dataSource = data.map(item => {
+        return {
+          collection: item.name,
           volume: '8.821,26',
           hour24: '-31.83%',
           day7: '+98.00%',
           floor_price: '6.35',
           owners: '4.9K',
           assets: '10.0K'
-        },
-        {
-            collection: 'Bored Ape Yacht Club',
-            volume: '8.821,26',
-            hour24: '-31.83%',
-            day7: '+98.00%',
-            floor_price: '6.35',
-            owners: '4.9K',
-            assets: '10.0K'
-          },
-          {
-            collection: 'Bored Ape Yacht Club',
-            volume: '8.821,26',
-            hour24: '-31.83%',
-            day7: '+98.00%',
-            floor_price: '6.35',
-            owners: '4.9K',
-            assets: '10.0K'
-          },
-          {
-            collection: 'Bored Ape Yacht Club',
-            volume: '8.821,26',
-            hour24: '-31.83%',
-            day7: '+98.00%',
-            floor_price: '6.35',
-            owners: '4.9K',
-            assets: '10.0K'
-          },
-          {
-            collection: 'Bored Ape Yacht Club',
-            volume: '8.821,26',
-            hour24: '-31.83%',
-            day7: '+98.00%',
-            floor_price: '6.35',
-            owners: '4.9K',
-            assets: '10.0K'
-          },
-    ];
+        }
+      })
+
+    const listCategoryUI = listCategory.map((item, index) => {
+      return (
+        <Option key={index} value={item.id}>
+          <Image width={24} height={24} src={newlight} alt='new'></Image>
+          {item.name}
+        </Option>
+      )
+    })
       
     const handleChange = () => {}
 
@@ -205,53 +184,18 @@ const Rankings = () => {
                     <Select
                     labelInValue
                     dropdownClassName={styles.dropdownMarket}
-                    defaultValue={{ value: 'lucy' }}
+                    defaultValue={{ value: '' }}
                     onChange={handleChange}
                     >
-                        <Option value="lucy">
+                        <Option value="">
                             <Image width={24} height={24} src={all} alt='all'></Image>
                             All NTFs
                         </Option>
-                        <Option value="jack">
-                            <Image width={24} height={24} src={newlight} alt='new'></Image>
-                            New
-                        </Option>
-                        <Option value="jacks">
-                            <Image width={24} height={24} src={art} alt='art'></Image>
-                            Art
-                        </Option>
-                        <Option value="jackss">
-                            <Image width={24} height={24} src={music} alt='music'></Image>
-                            Music
-                        </Option>
-                        <Option value="jackss">
-                            <Image width={24} height={24} src={domain} alt='domain'></Image>
-                            Domain Names
-                        </Option>
-                        <Option value="jackss">
-                            <Image width={24} height={24} src={virtual} alt='virtual'></Image>
-                            Virtual Worlds
-                        </Option>
-                        <Option value="jackss">
-                            <Image width={24} height={24} src={trading} alt='trading'></Image>
-                            Trading Cards
-                        </Option>
-                        <Option value="jackss">
-                            <Image width={24} height={24} src={collectibles} alt='collectibles'></Image>
-                            Collectibles
-                        </Option>
-                        <Option value="jackss">
-                            <Image width={24} height={24} src={sports} alt='sports'></Image>
-                            Sports
-                        </Option>
-                        <Option value="jackss">
-                            <Image width={24} height={24} src={utility} alt='utility'></Image>
-                            Utility
-                        </Option>
+                        {listCategoryUI}
                     </Select>
                     </div>
                 </div>
-                <Table columns={columns} dataSource={data}
+                <Table columns={columns} dataSource={dataSource}
                 onRow={(record, rowIndex) => {
                     return {
                       onClick: event => {
@@ -275,3 +219,18 @@ const Rankings = () => {
 }
 
 export default Rankings;
+
+export async function getStaticProps() {
+
+  const rangeTime= [moment('2021-08-01 00:00:00').format('YYYY-MM-DD HH:mm:ss'), moment('2021-10-01 23:59:59').format('YYYY-MM-DD HH:mm:ss')]
+  const rankingCollection = await getRankingCollection(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}`);
+
+  const listCategory = await getListCategory();
+
+  return {
+    props: {
+      rankingCollection,
+      listCategory
+    }
+  }
+}

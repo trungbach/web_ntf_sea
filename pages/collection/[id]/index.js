@@ -10,16 +10,22 @@ import Link from 'next/link'
 import ItemSell from '@/components/ItemSell'
 import Footer from '@/components/Footer'
 import NavBar from '@/components/SideBar';
-import bannerCategory from '@/public/bannerCategory.png'
-import avatarCategory from '@/public/avatarCategory.png'
 import etherSvg from '@/public/etherSvg.svg';
 import WebIcon from '@material-ui/icons/Web';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
+import {getListCollection, getCollectionBySlug} from '@/pages/api/collection'
+import {useCollection} from '@/lib/useCollection';
+
 const {Option} = Select;
 
-const CollectionName = () => {
+const CollectionName = ({collection}) => {
+    console.log(collection)
+    const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
+    const {data} = useCollection(`collection_id=${collection?.id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}`)
+    console.log(data)
 
     const [isSeeMore, setIsSeeMore] = useState(false);
+    const [searchText, setSearchText] = useState('');
     const [heightDesc, setHeightDesc] = useState(-1);
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const refDesc = useRef();
@@ -32,88 +38,52 @@ const CollectionName = () => {
         } else refDesc.current.style.height = '8rem';
     },[])
 
-  const seeMore = () => {
-    refDesc.current.style.height = 'auto';
-    setIsSeeMore(true);
-  }
+    const seeMore = () => {
+        refDesc.current.style.height = 'auto';
+        setIsSeeMore(true);
+    }
 
-  const seeLess = () => {
-    refDesc.current.style.height = '8rem';
-    setIsSeeMore(false)
-  }
+    const seeLess = () => {
+        refDesc.current.style.height = '8rem';
+        setIsSeeMore(false)
+    }
 
-  const onChange = () => {}
+    const setPrice = (minPrice, maxPrice) => {
+        setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
+    }
+
   const handleChange = () => {}
 
-  const collection = [
-      { 
-          url: 'url'
-      },
-      { 
-        url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-        { 
-            url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-        { 
-        url: 'url'
-        },
-  ]
-
-   const listCollection = collection.map((item, index) => {
-       return (
-            <div key={index} className="col-12 col-md-4 col-lg-3 mb-4">
-                <ItemSell />
-            </div>
-       )
-   }) 
+  const listItem = data?.map((item, index) => {
+      return (
+        <div key={index} className="col-12 col-md-4 col-lg-3 mb-4">
+            <ItemSell item={item}/>
+        </div>
+      )
+  }) || ''
 
     return (
         <>
         <div className={styles.collection}>
             <div className={styles.banner}>
-                <Image src={bannerCategory} alt="banner-category" />
+                <Image layout='fill' objectFit='cover' src={collection.banner_url} alt="banner-collection" />
             </div>
             <div onClick={()=>setIsShowSideBar(false)} className={styles.overlay} style={{display: isShowSideBar ? 'block' : 'none'}}></div>
-            <NavBar isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
+            <NavBar setPrice={setPrice} isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
             <div className={styles.content}>
                 <div className="container">
                 <div className={styles.heading}>
                     <div className={styles.avatar}>
-                        <Image style={{objectFit: 'cover'}} src={avatarCategory} alt="avatar-category" />
+                        <Image layout='fill' style={{objectFit: 'cover'}} src={collection.logo_url} alt="logo-collection" />
                     </div>
-                    <h1>Avid Lines</h1>
+                    <h1>{collection.name}</h1>
                     <div className={styles.about}>
                     <div className={styles.aboutContainer}>
                         <div>
                             <Link href='/assets'>
                                 <a>
                                     <h3>
-                                        454
+                                        {collection.created}
                                     </h3>
                                     <span>items</span>
                                 </a>
@@ -123,7 +93,7 @@ const CollectionName = () => {
                             <Link href='/assets'>
                                 <a>
                                     <h3>
-                                        302
+                                        {collection.owner}
                                     </h3>
                                     <span>owners</span>
                                 </a>
@@ -153,21 +123,11 @@ const CollectionName = () => {
                     </div>
                     
                     <p ref={refDesc}>
-                    An online community of makers, developers, and traders is pushing the art world into 
-                    new territory. It all started with CryptoPunks, a set of 10,000 randomly generated 
-                    punks that proved demand for the digital ownership of non-physical items and 
-                    collectibles in 2017, and the market has evolved rapidly ever since.
-                    As the underlying technology develops, a growing pool of artists are selling 
-                    verified, immutable works to art lovers and speculators, and the space as a whole 
-                    is waking up to the power and potential of decentralized networks and currencies. 
-                    With creators and collectors generating meaningful revenue through an entirely 
-                    digital ecosystem, the tokenization of gifs, memes, and MP4s is emerging as the 
-                    most exciting and relevant blockchain use case. From SuperRare to Josie to JOY, 
-                    browse and trade NFTs from some of the world&apos;s top crypto artists on OpenSea.
+                        {collection.description}
                     </p>
                     {heightDesc > 80 && 
-                        !isSeeMore ? <div  type='button' className={styles.seeMoreBtn} onClick={seeMore}><ExpandMoreIcon /></div>
-                        : <div type='button' className={styles.seeMoreBtn} onClick={seeLess}> <ExpandLessIcon /></div>}
+                        (!isSeeMore ? <div  type='button' className={styles.seeMoreBtn} onClick={seeMore}><ExpandMoreIcon /></div>
+                        : <div type='button' className={styles.seeMoreBtn} onClick={seeLess}> <ExpandLessIcon /></div>)}
                 </div>
                 <div className={styles.social}>
                         <Link href='/'><a>
@@ -193,7 +153,7 @@ const CollectionName = () => {
                 </div>
                 <div className={styles.filter}>
                     <div>
-                        <Input prefix={<SearchOutlined />} placeholder="Search" onChange={onChange} />
+                        <Input prefix={<SearchOutlined />} placeholder="Search" onChange={e => setSearchText(e.target.value)}  onKeyPress={onKeyDown} />
                     </div>
                     <div className={styles.filterSelect}>
                         <Select
@@ -202,7 +162,7 @@ const CollectionName = () => {
                             onChange={handleChange}
                             >
                             <Option value="lucy">Sort by</Option>
-                            <Option value="jack">Recently Listed</Option>
+                            <Option value="jac1k">Recently Listed</Option>
                             <Option value="jack">Recently Sold</Option>
                             <Option value="jacks">Ending Soon</Option>
                             <Option value="jackss">Price: Low to High</Option>
@@ -218,7 +178,7 @@ const CollectionName = () => {
                     </div>
                 </div>
                 <div className='row'>
-                    {listCollection}
+                    {listItem}
                 </div> 
             </div>
             </div>
@@ -230,4 +190,23 @@ const CollectionName = () => {
 
 export default CollectionName;
 
+export async function getStaticPaths() {
+
+    const listCollection = await getListCollection();
+    return {
+        paths: listCollection?.map(collection => ({ params: { id: collection.id.toString() } })) || [],
+        fallback: false
+    }
+
+}
+
+export async function getStaticProps({params}) {
+
+    const collection = await getCollectionBySlug({id: params.id});
+    return {
+        props: {
+            collection
+        }
+    }
+}
 

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Collapse,  Select, Input, Checkbox  } from 'antd';
+import { Collapse,  Select, Input, Checkbox, Button  } from 'antd';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import styles from './style.module.scss';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -11,7 +11,7 @@ import Image from 'next/image'
 const {Option} = Select
 const { Panel } = Collapse;
 
-const NavBar = ({isShowSideBar, setIsShowSideBar}) => {
+const NavBar = ({isShowSideBar, setIsShowSideBar, setPrice}) => {
 
     const callback = (key) => {
         console.log(key);
@@ -27,10 +27,38 @@ const NavBar = ({isShowSideBar, setIsShowSideBar}) => {
     const onChangeCollections = () => {}
     const onChangeSale = () => {}
 
+    const [minPrice, setMinPrice] = useState('')
+    const [maxPrice, setMaxPrice] = useState('')
+    const [wrongPrice, setWrongPrice] = useState(false)
+
+    const handleKeyPrice = e => {
+        if(e.key === '-' || e.key === ',') {
+            e.preventDefault()
+        }
+    }
+
+    const setMinMax = (e, type) => {
+        if(type === -1) {
+            setMinPrice(e.target.value)
+            if(e.target.value > maxPrice && maxPrice !== ''  && e.target.value !== '') setWrongPrice(true)
+            else setWrongPrice(false)
+        }   
+        else {
+            setMaxPrice(e.target.value);
+            if(e.target.value < minPrice && minPrice !== '' && e.target.value !== '') setWrongPrice(true)
+            else setWrongPrice(false)
+        }
+
+    } 
+
+    const handleSetPrice = () => {
+        setPrice(minPrice, maxPrice)
+    }
+
     return (
         <div className={styles.sideFilter} style={{right: isShowSideBar ? '0' : (widthScreen >= 768 ? '-380px' : '-100%')}}>
                 <div className={styles.sideCollapse}>
-                    <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']} onChange={callback}>
+                    <Collapse  expandIconPosition="right" defaultActiveKey={['1']} onChange={callback}>
                         <div className={styles.filterTitle}>
                             <div>
                                 <FilterListIcon /> Filter
@@ -39,53 +67,22 @@ const NavBar = ({isShowSideBar, setIsShowSideBar}) => {
                                 <CloseIcon />
                             </div>
                         </div>
-                        {/* <Panel header="Status" key="1">
-                            <div className={styles.filterList}>
-                                <div>Buy Now</div>
-                                <div>On Auction</div>
-                                <div>New</div>
-                                <div>Has Offers</div>
-                            </div>
-                        </Panel> */}
                         <Panel header="Price" key="1">
                             <div className={styles.filterPrice}>
-                                <Select
-                                labelInValue
-                                defaultValue={{ value: 'lucy' }}
-                                dropdownClassName={styles.selectPrice}
-                                onChange={handleChange}
-                                >
-                                    <Option value="lucy"><AttachMoneyIcon /> United States Dollar (USD)</Option>
-                                    <Option value="jackss"><Image src={ether} alt='ether ETH' />Ether (ETH)</Option>
-                                </Select>
-                                <div className={styles.rangePrice}>
-                                    <Input placeholder='Min' type="number"/>
-                                    <span>to</span>
-                                    <Input placeholder='Max' type="number"/>
+                                <div>
+                                    <Image objectFit='contain' src={ether} alt='ether ETH' />Ether (ETH)
                                 </div>
-                                <div type="button" className={styles.applyPrice}>Apply</div>
-                            </div>
-                        </Panel>
-                        <Panel header="On Sale In" key="2">
-                            <div className={styles.filterCollections}>
-                                <Input prefix={<SearchOutlined />} placeholder="Filter" allowClear onChange={onChangeCollections} />
-                                <ul style={{overflowY: 'scroll'}}>
-                                    <Checkbox.Group style={{ width: '100%' }} onChange={onChangeSale}>
-                                        <Checkbox value="A">ETH</Checkbox>
-                                        <Checkbox value="B">WETH</Checkbox>
-                                        <Checkbox value="C">0xBTC</Checkbox>
-                                        <Checkbox value="D">1337</Checkbox>
-                                        <Checkbox value="E">1MT</Checkbox>
-                                        <Checkbox value="F">1MT</Checkbox>
-                                        <Checkbox value="G">1MT</Checkbox>
-                                        <Checkbox value="H">1MT</Checkbox>
-                                        <Checkbox value="I">1MT</Checkbox>
-                                        <Checkbox value="K">1MT</Checkbox>
-                                        <Checkbox value="L">1MT</Checkbox>
-                                        <Checkbox value="M">1MT</Checkbox>
-                                        <Checkbox value="N">1MT</Checkbox>
-                                    </Checkbox.Group>
-                                </ul>
+                                <div className={styles.rangePrice}>
+                                    <Input placeholder='Min' type="number" min="0" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' 
+                                            onChange={e => setMinMax(e,-1)} onKeyPress={handleKeyPrice}/>
+
+                                    <span>to</span>
+
+                                    <Input placeholder='Max' type="number" min="0" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' 
+                                            onChange={e => setMinMax(e, 1)} onKeyPress={handleKeyPrice} />
+                                </div>
+                                {wrongPrice && <p className={styles.wrongPrice}>Minimum must be less than maximum</p>}
+                                <Button disabled={!wrongPrice ? false : true}  onClick={handleSetPrice} className={styles.applyPrice}>Apply</Button>
                             </div>
                         </Panel>
                     </Collapse>

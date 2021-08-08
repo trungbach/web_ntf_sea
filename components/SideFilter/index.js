@@ -18,7 +18,7 @@ import virtual from '../../public/virtual-worlds-light.svg';
 const {Option} = Select
 const { Panel } = Collapse;
 const { Sider } = Layout;
-const SideFilter = () => {
+const SideFilter = ({ setPrice, listCategory, listCollection, setCategoryId, setCollectionId }) => {
 
     const sideRef = useRef()
 
@@ -27,7 +27,17 @@ const SideFilter = () => {
     }
 
     const [widthScreen, setWidthScreen] = useState()
+    const [minPrice, setMinPrice] = useState('')
+    const [maxPrice, setMaxPrice] = useState('')
+    // const [categoryId, setCategoryId] = useState('')
+    // const [collectionId, setCollectionId] = useState('')
+    const [wrongPrice, setWrongPrice] = useState(false)
 
+    const handleKeyPrice = e => {
+        if(e.key === '-' || e.key === ',') {
+            e.preventDefault()
+        }
+    }
     useEffect(() => {
         setWidthScreen(window.screen.width)
     },[])
@@ -41,138 +51,83 @@ const SideFilter = () => {
         setCollapsed(collapsed);
     };
 
-    const listCollection = (
-        <>
-            <li>
-                <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
+    const listCollectionUI = listCollection.map((item, index) => {
+        return (
+            <li key={index} onClick={()=>setCollectionId(item.id)} className='justify-content-center'>
+                 <Image layout='fill' src={item.logo_url} alt={item.logo_url} /> 
+                 {item.name}
             </li>
-            <li>
-                <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
+        )
+    })
+
+    const listCategoryUI = listCategory.map((item, index) => {
+        return (
+            <li key={index} onClick={()=>setCategoryId(item.id)}>
+                <Image width={24} height={24} src={art} alt='art'></Image>
+                    {item.name}
             </li>
-            <li>
-                <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
-            </li>
-            <li>
-                <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
-            </li>
-            <li>
-                <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
-            </li>
-            <li>
-                <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
-            </li>
-            <li>
-                <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
-            </li>
-            <li>
-                <Image src={collectionSider} alt='collection-sider' /> Bored Ape Kennel Club
-            </li>
-        </>
-    )
+        )
+    })
 
     const handleChange = () => {}
     const onChangeCollections = () => {}
     const onChangeSale = () => {}
 
+    const setMinMax = (e, type) => {
+        if(type === -1) {
+            setMinPrice(e.target.value)
+            if(e.target.value > maxPrice && maxPrice !== ''  && e.target.value !== '') setWrongPrice(true)
+            else setWrongPrice(false)
+        }   
+        else {
+            setMaxPrice(e.target.value);
+            if(e.target.value < minPrice && minPrice !== '' && e.target.value !== '') setWrongPrice(true)
+            else setWrongPrice(false)
+        }
+
+    } 
+
+    const handleSetPrice = () => {
+        setPrice(minPrice, maxPrice)
+    }
+
     return (
         <div ref={sideRef} className={styles.sideFilter}>
-            <Sider width={widthScreen >= 768 ? '340px' : '100%'} collapsedWidth={widthScreen >= 768 ? '60px' : '0px'} theme="light" collapsible collapsed={collapsed} onCollapse={onCollapse}>
+            <Sider width={widthScreen >= 768 ? '300px' : '100%'} collapsedWidth={widthScreen >= 768 ? '60px' : '0px'} theme="light" collapsible collapsed={collapsed} onCollapse={onCollapse}>
                 <div id='collapseDiv'>
                     <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']} onChange={callback}>
                         <div className={styles.filterTitle}><FilterListIcon /> Filter
                         </div>
-                        {/* <Panel header="Status" key="1">
-                            <div className={styles.filterList}>
-                                <div>Buy Now</div>
-                                <div>On Auction</div>
-                                <div>New</div>
-                                <div>Has Offers</div>
-                            </div>
-                        </Panel> */}
                         <Panel header="Price" key="1">
                             <div className={styles.filterPrice}>
-                                <Select
-                                labelInValue
-                                defaultValue={{ value: 'lucy' }}
-                                dropdownClassName={styles.selectPrice}
-                                onChange={handleChange}
-                                >
-                                    <Option value="lucy"><AttachMoneyIcon /> United States Dollar (USD)</Option>
-                                    <Option value="jackss"><Image src={ether} alt='ether ETH' />Ether (ETH)</Option>
-                                </Select>
-                                <div className={styles.rangePrice}>
-                                    <Input placeholder='Min' type="number"/>
-                                    <span>to</span>
-                                    <Input placeholder='Max' type="number"/>
+                                <div>
+                                    <Image objectFit='contain' src={ether} alt='ether ETH' />Ether (ETH)
                                 </div>
-                                <div type="button" className={styles.applyPrice}>Apply</div>
+                                <div className={styles.rangePrice}>
+                                    <Input placeholder='Min' type="number" min="0" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' 
+                                                onChange={e => setMinMax(e,-1)} onKeyPress={handleKeyPrice}/>
+
+                                        <span>to</span>
+
+                                    <Input placeholder='Max' type="number" min="0" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' 
+                                            onChange={e => setMinMax(e, 1)} onKeyPress={handleKeyPrice} />
+                                </div>
+                                {wrongPrice && <p className={styles.wrongPrice}>Minimum must be less than maximum</p>}
+                                <Button disabled={!wrongPrice ? false : true}  onClick={handleSetPrice} className={styles.applyPrice}>Apply</Button>
                             </div>
                         </Panel>
                         <Panel header="Collections" key="2">
                             <div className={styles.filterCollections}>
                                 <Input prefix={<SearchOutlined />} placeholder="Filter" allowClear onChange={onChangeCollections} />
-                                <ul style={{overflowY: 'scroll'}}>
-                                    {listCollection}
+                                <ul style={{overflowY: 'auto'}}>
+                                    {listCollectionUI}
                                 </ul>
                             </div>
                         </Panel>
                         <Panel header="Categories" key="3">
                             <div className={styles.filterCollections}>
                                 <ul style={{overflowY: 'scroll'}}>
-                                    <li>
-                                        <Image width={24} height={24} src={art} alt='art'></Image>
-                                            Art
-                                    </li>
-                                    <li>
-                                        <Image width={24} height={24} src={music} alt='music'></Image>
-                                            Music
-                                    </li>
-                                    <li>
-                                        <Image width={24} height={24} src={domain} alt='domain'></Image>
-                                            Domain Names
-                                    </li>
-                                    <li>
-                                        <Image width={24} height={24} src={virtual} alt='virtual'></Image>
-                                            Virtual Worlds
-                                    </li>
-                                    <li>
-                                        <Image width={24} height={24} src={trading} alt='trading'></Image>
-                                            Trading Cards
-                                    </li>
-                                    <li>
-                                        <Image width={24} height={24} src={collectibles} alt='collectibles'></Image>
-                                            Collectibles
-                                    </li>
-                                    <li>
-                                        <Image width={24} height={24} src={sports} alt='sports'></Image>
-                                            Sports
-                                    </li>
-                                    <li>
-                                        <Image width={24} height={24} src={utility} alt='utility'></Image>
-                                            Utility
-                                    </li>
-                                </ul>
-                            </div>
-                        </Panel>
-                        <Panel header="On Sale In" key="4">
-                            <div className={styles.filterCollections}>
-                                <Input prefix={<SearchOutlined />} placeholder="Filter" allowClear onChange={onChangeCollections} />
-                                <ul style={{overflowY: 'scroll'}}>
-                                    <Checkbox.Group style={{ width: '100%' }} onChange={onChangeSale}>
-                                        <Checkbox value="A">ETH</Checkbox>
-                                        <Checkbox value="B">WETH</Checkbox>
-                                        <Checkbox value="C">0xBTC</Checkbox>
-                                        <Checkbox value="D">1337</Checkbox>
-                                        <Checkbox value="E">1MT</Checkbox>
-                                        <Checkbox value="F">1MT</Checkbox>
-                                        <Checkbox value="G">1MT</Checkbox>
-                                        <Checkbox value="H">1MT</Checkbox>
-                                        <Checkbox value="I">1MT</Checkbox>
-                                        <Checkbox value="K">1MT</Checkbox>
-                                        <Checkbox value="L">1MT</Checkbox>
-                                        <Checkbox value="M">1MT</Checkbox>
-                                        <Checkbox value="N">1MT</Checkbox>
-                                    </Checkbox.Group>
+                                   {listCategoryUI}
                                 </ul>
                             </div>
                         </Panel>

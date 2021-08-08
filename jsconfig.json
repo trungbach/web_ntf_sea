@@ -7,7 +7,9 @@
         "@/components/*": ["components/*"],
         "@/config/*": ["config/*"],
         "@/public/*": ["public/*"],
-        "@/services/*": ["services/*"]
+        "@/services/*": ["services/*"],
+        "@/lib/*": ["lib/*"],
+        "@/artifacts/*": ["artifacts/*"]
       }
     }
   }

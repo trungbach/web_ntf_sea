@@ -1,16 +1,17 @@
 .sellItemContainer {
     transition: all 0.1s ease 0s;
-    padding: 0.7rem;
+    padding: 1rem;
     &:hover {
         transform: translateY(-2px);
     }
 }
 .sellItem {
-    display: block;
-    max-width: 26rem;
     :global {
         .ant-card {
             border-radius: 0.7rem;
+        }
+        .ant-card-bordered {
+            border: 1px solid rgb(229, 232, 235);
         }
         .ant-card-body {
             padding: 1rem;
@@ -26,12 +27,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
+        height: 22rem;
+        min-width: 23rem;
         & > div {
-            width: 100%;
             border-radius: 0.7rem;
-            img {
-                object-fit: cover;
-            }
         }
     }
     .sellItemContent {

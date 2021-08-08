@@ -80,6 +80,22 @@
       }
   }
   .filterPrice {
+      & > div:first-child {
+        display: flex;
+        background-color: rgb(255, 255, 255);
+        border-radius: 5px;
+        border: 1px solid rgb(229, 232, 235);
+        width: 100%;
+        padding: 12px;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: 500;
+        & > div {
+            width: 16px;
+            height: 16px;
+            margin-right: 1rem !important;
+        }
+      }
       .rangePrice {
           margin-top: 1.5rem;
           display: flex;
@@ -87,16 +103,22 @@
           span {
               margin: 0 1rem;
           }
+          
           :global {
               .ant-input {
                   background-color: transparent;
-                  border: none;
                   flex: 1 0 0%;
                   outline: none;
                   padding: 1rem;
                   min-width: 0px;
               }
           }
+      }
+      .wrongPrice {
+        font-weight: 500;
+        font-size: 12px;
+        color: rgb(235, 87, 87);
+        margin-top: 1.6rem;
       }
       .applyPrice {
           margin-top: 2rem;
@@ -109,12 +131,14 @@
           justify-content: center;
           font-size: 16px;
           font-weight: 600;
-          padding: 12px 20px;
-          background-color: rgb(255, 255, 255);
-          border: 1px solid rgb(32, 129, 226);
-          color: rgb(32, 129, 226);
-
-          &:hover {
+          padding: 10px 25px;
+          height: auto;
+            &:not([disabled]) {
+                background-color: rgb(255, 255, 255);
+                border: 1px solid rgb(32, 129, 226);
+                color: rgb(32, 129, 226);
+            }
+          &:not(:disabled):hover {
               box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
               transition: all 0.2s ease 0s;
           }

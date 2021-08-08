@@ -6,18 +6,64 @@ import {Select, Button} from 'antd'
 import ItemSell from '@/components/ItemSell'
 import LoadingItem from '@/components/LoadingItem'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import {getListItem} from '@/pages/api/asset'
+import {useAsset} from '@/lib/useAsset';
+import {getListCategory} from '../api/category';
+import {getListCollection} from '../api/collection';
 
 const {Option} = Select
 
-const Assets = () => {
+export async function getStaticProps() {
+
+    const listItem = await getListItem();
+    const listCategory = await getListCategory();
+    const listCollection = await getListCollection();
+
+    return {
+        props: {
+            listItem,
+            listCategory,
+            listCollection
+        }
+    }
+}
+
+
+const Assets = ({listItem, listCategory, listCollection}) => {
+    console.log( listCollection)
+    const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '', collection_id: '', category_id: '' })
+
+    const {data} = useAsset(`category_id=${filterObj.category_id}&collection_id=${filterObj.collection_id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}`, listItem)
+    console.log(data)
 
     const handleChangeTypeItem = () => {}
     const handleChangeSortBy = () => {}
     const [isShowSideBar, setIsShowSideBar] = useState(false);
+
+    const setPrice = (minPrice, maxPrice) => {
+        setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
+    }
+
+    const onKeyDown = e => {
+        if(e.key === "Enter") {
+            setFilterObj({...filterObj, key: searchText})
+        }
+    }
+
+    const listItemResponse = data.map((item, index) => {
+        return (
+            <ItemSell item={item} key={index} />
+        )
+    })
+
+    const setCollectionId = (id) => setFilterObj({...filterObj, collection_id: id})
+    const setCategoryId = (id) => setFilterObj({...filterObj, category_id: id})
+
     return (
         
         <div className={styles.assets}> 
-            <SideFilter />
+            <SideFilter setCollectionId={setCollectionId} setCategoryId={setCategoryId} 
+                        setPrice={setPrice} listCategory={listCategory} listCollection={listCollection} />
             <SideFilterMobile isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
             <div className={styles.showFilter}>
                 <Button className={styles.buttonShowFilter} onClick={() =>setIsShowSideBar(true)}>Filter</Button>
@@ -57,6 +103,7 @@ const Assets = () => {
                     </div>
                 </div>
                 <div className={styles.assetsList}>
+                    {/* <LoadingItem />
                     <LoadingItem />
                     <LoadingItem />
                     <LoadingItem />
@@ -74,31 +121,13 @@ const Assets = () => {
                     <LoadingItem />
                     <LoadingItem />
                     <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    {/* <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell />
-                    <ItemSell /> */}
+                    <LoadingItem /> */}
+                    {listItemResponse}
                 </div>
             </div>
         </div>
     );
 }
 export default Assets;
+
+

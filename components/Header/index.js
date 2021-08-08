@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Input } from 'antd';
 import Image from 'next/image'
 import {SearchOutlined  } from '@ant-design/icons'
@@ -6,25 +6,76 @@ import { Menu, Dropdown } from 'antd';
 import opensea from '../../public/opensea.svg'
 import styles from './style.module.scss'
 import all from '../../public/allnfts-light.svg';
-import art from '../../public/art-light.svg';
-import collectibles from '../../public/collectibles-light.svg';
-import domain from '../../public/domain-names-light.svg';
-import newlight from '../../public/new-light.svg';
-import music from '../../public/music-light.svg';
-import sports from '../../public/sports-light.svg';
-import trading from '../../public/trading-cards-light.svg';
-import utility from '../../public/utility-light.svg';
-import virtual from '../../public/virtual-worlds-light.svg';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import Wallet from '@/components/Wallet'
 import Link from 'next/link'
+import {useRouter} from 'next/router'
+import {getListCategory} from '@/pages/api/category'
+import Cookies  from 'js-cookie'
+import avatarUser from '@/public/avatarUser.png'
 
 const Header = () => {
 
-    const onChange = () => {}
+    const router = useRouter()
+    const [searchText, setSearchText] =  useState('')
+    const [listCategory, setListCategory] = useState([])
+    const [user, setUser] = useState(null)
+    useEffect(() => {
+        const getCategory = async() => {
+             const listCategory = await getListCategory();
+             setListCategory(listCategory)
+        }
+        getCategory();
+    },[])
+
+    const [isLogined, setIsLogined] = useState(false)
+
+    // useEffect(() => {
+    //     setIsLogined(Cookies .get('token') !== undefined)
+    // },[Cookies.get('token')])
+
+    useEffect(() => {
+        setUser(localStorage.getItem('user'));
+    },[])
+
+    const onChange = (e) => {
+        setSearchText(e.target.value)
+    }
+    const onKeyPress = e => {}
+    // const onKeyPress = e => {
+    //     console.log(router.pathname)
+    //     if(e.key === 'Enter') {
+    //         if(router.pathname !== '/assets') {
+    //             router.push({ pathname: '/assets', query: { key: e.target.value } })
+    //             // router.push({
+    //             //     pathname: '/assets?[pid]',
+    //             //     query: { pid: e.target.value },
+    //             // })
+    //         } else router.push({ pathname: '/assets', query: { key: e.target.value }, {shallow: true} })
+    //     }
+    // }
 
     const [isShowWallet, setIsShowWallet] = useState(false)
+
+    const logOut = () => {
+        Cookies.remove('token')
+        setIsLogined(false)
+    }
+
+    const categories = listCategory.length > 0 && listCategory.map((item, index) => {
+        return (
+            <Menu.Item key={index}>
+                 <Link href={`/category/${item.id}`}>
+                    <a>
+                        <Image width={24} height={24} src={item.logo_url} alt={item.logo_url} />
+                        {item.name}
+                    </a>
+                </Link>
+            </Menu.Item>
+        )
+    })
+
 
     const menuMarket = (
         <Menu className={styles.menuMarket}>
@@ -36,85 +87,7 @@ const Header = () => {
                     </a>
                 </Link>
             </Menu.Item>
-            <Menu.Item key={2}>
-                <Link href='/category/art'>
-                    <a>
-                        <Image width={24} height={24} src={newlight} alt='new'></Image>
-                        New
-                    </a>
-                </Link>
-            </Menu.Item>
-            <Menu.Item key={3}>
-                <Link href='/category/art'>
-                     <a>
-                        <Image width={24} height={24} src={art} alt='art'></Image>
-                        Art
-                    </a>
-                </Link>
-               
-            </Menu.Item>
-            <Menu.Item key={4}>
-                <Link href='/category/music'>
-                    <a>
-                        <Image width={24} height={24} src={music} alt='music'></Image>
-                        Music
-                    </a>
-                </Link>
-            </Menu.Item>
-            <Menu.Item key={5}>
-                <Link href='/category/domain-names'>
-                <a>
-                <Image width={24} height={24} src={domain} alt='domain'></Image>
-                    Domain Names
-                </a>    
-                </Link>
-                
-            </Menu.Item>
-            <Menu.Item key={6}>
-                <Link href='/category/virtual-worlds'>
-                <a>
-                <Image width={24} height={24} src={virtual} alt='virtual'></Image>
-                    Virtual Worlds
-                </a>    
-                </Link>
-                
-            </Menu.Item>
-            <Menu.Item key={7}>
-                <Link href='/category/trading-cards'>
-                <a>
-                <Image width={24} height={24} src={trading} alt='trading'></Image>
-                    Trading Cards
-                </a>    
-                </Link>
-                
-            </Menu.Item>
-            <Menu.Item key={8}>
-                <Link href='/category/collectibles'>
-                <a>
-                <Image width={24} height={24} src={collectibles} alt='collectibles'></Image>
-                    Collectibles
-                </a>    
-                </Link>
-                
-            </Menu.Item>
-            <Menu.Item key={9}>
-                <Link href='/category/sports'>
-                <a>
-                <Image width={24} height={24} src={sports} alt='sports'></Image>
-                    Sports
-                </a>    
-                </Link>
-                
-            </Menu.Item>
-            <Menu.Item key={10}>
-                <Link href='/category/utility'>
-                <a>
-                <Image width={24} height={24} src={utility} alt='utility'></Image>
-                    Utility
-                </a>    
-                </Link>
-                
-            </Menu.Item>
+            {categories}
         </Menu>
     )
 
@@ -186,7 +159,7 @@ const Header = () => {
             </Menu.Item>
             <Menu.Item>
                 <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                   My categorys
+                   My Collection
                 </a>
             </Menu.Item>
             <Menu.Item>
@@ -199,6 +172,11 @@ const Header = () => {
                    My Account Settings
                 </a>
             </Menu.Item>
+            {isLogined &&  
+                <Menu.Item onClick={logOut}>
+                    Log Out
+                </Menu.Item>
+            }
         </Menu>
     )
 
@@ -218,7 +196,8 @@ const Header = () => {
                 <span className="navbar-toggler-icon"></span>
                 </button>
                 <form className={`${styles.form} d-flex`}>
-                        <Input prefix={<SearchOutlined />} placeholder="Search items, categorys, and accounts" allowClear onChange={onChange} />
+                        <Input prefix={<SearchOutlined />} placeholder="Search items, categorys, and accounts" 
+                        allowClear onChange={onChange} onKeyPress={onKeyPress} />
                 </form>
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div className={`navbar-nav ${styles.navRight}`}>
@@ -228,11 +207,12 @@ const Header = () => {
                         <Dropdown overlay={menuStats} placement="bottomLeft">
                             <a className="nav-link" href="#">Stats</a>
                         </Dropdown>
+                        <Link href='/create'>Create</Link>
                         {/* <Dropdown overlay={menuResource} placement="bottomLeft">
                             <a className="nav-link" href="#">Resources</a>
                         </Dropdown> */}
                         <Dropdown overlay={menuUser} placement="bottomRight">
-                            <a className="nav-link" href="#"><AccountCircleOutlinedIcon /></a>
+                            <a className="nav-link" href="#">{user ? <Image width={40} height={40} src={avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
                         </Dropdown>
 
                         <span type='button' title='Wallet' className={`nav-link ${styles.walletBtn}`} onClick={() =>setIsShowWallet(!isShowWallet)}>

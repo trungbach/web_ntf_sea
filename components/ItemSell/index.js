@@ -9,29 +9,29 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import { Card } from 'antd';
 import itemThumb from '@/public/itemThumb.png';
 
-const ItemSell = () => {
+const ItemSell = ({item}) => {
     return (
         <div className={styles.sellItemContainer}>
-            <Link href='/assets/item/id' >
+            <Link href={`/assets/${item.owner}/${item.id}`} >
                     <a className={styles.sellItem}>
                         <Card
                             hoverable
                         >
                             <div className={styles.itemFavorite}>
-                                <FavoriteBorderIcon /> <span>1</span>
+                                <FavoriteBorderIcon /> <span>{item.number_favorites}</span>
                             </div>
                             <div className={styles.itemImg}>
-                                <Image  alt="hot asset" src={itemThumb} />
+                                <Image objectFit='cover'  alt={item.image_url} src={item.image_url} layout='fill'/>
                             </div>
                             <div className={styles.sellItemContent}>
                                 <div>
                                     <div>
                                         Zed Run <VerifiedUserIcon />
-                                        <div className={styles.ownerName}>Kirby</div>
+                                        <div className={styles.ownerName}>{item.name}</div>
                                     </div>
                                     <div className={styles.itemPrice}>
                                         <span>Price</span>
-                                        <div><Image src={eth} alt='eth'></Image> 0,089</div>
+                                        <div><Image src={eth} alt='eth'></Image> {item.price}</div>
                                     </div>
                                 </div>
                                 <div>

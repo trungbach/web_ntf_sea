@@ -38,21 +38,20 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
           window.web3 = new Web3(window.web3.currentProvider)
         }
 
-        const publicAddress = await web3.eth.getCoinbase().toLowerCase()
-
+        const publicAddress = await web3.eth.getCoinbase()
         const resNonce = await checkPublicAddress({public_address: publicAddress})
         setAccount(JSON.parse(resNonce.text).data)
 
         const {nonce} = JSON.parse(resNonce.text).data
-
+        console.log(nonce)
         // handleSignMessage
         web3.eth.personal.sign(
             web3.utils.fromUtf8(`I am signing my one-time nonce: ${nonce}`),
             publicAddress,
             async (err, signature) => {
                 console.log(signature)
-                const resSignature = await verifySignature({public_address: publicAddress, signature});
-                console.log(resSignature)
+                // const resSignature = await verifySignature({public_address: publicAddress, signature});
+                // console.log(resSignature)
               }
           )
       }

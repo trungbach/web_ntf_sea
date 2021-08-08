@@ -3,9 +3,8 @@
 .collection {
     margin-bottom: 6rem;
     .banner {
-        & > div {
-            width: 100%;
-        }
+        position: relative;
+        height: 22rem;
     }
     .content {
         position: relative;
@@ -178,12 +177,11 @@
                 }
             }
             & > div:first-child {
-                flex-grow: 2;
+                flex-grow: 100;
                 @media (max-width: 768px) {
                     & {
                         width: 100%;
                         margin-bottom: 1.5rem;
-                        /* flex-direction: column; */
                     }
                 }
             }

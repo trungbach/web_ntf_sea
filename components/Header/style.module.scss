@@ -69,7 +69,11 @@
                 background-color: transparent;
             }
         }
-        
+        .ant-dropdown-trigger {
+            img {
+                border-radius: 50%;
+            }
+        }
     }
 }
 
