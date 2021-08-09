@@ -21,13 +21,13 @@ const Header = () => {
     const [searchText, setSearchText] =  useState('')
     const [listCategory, setListCategory] = useState([])
     const [user, setUser] = useState(null)
-    // useEffect(() => {
-    //     const getCategory = async() => {
-    //          const listCategory = await getListCategory();
-    //          setListCategory(listCategory)
-    //     }
-    //     getCategory();
-    // },[])
+    useEffect(() => {
+        const getCategory = async() => {
+             const listCategory = await getListCategory();
+             setListCategory(listCategory)
+        }
+        getCategory();
+    },[])
 
     const [isLogined, setIsLogined] = useState(false)
 
