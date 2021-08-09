@@ -61,6 +61,12 @@ const CollectionName = ({collection}) => {
         </div>
       )
   }) || ''
+  
+  const onKeyDown = e => {
+    if(e.key === "Enter") {
+        setFilterObj({...filterObj, key: searchText})
+    }
+    }
 
     return (
         <>

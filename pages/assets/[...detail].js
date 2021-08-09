@@ -37,10 +37,12 @@ import Listing from '@/components/Listing'
 import TradingHistory from '@/components/TradingHistory';
 import {getDetailItem, getMoreFromCollection} from '@/pages/api/detail'
 
-export async function getServerSideProps({ params }) {
-    console.log(params.detail)
-    const item = await getDetailItem({ id: params.detail[1] })
-
+export async function getServerSideProps({ params, req, res }) {
+    const tokenCookie = req.headers.cookie.split(";")
+    .find(c => c.trim().startsWith("token="));
+    const token = tokenCookie && tokenCookie.split('=')[1]
+    console.log('tk',token)
+    const item = await getDetailItem({ id: params.detail[1], token: token })
 
     const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
     return {
@@ -53,7 +55,6 @@ export async function getServerSideProps({ params }) {
 
 const DetailItem = ({item, moreFromCollection}) => {
 
-    console.log(moreFromCollection)
     const { Panel } = Collapse;
     const {Option} = Select
 
