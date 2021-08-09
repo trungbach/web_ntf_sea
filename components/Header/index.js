@@ -21,23 +21,20 @@ const Header = () => {
     const [searchText, setSearchText] =  useState('')
     const [listCategory, setListCategory] = useState([])
     const [user, setUser] = useState(null)
-    useEffect(() => {
-        const getCategory = async() => {
-             const listCategory = await getListCategory();
-             setListCategory(listCategory)
-        }
-        getCategory();
-    },[])
+    // useEffect(() => {
+    //     const getCategory = async() => {
+    //          const listCategory = await getListCategory();
+    //          setListCategory(listCategory)
+    //     }
+    //     getCategory();
+    // },[])
 
     const [isLogined, setIsLogined] = useState(false)
 
-    // useEffect(() => {
-    //     setIsLogined(Cookies .get('token') !== undefined)
-    // },[Cookies.get('token')])
-
     useEffect(() => {
-        setUser(localStorage.getItem('user'));
-    },[])
+        console.log(isLogined)
+        setIsLogined(Cookies.get('token') !== undefined)
+    },[Cookies.get('token')])
 
     const onChange = (e) => {
         setSearchText(e.target.value)
@@ -63,9 +60,9 @@ const Header = () => {
         setIsLogined(false)
     }
 
-    const categories = listCategory.length > 0 && listCategory.map((item, index) => {
+    const categories = listCategory.length > 0 ? listCategory.map((item, index) => {
         return (
-            <Menu.Item key={index}>
+            <Menu.Item key={index+1}>
                  <Link href={`/category/${item.id}`}>
                     <a>
                         <Image width={24} height={24} src={item.logo_url} alt={item.logo_url} />
@@ -74,12 +71,12 @@ const Header = () => {
                 </Link>
             </Menu.Item>
         )
-    })
+    }) : []
 
 
     const menuMarket = (
         <Menu className={styles.menuMarket}>
-            <Menu.Item key={1}>
+            <Menu.Item key={0}>
                 <Link href="/assets">
                     <a>
                         <Image width={24} height={24} src={all} alt='all'></Image>
@@ -101,7 +98,7 @@ const Header = () => {
                 </Link>
             </Menu.Item>
             <Menu.Item>
-                <Link href='/activity'>
+                <Link href='/rankings'>
                     <a>
                         Activity
                     </a>
@@ -212,7 +209,7 @@ const Header = () => {
                             <a className="nav-link" href="#">Resources</a>
                         </Dropdown> */}
                         <Dropdown overlay={menuUser} placement="bottomRight">
-                            <a className="nav-link" href="#">{user ? <Image width={40} height={40} src={avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
+                            <a className="nav-link" href="#">{isLogined ? <Image width={40} height={40} src={avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
                         </Dropdown>
 
                         <span type='button' title='Wallet' className={`nav-link ${styles.walletBtn}`} onClick={() =>setIsShowWallet(!isShowWallet)}>

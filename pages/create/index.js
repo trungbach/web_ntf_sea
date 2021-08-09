@@ -11,6 +11,8 @@ import Market from '@/artifacts/contracts/Market.sol/NFTMarket.json'
 import styles from './style.module.scss'
 import {Select} from 'antd'
 import { getListCollection } from '@/pages/api/collection';
+import axios from 'axios'
+
 const {Option} = Select;
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
@@ -36,44 +38,36 @@ const CreateItem = (props) => {
   }, [])
 
   async function loadNFTs() {
-    /* create a generic provider and query for unsold market items */
-    const provider = new ethers.providers.JsonRpcProvider()
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+    const signer = provider.getSigner()
+
+    const marketContract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
     const tokenContract = new ethers.Contract(config.nftaddress, NFT.abi, provider)
-    const marketContract = new ethers.Contract(config.nftmarketaddress, Market.abi, provider)
-    const data = await marketContract.fetchMarketItems()
-    
-    /*
-    *  map over items returned from smart contract and format 
-    *  them as well as fetch their token metadata
-    */
+    const data = await marketContract.fetchItemsCreated()
+
     const items = await Promise.all(data.map(async i => {
       const tokenUri = await tokenContract.tokenURI(i.tokenId)
       const meta = await axios.get(tokenUri)
+      console.log(meta)
       let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
       let item = {
         price,
         tokenId: i.tokenId.toNumber(),
         seller: i.seller,
         owner: i.owner,
+        sold: i.sold,
         image: meta.data.image,
-        name: meta.data.name,
-        description: meta.data.description,
       }
-      console.log(item)
+      console.log('item', item)
+
       return item
     }))
 
     setNfts(items)
 
-    // const payload = {
-    //   ...formInput, 
-    //   image_url: fileUrl,
-    //   symbol: 'ETH',
-      // block_id: '',
-    // }
-    // const newItem = await createItem(payload);
-    // console.log('newItem', newItem);
-
+    
   }
 
   async function onChange(e) {
@@ -134,6 +128,16 @@ const CreateItem = (props) => {
     transaction = await contract.createMarketItem(config.nftaddress, tokenId, price, { value: listingPrice })
     await transaction.wait()
     console.log(transaction)
+
+    const payload = {
+      ...formInput, 
+      image_url: fileUrl,
+      symbol: 'ETH',
+      block_id: ntfs[ntfs.length-1]?.tokenId,
+    }
+    const newItem = await createItem(payload);
+    console.log('newItem', newItem);
+
     // router.push('/')
   }
 
@@ -169,7 +173,7 @@ const CreateItem = (props) => {
           className="mt-2 border rounded p-4"
           onChange={e => updateFormInput({ ...formInput, price: e.target.value })}
         />
-        <Select onChange={value => handleCollection(value)}>
+        <Select style={{marginTop: '2rem'}} onChange={value => handleCollection(value)} placeholder='Choose collection'>
           {collections}
         </Select>
 
@@ -181,7 +185,7 @@ const CreateItem = (props) => {
         />
         {
           fileUrl && (
-            <Image className="rounded mt-4" width="350" height="350" src={fileUrl} alt='image-item' />
+            <img className="rounded mt-4" style={{marginBottom: '2rem'}} width="350" height="350" src={fileUrl} alt='image-item' />
           )
         }
         <button onClick={createMarket} className={styles.secondaryButton}>

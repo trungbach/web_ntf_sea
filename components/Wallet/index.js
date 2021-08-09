@@ -7,7 +7,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import metamask from '@/public/metamask.png'
 import Web3 from 'web3'
 import {checkPublicAddress, verifySignature} from '@/pages/api/login'
-
+import Cookies from 'js-cookie'
 const Wallet = ({isShowWallet, setIsShowWallet}) => {
 
     const [widthScreen, setWidthScreen] = useState()
@@ -50,8 +50,10 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
             publicAddress,
             async (err, signature) => {
                 console.log(signature)
-                // const resSignature = await verifySignature({public_address: publicAddress, signature});
-                // console.log(resSignature)
+                const resSignature = await verifySignature({public_address: publicAddress, signature});
+                if(resSignature.status === 200) {
+                    Cookies.set('token', resSignature.body.data)
+                }
               }
           )
       }
