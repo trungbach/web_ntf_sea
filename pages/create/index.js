@@ -162,7 +162,10 @@ const CreateItem = (props) => {
         />
         {
           fileUrl && (
-            <Image className="rounded mt-4" style={{marginBottom: '2rem'}} width="350" height="350" src={fileUrl} alt='image-item' />
+            <div className={styles.imageAsset}>
+            <Image className="rounded mt-4"  objectFit='contain' width="350" height="350" src={fileUrl} alt='image-item' />
+
+            </div>
           )
         }
         <button onClick={createMarket} className={styles.secondaryButton}>
