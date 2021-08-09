@@ -14,3 +14,9 @@ export async function getItemByCategory(payload) {
     const res = await collectionService.getItemByCategory(payload)
     return res.body.data
 }
+
+export async function getMyCollection(payload) {
+    const res = await collectionService.getMyCollection(payload)
+    console.log(res)
+    return res.body.data
+}

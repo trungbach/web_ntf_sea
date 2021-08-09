@@ -155,9 +155,11 @@ const Header = () => {
                 </a>
             </Menu.Item>
             <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                   My Collection
-                </a>
+                <Link href='/collections'>
+                    <a>
+                        My Collection
+                    </a>
+                </Link>
             </Menu.Item>
             <Menu.Item>
                 <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">

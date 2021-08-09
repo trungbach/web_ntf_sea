@@ -8,3 +8,20 @@ export async function createItem(payload) {
 
 }
 
+export async function createMyCollection(payload) {
+
+    const res = await createServicer.createMyCollection(payload);
+    console.log(res);
+    return res;
+
+}
+
+// export async function upload(payload) {
+
+//     const res = await createServicer.createItem(payload);
+//     console.log(res);
+//     return res.body.data;
+
+// }
+
+

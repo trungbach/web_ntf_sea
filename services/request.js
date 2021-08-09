@@ -8,7 +8,6 @@ const request = {
     superagent
       .get(config.API_DOMAIN + url)                                              
       .query(data)
-      // .set('Authorization', 'Bearer ' +)                                
       .set('Accept', 'application/json')    
       .use((req) =>                                      
         req.on('error', (err) => {
@@ -57,6 +56,7 @@ const request = {
       .put(config.API_DOMAIN + url)
       .send(data)
       .set('Authorization', 'Bearer ' + Cookies.get('token'))
+      .set('x-access-token', Cookies.get('token'))
       .set('Accept', 'application/json, multipart/form-data')
       .use((req) =>
         req.on('error', (err) => {

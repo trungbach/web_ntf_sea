@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
+
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 import { useRouter } from 'next/router'
 import Web3Modal from 'web3modal'
@@ -9,25 +10,32 @@ import {createItem} from '@/pages/api/create'
 import NFT from '@/artifacts/contracts/NFT.sol/NFT.json'
 import Market from '@/artifacts/contracts/Market.sol/NFTMarket.json'
 import styles from './style.module.scss'
-import {Select} from 'antd'
-import { getListCollection } from '@/pages/api/collection';
-import axios from 'axios'
+import {Select, Button} from 'antd'
+import {getMyCollection} from '@/pages/api/collection'
 
 const {Option} = Select;
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
-export async function getServerSideProps() {
-  const listCollection = await getListCollection();
+export async function getServerSideProps({req}) {
+
+  const tokenCookie = req.headers.cookie.split(";")
+  .find(c => c.trim().startsWith("token="));
+  const token = tokenCookie && tokenCookie.split('=')[1]
+  console.log('tk',token)
+
+  const listCollection = await getMyCollection({token: token});
   return {
-    props: {
-      listCollection
-    }
+      props: {
+        listCollection
+      }
   }
+
 }
 
 const CreateItem = (props) => {
   const { listCollection} = props;
   const [fileUrl, setFileUrl] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [formInput, updateFormInput] = useState({ price: '', name: '', description: '', collection_id: '', category_id: '' })
   const router = useRouter()
 
@@ -64,11 +72,15 @@ const CreateItem = (props) => {
 
   async function createMarket() {
     const { name, description, price } = formInput
-    if (!name || !description || !price || !fileUrl) return
+    if (!name || !description || !price || !fileUrl) {
+      alert('You must fill full field!')
+      return
+    }
     /* first, upload to IPFS */
     const data = JSON.stringify({
       name, description, image: fileUrl
     })
+    setLoading(true)
     try {
       const added = await client.add(data)
       const url = `https://ipfs.infura.io/ipfs/${added.path}`
@@ -90,6 +102,7 @@ const CreateItem = (props) => {
     let contract = new ethers.Contract(config.nftaddress, NFT.abi, signer)
     let transaction = await contract.createToken(url)
     let tx = await transaction.wait()
+    console.log(tx)
     let event = tx.events[0]
     let value = event.args[2]
     let tokenId = value.toNumber()
@@ -114,8 +127,9 @@ const CreateItem = (props) => {
     }
     const newItem = await createItem(payload);
     console.log('newItem', newItem);
-
-    // router.push('/')
+    setLoading(false)
+    router.push('/collections')
+    alert('Add item success!')
   }
 
   const collections = listCollection?.map((item, index) => {
@@ -168,9 +182,9 @@ const CreateItem = (props) => {
             </div>
           )
         }
-        <button onClick={createMarket} className={styles.secondaryButton}>
+        <Button loading={loading} onClick={createMarket} className={styles.secondaryButton}>
           Create 
-        </button>
+        </Button>
       </div>
     </div>
   )

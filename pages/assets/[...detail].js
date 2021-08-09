@@ -25,7 +25,6 @@ import ViewModuleRoundedIcon from '@material-ui/icons/ViewModuleRounded';
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import imgDetail from '@/public/imgDetail.png';
 import ether from '@/public/ether.png'
 import noTrading from '@/public/noTrading.svg'
 import WebIcon from '@material-ui/icons/Web';
@@ -36,7 +35,12 @@ import noOffer from '@/public/noOffer.svg'
 import Listing from '@/components/Listing'
 import TradingHistory from '@/components/TradingHistory';
 import {getDetailItem, getMoreFromCollection} from '@/pages/api/detail'
-
+import config from '@/config/index'
+import Web3Modal from "web3modal"
+import { ethers } from 'ethers'
+import Market from '@/artifacts/contracts/Market.sol/NFTMarket.json'
+import {getDetailNtfBlock, buyItem} from '@/pages/api/detail'
+import {useRouter} from 'next/router'
 export async function getServerSideProps({ params, req, res }) {
     const tokenCookie = req.headers.cookie.split(";")
     .find(c => c.trim().startsWith("token="));
@@ -54,16 +58,40 @@ export async function getServerSideProps({ params, req, res }) {
 }
 
 const DetailItem = ({item, moreFromCollection}) => {
-
+    const router = useRouter()
     const { Panel } = Collapse;
     const {Option} = Select
 
     function callback(key) {
          console.log(key);
     }
-
     
     const handleChange = () => {}
+
+    async function buyNft() {
+
+        const nft = await getDetailNtfBlock({id: item.block_id})
+        console.log(nft)
+        /* needs the user to sign the transaction, so will use Web3Provider and sign it */
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
+    
+        /* user will be prompted to pay the asking proces to complete the transaction */
+        const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
+        const transaction = await contract.createMarketSale(config.nftaddress, nft.tokenId, {
+          value: price
+        })
+        await transaction.wait()
+        await buyItem({id: item.id})
+        router.push('/assets')
+        alert('Buy success!')
+
+        // loadNFTs()
+    }
+
     return (
     <>
         <div className={`${styles.detail} container-xl`}>
@@ -205,7 +233,7 @@ const DetailItem = ({item, moreFromCollection}) => {
                                 <Image src={ether} alt='ether' />
                                 <span className={styles.hightlightNumber}>0,2</span> <span>($462,81)</span>
                             </div>
-                            <div className={styles.buyNow}>
+                            <div className={styles.buyNow} onClick={buyNft}>
                                 <Button><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
                             </div>
                         </div>

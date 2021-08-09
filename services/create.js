@@ -6,6 +6,9 @@ const createService =  {
         return request.post('/items', payload)
     },
 
+    createMyCollection: payload => {
+        return request.post('/collections', payload)
+    },
 }
 
 export default createService

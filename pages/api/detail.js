@@ -10,3 +10,14 @@ export async function getMoreFromCollection(payload) {
     return res.body.data;
 }
 
+export async function getDetailNtfBlock(payload) {
+    const res = await detailService.getDetailNtfBlock(payload);
+    return res.body.data;
+}
+
+export async function buyItem(payload) {
+    const res = await detailService.buyItem(payload);
+    console.log(res)
+    return res.body.data;
+}
+

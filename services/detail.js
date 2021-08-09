@@ -10,6 +10,14 @@ const detailService = {
     getMoreFromCollection: payload => {
         return request.get('/items', payload);
     },
+    
+    getDetailNtfBlock: payload => {
+        return request.get(`/itemnft-by-id/${payload.id}`);
+    },
+
+    buyItem: payload => {
+        return request.put(`/buy-item/${payload.id}`);
+    },
 
 }
 

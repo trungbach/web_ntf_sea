@@ -126,7 +126,7 @@ const SideFilter = ({ setPrice, listCategory, listCollection, setCategoryId, set
                         </Panel>
                         <Panel header="Categories" key="3">
                             <div className={styles.filterCollections}>
-                                <ul style={{overflowY: 'scroll'}}>
+                                <ul style={{overflowY: 'auto'}}>
                                    {listCategoryUI}
                                 </ul>
                             </div>

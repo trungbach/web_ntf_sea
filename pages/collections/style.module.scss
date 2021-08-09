@@ -1,0 +1,53 @@
+@import '@/styles/base.scss';
+
+.collections {
+    padding: 7rem 0;
+    h1 {
+        font-size: 4rem;
+    }
+    .secondaryButton {
+        height:auto;
+    }
+    .listCollection {
+        display: flex;
+        align-items: center;
+        margin-top: 3rem;
+    }
+    .sellItemContainer {
+        margin-right: 1rem;
+    }
+
+    .trendingItem {
+        display: block;
+        :global {
+           .ant-card-body {
+               padding: 0;
+               position: relative;
+           }
+        }
+     }
+     .trendingItemContent {
+        text-align: center;
+        padding: 4rem;
+        .avatar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, -50%);
+            padding: 0.3rem;
+            background: #fff;
+            border-radius: 50%;
+            height: 6rem;
+            width: 6rem;
+            border: 1px solid #ccc;
+            img {
+                border-radius: 50%;
+                width: 5rem !important;
+                height: 5rem;
+            }
+        }
+    }
+}
