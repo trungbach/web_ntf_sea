@@ -5,8 +5,8 @@
 const config = {
     // API_DOMAIN: process.env.API_DOMAIN,
     API_DOMAIN: 'http://139.177.188.72:3333',
-    nftmarketaddress: '0xD37A2A2aE679baD4A3Dd66846E873b4aBE87F41c',
-    nftaddress: '0x078C209aae0911354Bc2a02FDf771a2b567525c1'
+    nftmarketaddress: '0x69596dB318a3032B12eB442f981195A02540a9D0',
+    nftaddress: '0x1d483F58Ac2113376EaA5904c368549c8C28e783'
 };
 
 export default config;

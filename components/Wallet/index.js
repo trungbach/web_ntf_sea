@@ -51,9 +51,10 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
             async (err, signature) => {
                 console.log(signature)
                 const resSignature = await verifySignature({public_address: publicAddress, signature});
-                if(resSignature.status === 200) {
+                // if(resSignature.status === 200) {
                     Cookies.set('token', resSignature.body.data)
-                }
+                    console.log(resSignature.body.data)
+                // }
               }
           )
       }

@@ -31,12 +31,6 @@ const CreateItem = (props) => {
   const [formInput, updateFormInput] = useState({ price: '', name: '', description: '', collection_id: '', category_id: '' })
   const router = useRouter()
 
-  const [nfts, setNfts] = useState([])
-
-  useEffect(() => {
-    loadNFTs()
-  }, [])
-
   async function loadNFTs() {
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
@@ -46,26 +40,8 @@ const CreateItem = (props) => {
     const marketContract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
     const tokenContract = new ethers.Contract(config.nftaddress, NFT.abi, provider)
     const data = await marketContract.fetchItemsCreated()
-
-    const items = await Promise.all(data.map(async i => {
-      const tokenUri = await tokenContract.tokenURI(i.tokenId)
-      const meta = await axios.get(tokenUri)
-      console.log(meta)
-      let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
-      let item = {
-        price,
-        tokenId: i.tokenId.toNumber(),
-        seller: i.seller,
-        owner: i.owner,
-        sold: i.sold,
-        image: meta.data.image,
-      }
-      console.log('item', item)
-
-      return item
-    }))
-
-    setNfts(items)
+    console.log(data)
+    return data;
 
     
   }
@@ -114,7 +90,6 @@ const CreateItem = (props) => {
     let contract = new ethers.Contract(config.nftaddress, NFT.abi, signer)
     let transaction = await contract.createToken(url)
     let tx = await transaction.wait()
-    console.log('tx', tx)
     let event = tx.events[0]
     let value = event.args[2]
     let tokenId = value.toNumber()
@@ -129,11 +104,13 @@ const CreateItem = (props) => {
     await transaction.wait()
     console.log(transaction)
 
+    const data = await loadNFTs();
+    console.log('created', data)
     const payload = {
       ...formInput, 
       image_url: fileUrl,
       symbol: 'ETH',
-      block_id: ntfs[ntfs.length-1]?.tokenId,
+      block_id: data[data.length-1].itemId.toNumber(),
     }
     const newItem = await createItem(payload);
     console.log('newItem', newItem);
