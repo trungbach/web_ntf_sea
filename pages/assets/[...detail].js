@@ -78,12 +78,16 @@ const DetailItem = ({item, moreFromCollection}) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
-    
+        console.log(nft.price.toString())
         /* user will be prompted to pay the asking proces to complete the transaction */
+        // const pricePrev =  ethers.utils.formatUnits(nft.price.toString(), 'ether')
+        // const price = ethers.utils.parseUnits(pricePrev.toString(), 'ether')   
         const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
+        // console.log('price', price)
         const transaction = await contract.createMarketSale(config.nftaddress, nft.tokenId, {
-          value: price
-        })
+          value: price, gasPrice: ethers.utils.parseUnits('80', 'gwei'), gasLimit: 33000
+        },)
+        // console.log(transaction)
         await transaction.wait()
         await buyItem({id: item.id})
         router.push('/assets')
