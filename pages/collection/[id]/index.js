@@ -201,7 +201,7 @@ export async function getStaticPaths() {
     const listCollection = await getListCollection();
     return {
         paths: listCollection?.map(collection => ({ params: { id: collection.id.toString() } })) || [],
-        fallback: false
+        fallback: blocking
     }
 
 }
@@ -212,7 +212,8 @@ export async function getStaticProps({params}) {
     return {
         props: {
             collection
-        }
+        },
+        revalidate: 10,
     }
 }
 
