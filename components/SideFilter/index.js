@@ -63,7 +63,7 @@ const SideFilter = ({ setPrice, listCategory, listCollection, setCategoryId, set
     const listCategoryUI = listCategory.map((item, index) => {
         return (
             <li key={index} onClick={()=>setCategoryId(item.id)}>
-                <Image width={24} height={24} src={art} alt='art'></Image>
+                <Image width={24} height={24} src={item.logo_url} alt={item.logo_url}></Image>
                     {item.name}
             </li>
         )

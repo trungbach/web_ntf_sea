@@ -39,6 +39,9 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 4rem;
+            .totalResult {
+                font-weight: 500;
+            }
             .filter {
                 display: flex;
                 justify-content: center;

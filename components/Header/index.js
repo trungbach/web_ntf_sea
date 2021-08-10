@@ -39,19 +39,18 @@ const Header = () => {
     const onChange = (e) => {
         setSearchText(e.target.value)
     }
-    const onKeyPress = e => {}
-    // const onKeyPress = e => {
-    //     console.log(router.pathname)
-    //     if(e.key === 'Enter') {
-    //         if(router.pathname !== '/assets') {
-    //             router.push({ pathname: '/assets', query: { key: e.target.value } })
-    //             // router.push({
-    //             //     pathname: '/assets?[pid]',
-    //             //     query: { pid: e.target.value },
-    //             // })
-    //         } else router.push({ pathname: '/assets', query: { key: e.target.value }, {shallow: true} })
-    //     }
-    // }
+
+    const onKeyPress = e => {
+        if(e.key === 'Enter') {
+            if(router.pathname !== '/assets') {
+                router.push({ pathname: '/assets', query: { key: e.target.value } })
+                // router.push({
+                //     pathname: '/assets?[pid]',
+                //     query: { pid: e.target.value },
+                // })
+            } else router.push({ pathname: '/assets', query: { key: e.target.value } })
+        }
+    }
 
     const [isShowWallet, setIsShowWallet] = useState(false)
 

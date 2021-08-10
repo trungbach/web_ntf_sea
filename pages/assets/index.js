@@ -24,7 +24,8 @@ export async function getStaticProps() {
             listItem,
             listCategory,
             listCollection
-        }
+        },
+        revalidate: 60
     }
 }
 
@@ -71,7 +72,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
             <div className={styles.mainAsset}>
                 <div className={styles.heading}>
                     <div className={`${styles.totalResult} d-none d-md-block`}>
-                        17.159.512 results
+                        {listItem.length} results
                     </div>
                     <div className={styles.filter}>
                         <Select

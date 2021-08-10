@@ -9,7 +9,9 @@ const Layout = ({children}) => {
             <Meta />
             <Header/>
             <HeaderMobile />
-            {children}
+            <div>
+                {React.cloneElement(children, {search_text: 'trung'})}
+            </div>
         </div>
     );
 }

@@ -15,9 +15,9 @@ const Meta = ({title, keywords, description}) => {
 }
 
 Meta.defaultProps = {
-    title: 'Bach Van Trung',
-    keywords: 'Bach Van Trung',
-    description: 'Get the lastes new in webdev'
+    title: 'OpenSea: Buy NFTs, Crypto Collectibles, CryptoKitties, Decentraland, and more on Ethereum',
+    keywords: 'OpenSea: Buy NFTs, Crypto Collectibles, CryptoKitties, Decentraland, and more on Ethereum',
+    description: 'Get the lastes new item in OpenSea'
 }
 
 export default Meta;

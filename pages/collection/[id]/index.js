@@ -15,21 +15,19 @@ import WebIcon from '@material-ui/icons/Web';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import {getListCollection, getCollectionBySlug} from '@/pages/api/collection'
 import {useCollection} from '@/lib/useCollection';
+import {useRouter} from 'next/router'
 
 const {Option} = Select;
 
 const CollectionName = ({collection}) => {
-    console.log(collection)
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
     const {data} = useCollection(`collection_id=${collection?.id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}`)
-    console.log(data)
-
     const [isSeeMore, setIsSeeMore] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [heightDesc, setHeightDesc] = useState(-1);
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const refDesc = useRef();
-
+    const router = useRouter()
     useEffect(() => {
         const height = refDesc.current.clientHeight
         setHeightDesc(height)
@@ -67,6 +65,10 @@ const CollectionName = ({collection}) => {
         setFilterObj({...filterObj, key: searchText})
     }
     }
+
+    if (router.isFallback) {
+        return <div>Loading...</div>
+      }
 
     return (
         <>
@@ -201,7 +203,7 @@ export async function getStaticPaths() {
     const listCollection = await getListCollection();
     return {
         paths: listCollection?.map(collection => ({ params: { id: collection.id.toString() } })) || [],
-        fallback: blocking
+        fallback: true
     }
 
 }

@@ -21,9 +21,10 @@ export async function getServerSideProps({req}) {
 
 }
 
-const MyCollections = ({myCollection}) => {
+const MyCollections = ({myCollection, search_text}) => {
     console.log(myCollection)
     const router = useRouter()
+    console.log(search_text)
 
     const goToCreate = () => {
         router.push('/collection/create')

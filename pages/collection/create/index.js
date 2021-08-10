@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styles from './style.module.scss';
-import { Button, Card, Select } from 'antd'
+import { Button, Card, Select, Form, Input, TextArea } from 'antd'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { create as ipfsHttpClient } from 'ipfs-http-client';
@@ -10,6 +10,7 @@ import {getListCategory} from '@/pages/api/category'
 import config from '@/config/index'
 import superagent from 'superagent'
 import Cookies from 'js-cookie'
+import ImageIcon from '@material-ui/icons/Image';
 
 const {Option} = Select
 
@@ -29,9 +30,12 @@ const CreateCollection = ({listCategory}) => {
     const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
     const router = useRouter()
-    const [logo, setLogo] = useState(null)
     const [loading, setLoading] = useState(false)
     const [banner, setBanner] = useState(null)
+    const [logoUrl, setLogoUrl] = useState(null)
+    const [bannerUrl, setBannerUrl] = useState(null)
+
+    const [form] = Form.useForm();
     const [formInput, updateFormInput] = useState({ name: '', description: '', category_id: '', logo_url: '', banner_url: '' })
     // const fileSelectLogo = async (e) => {
     //     var file = e.target.files[0];
@@ -63,40 +67,39 @@ const CreateCollection = ({listCategory}) => {
     //     }
     // }
 
-    async function onChangeLogo(e) {
-        const file = e.target.files[0]
-        try {
-          const added = await client.add(
-            file,
-            {
-              progress: (prog) => console.log(`received: ${prog}`)
-            }
-          )
-          const url = `https://ipfs.infura.io/ipfs/${added.path}`
-          setLogo(url)
-          console.log(url)
-          updateFormInput({ ...formInput, logo_url: url })
-        } catch (error) {
-          console.log('Error uploading file: ', error)
-        }  
-      }
+    async function fileSelectLogo(e) {
+      const file = e.target.files[0]
+      try {
+        const added = await client.add(
+          file,
+          {
+            progress: (prog) => console.log(`received: ${prog}`)
+          }
+        )
+        const url = `https://ipfs.infura.io/ipfs/${added.path}`
+        form.setFieldsValue({logo_url: url})
+        setLogoUrl(url)
+      } catch (error) {
+        console.log('Error uploading file: ', error)
+      }  
+    }
 
-      async function onChangeBanner(e) {
-        const file = e.target.files[0]
-        try {
-          const added = await client.add(
-            file,
-            {
-              progress: (prog) => console.log(`received: ${prog}`)
-            }
-          )
-          const url = `https://ipfs.infura.io/ipfs/${added.path}`
-          setBanner(url)
-          updateFormInput({ ...formInput, banner_url: url })
-        } catch (error) {
-          console.log('Error uploading file: ', error)
-        }  
-      }
+    async function fileSelectBanner(e) {
+      const file = e.target.files[0]
+      try {
+        const added = await client.add(
+          file,
+          {
+            progress: (prog) => console.log(`received: ${prog}`)
+          }
+        )
+        const url = `https://ipfs.infura.io/ipfs/${added.path}`
+        form.setFieldsValue({banner_url: url})
+        setBannerUrl(url)
+      } catch (error) {
+        console.log('Error uploading file: ', error)
+      }  
+    }
 
     const categories = listCategory?.map((item, index) => {
         return (
@@ -106,80 +109,69 @@ const CreateCollection = ({listCategory}) => {
         )
       }) || []
 
-      const createCollection = async() => {
+      const createCollection = async(values) => {
         setLoading(true)
-        const { name, description, category_id, logo_url, banner_url } = formInput
-        if (!name || !description || !category_id || !logo_url || ! banner_url) {
-            alert('Bạn cần nhập đầy đủ các trường trước khi tạo')
-            return
-        }
-        const resCollection = await createMyCollection(formInput)
-        setLoading(false)
+        const resCollection = await createMyCollection(values)
+        await setLoading(false)
         if(resCollection.status === 200) {
-            alert('Thêm collection thành công!')
             router.push('/collections')
+            alert('Thêm collection thành công!')
         }
       }
+
+    const onFinishFailed = (errorInfo) => {
+      console.log('Failed:', errorInfo);
+    };
 
     return (
         <div className={styles.collections}>
             <div className="container">
                 <h1>Create your collection</h1>
                 <h3 className="my-5">Create, curate, and manage collections of unique NFTs to share and sell</h3>
-                <div className="d-flex flex-column pb-12">
-                    <input 
-                    placeholder="Asset Name"
-                    className="mt-8 border rounded p-4"
-                    onChange={e => updateFormInput({ ...formInput, name: e.target.value })}
-                    />
-                    <textarea
-                    placeholder="Asset Description"
-                    className="my-4 border rounded p-4"
-                    onChange={e => updateFormInput({ ...formInput, description: e.target.value })}
-                    />
                 
-                    <Select style={{marginTop: '2rem'}} onChange={(value) => updateFormInput({ ...formInput, category_id: value })} placeholder='Choose category'>
-                        {categories}
-                    </Select>
-                 
-                    <div className='my-5'>
-                        <label htmlFor="Logo">Logo: </label>
-                        <input
-                            type="file"
-                            name="Logo"
-                            className="my-4"
-                            onChange={onChangeLogo}
-                        />
-                        {
-                        logo && (
-                            <div className={styles.imageAsset}>
-                                <Image className="rounded mt-4"  objectFit='contain' width="350" height="350" src={logo} alt='image-item' />
-                            </div>
-                        )
-                        }
-                    </div>
-                    <div className='my-5'>
-                        <label htmlFor="Banner">Banner:</label>
+                <Form form={form}  onFinish={createCollection} onFinishFailed={onFinishFailed}  layout='vertical'>
+                    <Form.Item className={styles.fileContainer} name='logo_url' label="Logo image" rules={[{ required: true, message: "Please upload your logo !" }]}>
+                       
+                        <div className={styles.labelForFileLogo}>
+                          {logoUrl && <Image src={logoUrl} alt={logoUrl} layout='fill' />}
+                          <label  className={logoUrl ? styles.labelHidden : ''} htmlFor="fileLogo"><ImageIcon /></label>
+                        </div>
 
-                        <input
-                            type="file"
-                            name="Banner"
-                            className="my-4"
-                            onChange={onChangeBanner}
-                        />
-                        {
-                        banner && (
-                            <div className={styles.imageAsset}>
-                                <Image className="rounded mt-4"  objectFit='contain' width="350" height="350" src={banner} alt='image-item' />
-                            </div>
-                        )
-                        }
-                    </div>
-                   
-                    <Button loading={loading} onClick={createCollection} className={styles.secondaryButton}>
-                        Create 
-                    </Button>
-                </div>
+                        <input type="file" id="fileLogo" accept="image/*" onChange={fileSelectLogo} />
+                    </Form.Item>
+
+                    <Form.Item className={styles.fileContainer} name='banner_url' label="Banner image" rules={[{ required: true, message: "Please upload your banner image !" }]}>
+                       
+                        <div className={styles.labelForFile}>
+                          {bannerUrl && <Image src={bannerUrl} alt={bannerUrl} layout='fill' />}
+                          <label  className={bannerUrl ? styles.labelHidden : ''}htmlFor="fileBanner">Drag &amp; drop file <br /> or browse media on your device</label>
+                        </div>
+
+                        <input type="file" id="fileBanner" accept="image/*" onChange={fileSelectBanner} />
+                    </Form.Item>
+
+                    <Form.Item name='name' label="Name" rules={[{ required: true, message: "Please input item name!" }]} >
+                        <Input placeholder='Example: Treasure of the Sea' />
+                    </Form.Item>
+
+                    <Form.Item label="Description" name='description' rules={[{ required: true, message: "Please input your description" }]}>
+                          <Input.TextArea rows={5} placeholder="Provide a detailed description of your collection"/>
+                    </Form.Item>
+
+                    <Form.Item label="Category" name='category_id' rules={[{ required: true, message: "Please choose your collection" }]}>
+                        <Select placeholder='Add category'>
+                          {categories}
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button htmlType="submit" loading={loading} className={styles.secondaryButton}>
+                          Create 
+                        </Button>
+                    </Form.Item>
+
+                </Form>
+                        
             </div>
         </div>
     );

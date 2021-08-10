@@ -41,6 +41,7 @@ import { ethers } from 'ethers'
 import Market from '@/artifacts/contracts/Market.sol/NFTMarket.json'
 import {getDetailNtfBlock, buyItem} from '@/pages/api/detail'
 import {useRouter} from 'next/router'
+
 export async function getServerSideProps({ params, req, res }) {
     const tokenCookie = req.headers.cookie.split(";")
     .find(c => c.trim().startsWith("token="));
@@ -61,7 +62,7 @@ const DetailItem = ({item, moreFromCollection}) => {
     const router = useRouter()
     const { Panel } = Collapse;
     const {Option} = Select
-
+    console.log('item', item)
     function callback(key) {
          console.log(key);
     }
@@ -83,13 +84,10 @@ const DetailItem = ({item, moreFromCollection}) => {
         console.log(`gas_price: ${ gas_price }`);
         console.log(`getListingPrice: ${ await contract.getListingPrice() }`);
         /* user will be prompted to pay the asking proces to complete the transaction */
-        // const pricePrev =  ethers.utils.formatUnits(nft.price.toString(), 'ether')
-        // const price = ethers.utils.parseUnits(pricePrev.toString(), 'ether')   
         const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
-        // console.log('price', price)
         const transaction = await contract.createMarketSale(config.nftaddress, nft.tokenId, {
-          value: price, gasPrice: ethers.utils.parseUnits('80', 'gwei'), gasLimit: 33000
-        },)
+          value: price
+        })
         // console.log(transaction)
         await transaction.wait()
         await buyItem({id: item.id})
@@ -220,7 +218,7 @@ const DetailItem = ({item, moreFromCollection}) => {
                             </Tooltip>
                         </div>
                     </div>
-                    <header><h1>Mystic Toten</h1></header>
+                    <header><h1>{item.name}</h1></header>
                 </div>
                 <div className={styles.priceDetail}>
                     <div className='d-flex align-items-center'>
@@ -238,7 +236,7 @@ const DetailItem = ({item, moreFromCollection}) => {
                             <h3>Current price</h3>
                             <div className={styles.numberPrice}>
                                 <Image src={ether} alt='ether' />
-                                <span className={styles.hightlightNumber}>0,2</span> <span>($462,81)</span>
+                                <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
                             <div className={styles.buyNow} onClick={buyNft}>
                                 <Button><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
@@ -363,12 +361,12 @@ const DetailItem = ({item, moreFromCollection}) => {
                         <TradingHistory />
                     </Panel>
                     <Panel header={<div><ViewModuleRoundedIcon /> More from this collection</div>} key="2">
-                        <MoreFromCollection moreFromCollection={moreFromCollection} />
+                        <MoreFromCollection moreFromCollection={moreFromCollection.filter(c => c.id !== item.id)} />
                     </Panel>
                 </Collapse>
             </div>
             <div className={styles.viewCollection}>
-                <Link href='/collection/art'>
+                <Link href={`/collection/${item.collection_id}`}>
                     <a className={styles.primaryButton}>
                     View Collection
                     </a>
