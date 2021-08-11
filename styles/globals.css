@@ -9,6 +9,8 @@ body {
 :root {
   --primary-color: rgb(32, 129, 226);
   --background-color: #FBFDFF;
+  --text-color: rgba(4, 17, 29, 0.75);
+  --hover-text: rgb(4, 17, 29);
 }
 
 html {

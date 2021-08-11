@@ -149,9 +149,11 @@ const Header = () => {
     const menuUser = (
         <Menu className={styles.menuUser}>
             <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                   My Profile
-                </a>
+                <Link href='/account'>
+                    <a>
+                        My Profile
+                    </a>
+                </Link>
             </Menu.Item>
             <Menu.Item>
                 <Link href='/collections'>
