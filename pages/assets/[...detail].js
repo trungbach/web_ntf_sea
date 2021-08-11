@@ -95,12 +95,13 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
-        var currentGasPrice = await provider.getGasPrice();
-        let gas_price = ethers.utils.hexlify(parseInt(currentGasPrice));
-        console.log(`gas_price: ${ gas_price }`);
-        console.log(`getListingPrice: ${ await contract.getListingPrice() }`);
+        // var currentGasPrice = await provider.getGasPrice();
+        // let gas_price = ethers.utils.hexlify(parseInt(currentGasPrice));
+        // console.log(`gas_price: ${ gas_price }`);
+        // console.log(`getListingPrice: ${ await contract.getListingPrice() }`);
         /* user will be prompted to pay the asking proces to complete the transaction */
         const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
+        console.log(price)
         const transaction = await contract.createMarketSale(config.nftaddress, nft.tokenId, {
           value: price,
         //   gasLimit: 2100000,
