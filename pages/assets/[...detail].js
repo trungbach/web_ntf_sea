@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './detail.module.scss'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -63,6 +63,7 @@ const DetailItem = ({item, moreFromCollection}) => {
     const { Panel } = Collapse;
     const {Option} = Select
     console.log('item', item)
+    const [loading, setLoading] = useState(false)
     function callback(key) {
          console.log(key);
     }
@@ -70,7 +71,7 @@ const DetailItem = ({item, moreFromCollection}) => {
     const handleChange = () => {}
 
     async function buyNft() {
-
+        setLoading(true)
         const nft = await getDetailNtfBlock({id: item.block_id})
         console.log(nft)
         /* needs the user to sign the transaction, so will use Web3Provider and sign it */
@@ -90,6 +91,7 @@ const DetailItem = ({item, moreFromCollection}) => {
         })
         // console.log(transaction)
         await transaction.wait()
+        setLoading(false)
         await buyItem({id: item.id})
         router.push('/assets')
         alert('Buy success!')
@@ -239,7 +241,7 @@ const DetailItem = ({item, moreFromCollection}) => {
                                 <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
                             <div className={styles.buyNow} onClick={buyNft}>
-                                <Button><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                <Button loading={loading}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
                             </div>
                         </div>
                       
