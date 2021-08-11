@@ -103,8 +103,8 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
         const transaction = await contract.createMarketSale(config.nftaddress, nft.tokenId, {
           value: price,
-          gasLimit: 2100000,
-          gasPrice: 8000000000
+        //   gasLimit: 2100000,
+        //   gasPrice: 8000000000
         });
         // console.log(transaction)
         await transaction.wait()
