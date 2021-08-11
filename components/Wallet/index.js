@@ -128,7 +128,7 @@ const Wallet = ({isShowWallet, setIsShowWallet, loginAccount, isLoggedIn}) => {
                     <div className={styles.contentWallet}>
                         <div className={styles.contentInner}>
                             <p>Total balance</p>
-                            <h3>$ {balance} USD</h3>
+                            <h3>$ {balance} Wei</h3>
                             <div className={styles.addFund}>
                                 <button className={styles.secondaryButton}>Add Funds</button>
                             </div>

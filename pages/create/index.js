@@ -115,7 +115,7 @@ const CreateItem = (props) => {
     let event = tx.events[0]
     let value = event.args[2]
     let tokenId = value.toNumber()
-    const price = ethers.utils.parseUnits(itemPrice, 'ether')
+    const price = ethers.utils.parseUnits(values.price, 'ether')
   
     /* then list the item for sale on the marketplace */
     contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
@@ -134,7 +134,7 @@ const CreateItem = (props) => {
     const payload = {
       name,
       description,
-      price: itemPrice, 
+      price: values.price, 
       image_url: fileUrl,
       symbol: 'ETH',
       collection_id: collection_id.split(',')[0],
