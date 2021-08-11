@@ -12,16 +12,18 @@ import Wallet from '@/components/Wallet'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {getListCategory} from '@/pages/api/category'
-import Cookies  from 'js-cookie'
 import avatarUser from '@/public/avatarUser.png'
 import { ToastContainer, toast } from 'react-toastify';
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { logoutAccount } from '@/store/login/action'
 
-const Header = () => {
+const Header = ({isLoggedIn, logoutAccount}) => {
 
     const router = useRouter()
     const [searchText, setSearchText] =  useState('')
     const [listCategory, setListCategory] = useState([])
-    const [user, setUser] = useState(null)
+
     useEffect(() => {
         const getCategory = async() => {
              const listCategory = await getListCategory();
@@ -29,13 +31,6 @@ const Header = () => {
         }
         getCategory();
     },[])
-
-    const [isLogined, setIsLogined] = useState(false)
-
-    useEffect(() => {
-        console.log(isLogined)
-        setIsLogined(Cookies.get('token') !== undefined)
-    },[Cookies.get('token')])
 
     const onChange = (e) => {
         setSearchText(e.target.value)
@@ -45,10 +40,6 @@ const Header = () => {
         if(e.key === 'Enter') {
             if(router.pathname !== '/assets') {
                 router.push({ pathname: '/assets', query: { key: e.target.value } })
-                // router.push({
-                //     pathname: '/assets?[pid]',
-                //     query: { pid: e.target.value },
-                // })
             } else router.push({ pathname: '/assets', query: { key: e.target.value } })
         }
     }
@@ -56,9 +47,9 @@ const Header = () => {
     const [isShowWallet, setIsShowWallet] = useState(false)
 
     const logOut = () => {
-        Cookies.remove('token')
-        setIsLogined(false)
+        logoutAccount()
         toast.dark('You have been logged out successfully!')
+
     }
 
     const categories = listCategory.length > 0 ? listCategory.map((item, index) => {
@@ -150,32 +141,32 @@ const Header = () => {
 
     const menuUser = (
         <Menu className={styles.menuUser}>
-            <Menu.Item>
+            <Menu.Item key='0'>
                 <Link href='/account'>
                     <a>
                         My Profile
                     </a>
                 </Link>
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item key='1'>
                 <Link href='/collections'>
                     <a>
                         My Collection
                     </a>
                 </Link>
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item key='2'>
                 <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
                    My Favorites
                 </a>
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item key='3'>
                 <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
                    My Account Settings
                 </a>
             </Menu.Item>
-            {isLogined &&  
-                <Menu.Item onClick={logOut}>
+            {isLoggedIn &&  
+                <Menu.Item  key='4' onClick={logOut}>
                     Log Out
                 </Menu.Item>
             }
@@ -214,7 +205,7 @@ const Header = () => {
                             <a className="nav-link" href="#">Resources</a>
                         </Dropdown> */}
                         <Dropdown overlay={menuUser} placement="bottomRight">
-                            <a className="nav-link" href="#">{isLogined ? <Image width={40} height={40} src={avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
+                            <a className="nav-link" href="#">{isLoggedIn ? <Image width={40} height={40} src={avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
                         </Dropdown>
 
                         <span type='button' title='Wallet' className={`nav-link ${styles.walletBtn}`} onClick={() =>setIsShowWallet(!isShowWallet)}>
@@ -229,4 +220,14 @@ const Header = () => {
     );
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+    isLoggedIn: state.login.isLoggedIn
+})
+  
+const mapDispatchToProps = (dispatch) => {
+    return {
+        logoutAccount: bindActionCreators(logoutAccount, dispatch),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

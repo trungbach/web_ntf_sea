@@ -14,31 +14,41 @@ import {useRouter} from 'next/router'
 import avatar from '@/public/30.png'
 import cover from '@/public/cover.jpg'
 import { Tabs } from 'antd';
+import { connect } from 'react-redux'
+import LoginPage from '@/components/LoginPage'
 
 const { TabPane } = Tabs;
 const {Option} = Select;
 
 export async function getServerSideProps({ req }) {
-
-    const tokenCookie = req.headers.cookie && req.headers.cookie.split(";")
-    .find(c => c.trim().startsWith("token="));
-    const token = tokenCookie && tokenCookie.split('=')[1]
-    console.log('tk',token)
-    const myAsset = await getMyAsset({ token: token })
-    const myCreated = await getMyCreated({ token: token })
-    const myFavorited = await getMyFavorited({ token: token })
-
-    return {
-        props: {
-            myAsset,
-            myCreated,
-            myFavorited
+    if(req.headers.cookie) {
+        const tokenCookie = req.headers.cookie.split(";")
+        .find(c => c.trim().startsWith("token="));
+        const token = tokenCookie && tokenCookie.split('=')[1]
+        const myAsset = await getMyAsset({ token: token })
+        const myCreated = await getMyCreated({ token: token })
+        const myFavorited = await getMyFavorited({ token: token })
+    
+        return {
+            props: {
+                myAsset,
+                myCreated,
+                myFavorited
+            }
+        }
+    } else {
+        return {
+            props: {
+                myAsset: [],
+                myCreated: [],
+                myFavorited: []
+            }
         }
     }
 
 }
 
-const CollectionName = ({myAsset, myCreated, myFavorited}) => {
+const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
     console.log('myCreated', myCreated)
     console.log('myFavorited', myFavorited)
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
@@ -48,6 +58,12 @@ const CollectionName = ({myAsset, myCreated, myFavorited}) => {
 
     const setPrice = (minPrice, maxPrice) => {
         setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
+    }
+
+    if(!isLoggedIn) {
+        return (
+            <LoginPage />
+        )
     }
 
   const handleChange = () => {}
@@ -172,7 +188,12 @@ const CollectionName = ({myAsset, myCreated, myFavorited}) => {
     );
 }
 
-export default CollectionName;
+const mapStateToProps = (state) => ({
+    isLoggedIn: state.login.isLoggedIn
+})
+
+export default connect(mapStateToProps)(CollectionName)
+
 
 
 

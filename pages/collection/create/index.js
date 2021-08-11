@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styles from './style.module.scss';
-import { Button, Card, Select, Form, Input, TextArea } from 'antd'
+import { Button, Select, Form, Input } from 'antd'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { create as ipfsHttpClient } from 'ipfs-http-client';
@@ -11,6 +11,8 @@ import config from '@/config/index'
 import superagent from 'superagent'
 import Cookies from 'js-cookie'
 import ImageIcon from '@material-ui/icons/Image';
+import LoginPage from '@/components/LoginPage'
+import { connect } from 'react-redux'
 
 const {Option} = Select
 
@@ -25,18 +27,22 @@ export async function getStaticProps() {
     }
   }
 
-const CreateCollection = ({listCategory}) => {
+const CreateCollection = ({listCategory, isLoggedIn}) => {
     
     const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
     const router = useRouter()
     const [loading, setLoading] = useState(false)
-    const [banner, setBanner] = useState(null)
     const [logoUrl, setLogoUrl] = useState(null)
     const [bannerUrl, setBannerUrl] = useState(null)
 
     const [form] = Form.useForm();
-    const [formInput, updateFormInput] = useState({ name: '', description: '', category_id: '', logo_url: '', banner_url: '' })
+
+    if(!isLoggedIn) {
+      return (
+          <LoginPage />
+      )
+    }
     // const fileSelectLogo = async (e) => {
     //     var file = e.target.files[0];
     //     if (file) {
@@ -177,4 +183,8 @@ const CreateCollection = ({listCategory}) => {
     );
 }
 
-export default CreateCollection;
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.login.isLoggedIn
+})
+
+export default connect(mapStateToProps)(CreateCollection)

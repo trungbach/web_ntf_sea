@@ -12,34 +12,48 @@ import styles from './style.module.scss'
 import {Select, Button, Form, Input} from 'antd'
 import {getMyCollection} from '@/pages/api/collection'
 import Link from 'next/link'
+import LoginPage from '@/components/LoginPage'
+import { connect } from 'react-redux'
 
 const {Option} = Select;
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 export async function getServerSideProps({req}) {
 
-  const tokenCookie =  req.headers.cookie.split(";")
-  .find(c => c.trim().startsWith("token="));
-  const token = tokenCookie && tokenCookie.split('=')[1]
-  console.log('tk',token)
-
-  const listCollection = await getMyCollection({token: token});
-  return {
-      props: {
-        listCollection
+  if(req.headers.cookie) {
+    const tokenCookie =  req.headers.cookie.split(";")
+    .find(c => c.trim().startsWith("token="));
+    const token = tokenCookie && tokenCookie.split('=')[1]
+  
+    const listCollection = await getMyCollection({token: token});
+    return {
+        props: {
+          listCollection
+        }
+    }
+  } else {
+      return {
+        props: {
+          listCollection: []
+        }
       }
   }
 
 }
 
 const CreateItem = (props) => {
-  const { listCollection} = props;
+  const { listCollection, isLoggedIn} = props;
   const [fileUrl, setFileUrl] = useState(null)
   const [itemPrice, setItemPrice] = useState()
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const [form] = Form.useForm();
 
+  if(!isLoggedIn) {
+    return (
+        <LoginPage />
+    )
+  }
   async function loadNFTs() {
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
@@ -204,4 +218,8 @@ const CreateItem = (props) => {
 
 }
 
-export default CreateItem;
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.login.isLoggedIn
+})
+
+export default connect(mapStateToProps)(CreateItem)

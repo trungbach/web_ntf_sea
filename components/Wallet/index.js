@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Tooltip} from 'antd';
+import { Tooltip, Button} from 'antd';
 import styles from './style.module.scss';
 import Image from 'next/image'
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -8,20 +8,45 @@ import metamask from '@/public/metamask.png'
 import Web3 from 'web3'
 import { ToastContainer, toast } from 'react-toastify';
 import {checkPublicAddress, verifySignature} from '@/pages/api/login'
-import Cookies from 'js-cookie'
-const Wallet = ({isShowWallet, setIsShowWallet}) => {
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { loginAccount } from '@/store/login/action'
+import avatarUser from '@/public/avatarUser.png'
+const Wallet = ({isShowWallet, setIsShowWallet, loginAccount, isLoggedIn}) => {
 
+    console.log('isLoggedIn', isLoggedIn)
     const [widthScreen, setWidthScreen] = useState()
+    const [publicAddress, setPublicAddress] = useState(null)
+    const [balance, setBalance] = useState(null)
 
     useEffect(() => {
         setWidthScreen(window.screen.width)
     },[])
 
+    useEffect(() => {
+        const getBalance = async() => {
+            if (window.ethereum) {
+                window.web3 = new Web3(window.ethereum)
+                await window.ethereum.enable()
+              }
+            else if (window.web3) {
+                window.web3 = new Web3(window.web3.currentProvider)
+            }
+    
+            const publicAddress = await web3.eth.getCoinbase()
+            const currentBalance = await web3.eth.getBalance(publicAddress)
+            console.log('currentBalance',currentBalance)
+            console.log('publicAddress',publicAddress)
+            setBalance(currentBalance)
+            setPublicAddress(publicAddress)
+        }
+
+        getBalance()
+
+    },[])
+
     const [metamaskInstalled, setMetamaskInstalled] = useState(false)
     const [account, setAccount] = useState()
-    const [publicAddress, setPublicAddress] = useState()
-    const [loading, setLoading] = useState(false)
-    const [isLogined, setIsLogined] = useState(false)
 
     const checkMetamask = async() => {
         const isMetaInstalled = typeof window.web3 !== 'undefined'
@@ -43,9 +68,9 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
         const publicAddress = await web3.eth.getCoinbase()
         const resNonce = await checkPublicAddress({public_address: publicAddress})
         setAccount(JSON.parse(resNonce.text).data)
-
+        console.log(account)
         const {nonce} = JSON.parse(resNonce.text).data
-        console.log(nonce)
+        
         // handleSignMessage
         web3.eth.personal.sign(
             web3.utils.fromUtf8(`I am signing my one-time nonce: ${nonce}`),
@@ -54,11 +79,9 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
                 console.log(signature)
                 const resSignature = await verifySignature({public_address: publicAddress, signature});
                 // if(resSignature.status === 200) {
-                    Cookies.set('token', resSignature.body.data)
-                    console.log(resSignature.body.data)
-                    toast.dark('Login Success!')
-                    setIsLogined(true)
-                    setIsShowWallet(false)
+                toast.dark('Login Success!')
+                loginAccount(resSignature.body.data)
+                setIsShowWallet(false)
                 // }
               }
           )
@@ -67,7 +90,8 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
     return (
         <div className={styles.wallet}>
            {isShowWallet && <div className={styles.overlay} onClick={()=>setIsShowWallet(false)}></div>}
-            <div className={styles.sideFilter} style={{right: isShowWallet ? '0' : (widthScreen >= 768 ? '-380px' : '-100%')}}>
+           {!isLoggedIn ?
+            (<div className={styles.sideFilter} style={{right: isShowWallet ? '0' : (widthScreen >= 768 ? '-380px' : '-100%')}}>
                 <div className={styles.sideCollapse}>
                     <div className={styles.filterTitle}>
                         <AccountCircleIcon /> My wallet
@@ -91,7 +115,29 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div>)  : 
+            
+            (<div className={styles.sideFilter} style={{right: isShowWallet ? '0' : (widthScreen >= 768 ? '-380px' : '-100%')}}>
+                <div className={styles.sideCollapse}>
+                    <div className={styles.infoWallet}>
+                        <div>
+                            <Image src={avatarUser} alt='avatar' width={30} height={30} /> welcome!
+                        </div>
+                        <div>{publicAddress}</div>
+                    </div>
+                    <div className={styles.contentWallet}>
+                        <div className={styles.contentInner}>
+                            <p>Total balance</p>
+                            <h3>$ {balance} USD</h3>
+                            <div className={styles.addFund}>
+                                <button className={styles.secondaryButton}>Add Funds</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>)
+            }
+
             <ToastContainer
                 position="bottom-right"
             />
@@ -99,4 +145,14 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
     );
 }
 
-export default Wallet;
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.login.isLoggedIn
+})
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginAccount: bindActionCreators(loginAccount, dispatch),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Wallet)

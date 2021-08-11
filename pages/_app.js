@@ -5,6 +5,8 @@ import "slick-carousel/slick/slick-theme.css";
 import 'antd/dist/antd.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '../styles/globals.css'
+import { wrapper } from '../store/store'
+
 function MyApp({ Component, pageProps }) {
   return (
     <Layout>
@@ -14,4 +16,4 @@ function MyApp({ Component, pageProps }) {
   
 }
 
-export default MyApp
+export default wrapper.withRedux(MyApp)

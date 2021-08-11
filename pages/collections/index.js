@@ -6,7 +6,7 @@ import {getMyCollection} from '@/pages/api/collection'
 import LoginPage from '@/components/LoginPage'
 import Link from 'next/link'
 import Image from 'next/image'
-import Cookies from 'js-cookie'
+import { connect } from 'react-redux'
 
 export async function getServerSideProps({req}) {
 
@@ -20,33 +20,25 @@ export async function getServerSideProps({req}) {
         return {
             props: {
                 myCollection,
-                isLogin: true
             }
         }
     } else {
         return {
             props: {
                 myCollection: [],
-                isLogin: false
             }
         }
     }
 
 }
 
-const MyCollections = ({myCollection, isLogin, search_text}) => {
-
+const MyCollections = ({myCollection, search_text, isLoggedIn}) => {
+    console.log('isLoggedIn', isLoggedIn)
     console.log(myCollection)
     const router = useRouter()
     console.log(search_text)
-    const [isLogined, setIsLogined] = useState(isLogin)
 
-    useEffect(() => {
-        if(Cookies.get('token') === undefined)
-            setIsLogined(false)
-    },[Cookies.get('token')])
-
-    if(!isLogined) {
+    if(!isLoggedIn) {
         return (
             <LoginPage />
         )
@@ -100,4 +92,9 @@ const MyCollections = ({myCollection, isLogin, search_text}) => {
     );
 }
 
-export default MyCollections;
+const mapStateToProps = (state) => ({
+    isLoggedIn: state.login.isLoggedIn
+})
+
+export default connect(mapStateToProps)(MyCollections)
+

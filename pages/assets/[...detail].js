@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import styles from './detail.module.scss'
 import Link from 'next/link'
 import Image from 'next/image'
-import {Tooltip, Button, Collapse, Select, Table, Checkbox} from 'antd'
+import {Tooltip, Button, Collapse, Select} from 'antd'
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ShareIcon from '@material-ui/icons/Share';
 import LaunchIcon from '@material-ui/icons/Launch';
@@ -41,31 +41,46 @@ import { ethers } from 'ethers'
 import Market from '@/artifacts/contracts/Market.sol/NFTMarket.json'
 import {getDetailNtfBlock, buyItem} from '@/pages/api/detail'
 import {useRouter} from 'next/router'
+import LoginPage from '@/components/LoginPage'
+import { connect } from 'react-redux'
+const { Panel } = Collapse;
+const {Option} = Select
 
-export async function getServerSideProps({ params, req, res }) {
-    const tokenCookie = req.headers.cookie && req.headers.cookie.split(";")
-    .find(c => c.trim().startsWith("token="));
-    const token = tokenCookie && tokenCookie.split('=')[1]
-    console.log('tk',token)
-    const item = await getDetailItem({ id: params.detail[1], token: token })
-
-    const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
-    return {
-        props: {
-            item,
-            moreFromCollection
+export async function getServerSideProps({ params, req }) {
+    if(req.headers.cookie) {
+        const tokenCookie = req.headers.cookie.split(";")
+        .find(c => c.trim().startsWith("token="));
+        const token = tokenCookie && tokenCookie.split('=')[1]
+        const item = await getDetailItem({ id: params.detail[1], token: token })
+    
+        const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
+        return {
+            props: {
+                item,
+                moreFromCollection
+            }
+        }
+    } else {
+        return {
+            props: {
+                item: {},
+                moreFromCollection: []
+            }
         }
     }
+   
 }
 
-const DetailItem = ({item, moreFromCollection}) => {
+const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
     const router = useRouter()
-    const { Panel } = Collapse;
-    const {Option} = Select
+   
     console.log('item', item)
     const [loading, setLoading] = useState(false)
-    function callback(key) {
-         console.log(key);
+    
+    if(!isLoggedIn) {
+        return (
+            <LoginPage />
+        )
     }
     
     const handleChange = () => {}
@@ -97,8 +112,9 @@ const DetailItem = ({item, moreFromCollection}) => {
         router.push('/assets')
         alert('Buy success!')
 
-        // loadNFTs()
     }
+
+    const callback = (key) => {}
 
     return (
     <>
@@ -257,12 +273,12 @@ const DetailItem = ({item, moreFromCollection}) => {
                                     dropdownClassName={styles.selectPrice}
                                     onChange={handleChange}
                                     >
-                                        <Option value="jackss">Last 7 days</Option>
-                                        <Option value="jackss">Last 14 days</Option>
-                                        <Option value="jackss">Last 30 days</Option>
-                                        <Option value="jackss">Last 60 days</Option>
-                                        <Option value="jackss">Last 90 days</Option>
-                                        <Option value="jackss">Last Year</Option>
+                                        <Option value="jackss1">Last 7 days</Option>
+                                        <Option value="jackss2">Last 14 days</Option>
+                                        <Option value="jackss3">Last 30 days</Option>
+                                        <Option value="jackss4">Last 60 days</Option>
+                                        <Option value="jackss5">Last 90 days</Option>
+                                        <Option value="jackss6">Last Year</Option>
                                         <Option value="lucy">All Time</Option>
                                     </Select>
                                     <div className={styles.noTraffic}>
@@ -382,4 +398,9 @@ const DetailItem = ({item, moreFromCollection}) => {
     );
 }
 
-export default DetailItem;
+const mapStateToProps = (state) => ({
+    isLoggedIn: state.login.isLoggedIn
+  })
+  
+export default connect(mapStateToProps)(DetailItem)
+  
