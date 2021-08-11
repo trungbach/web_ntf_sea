@@ -11,13 +11,14 @@ import Market from '@/artifacts/contracts/Market.sol/NFTMarket.json'
 import styles from './style.module.scss'
 import {Select, Button, Form, Input} from 'antd'
 import {getMyCollection} from '@/pages/api/collection'
+import Link from 'next/link'
 
 const {Option} = Select;
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 export async function getServerSideProps({req}) {
 
-  const tokenCookie = req.headers.cookie.split(";")
+  const tokenCookie =  req.headers.cookie.split(";")
   .find(c => c.trim().startsWith("token="));
   const token = tokenCookie && tokenCookie.split('=')[1]
   console.log('tk',token)
@@ -36,7 +37,6 @@ const CreateItem = (props) => {
   const [fileUrl, setFileUrl] = useState(null)
   const [itemPrice, setItemPrice] = useState()
   const [loading, setLoading] = useState(false)
-  const [formInput, updateFormInput] = useState({ price: '', name: '', description: '', collection_id: '', category_id: '' })
   const router = useRouter()
   const [form] = Form.useForm();
 
@@ -78,7 +78,6 @@ const CreateItem = (props) => {
     const data = JSON.stringify({
       name, description, image: fileUrl
     })
-    // setLoading(true)
     try {
       const added = await client.add(data)
       const url = `https://ipfs.infura.io/ipfs/${added.path}`
@@ -143,14 +142,20 @@ const CreateItem = (props) => {
     )
   }) || []
 
-  const handleCollection = (value) => {
-    const arr = value.split(',')
-    updateFormInput({ ...formInput, collection_id: arr[0], category_id: arr[1] })
-  }
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+
+  const labelCollection = listCollection.length > 0 ? (
+    <div>
+      Collection: <Link href='/collection/create'><a>Create new one?</a></Link>
+    </div>
+  ) : (
+    <div>
+      Collection: <Link href='/collection/create'><a>You don&apos;t have any collections yet, click to create a new one!</a></Link>
+    </div>
+  )
 
   return (
 
@@ -181,7 +186,7 @@ const CreateItem = (props) => {
                 <Input.TextArea rows={5} placeholder="Provide a detailed description of your item"/>
           </Form.Item>
 
-          <Form.Item label="Collection" name='collection_id' rules={[{ required: true, message: "Please choose your collection" }]}>
+          <Form.Item label={labelCollection} name='collection_id' rules={[{ required: true, message: "Please choose your collection" }]}>
               <Select placeholder='Choose collection'>
                 {collections}
               </Select>
@@ -189,7 +194,7 @@ const CreateItem = (props) => {
 
           <Form.Item>
                 <Button htmlType="submit" loading={loading} className={styles.secondaryButton}>
-                Create 
+                  Create 
               </Button>
           </Form.Item>
 

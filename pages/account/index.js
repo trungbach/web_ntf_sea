@@ -8,7 +8,6 @@ import Link from 'next/link'
 import ItemSell from '@/components/ItemSell'
 import Footer from '@/components/Footer'
 import NavBar from '@/components/SideBar';
-import etherSvg from '@/public/etherSvg.svg';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import {getMyAsset, getMyCreated, getMyFavorited} from '@/pages/api/asset'
 import {useRouter} from 'next/router'
@@ -21,7 +20,7 @@ const {Option} = Select;
 
 export async function getServerSideProps({ req }) {
 
-    const tokenCookie = req.headers.cookie.split(";")
+    const tokenCookie = req.headers.cookie && req.headers.cookie.split(";")
     .find(c => c.trim().startsWith("token="));
     const token = tokenCookie && tokenCookie.split('=')[1]
     console.log('tk',token)
@@ -52,14 +51,6 @@ const CollectionName = ({myAsset, myCreated, myFavorited}) => {
     }
 
   const handleChange = () => {}
-
-//   const listItem = data?.map((item, index) => {
-//       return (
-//         <div key={index} className="col-12 col-md-4 col-lg-3 mb-4">
-//             <ItemSell item={item}/>
-//         </div>
-//       )
-//   }) || ''
 
     const listMyCreated = myCreated.length > 0 ? myCreated.map((item, index) => {
       return (
@@ -153,7 +144,6 @@ const CollectionName = ({myAsset, myCreated, myFavorited}) => {
                             <Button className={styles.buttonShowFilter} onClick={()=>setIsShowSideBar(true)}><FilterListIcon />Filter</Button>
                         </div>
                     </div>
-                    {/* {listItem} */}
                 </div>
                 <Tabs tabPosition='left'>
                     <TabPane tab="Collected" key="1">

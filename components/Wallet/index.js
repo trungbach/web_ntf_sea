@@ -6,6 +6,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import metamask from '@/public/metamask.png'
 import Web3 from 'web3'
+import { ToastContainer, toast } from 'react-toastify';
 import {checkPublicAddress, verifySignature} from '@/pages/api/login'
 import Cookies from 'js-cookie'
 const Wallet = ({isShowWallet, setIsShowWallet}) => {
@@ -20,6 +21,7 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
     const [account, setAccount] = useState()
     const [publicAddress, setPublicAddress] = useState()
     const [loading, setLoading] = useState(false)
+    const [isLogined, setIsLogined] = useState(false)
 
     const checkMetamask = async() => {
         const isMetaInstalled = typeof window.web3 !== 'undefined'
@@ -54,6 +56,9 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
                 // if(resSignature.status === 200) {
                     Cookies.set('token', resSignature.body.data)
                     console.log(resSignature.body.data)
+                    toast.dark('Login Success!')
+                    setIsLogined(true)
+                    setIsShowWallet(false)
                 // }
               }
           )
@@ -87,6 +92,9 @@ const Wallet = ({isShowWallet, setIsShowWallet}) => {
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                position="bottom-right"
+            />
         </div>
     );
 }

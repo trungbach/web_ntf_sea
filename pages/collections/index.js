@@ -1,30 +1,56 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './style.module.scss';
 import { Button, Card } from 'antd'
 import { useRouter } from 'next/router'
 import {getMyCollection} from '@/pages/api/collection'
+import LoginPage from '@/components/LoginPage'
 import Link from 'next/link'
 import Image from 'next/image'
+import Cookies from 'js-cookie'
+
 export async function getServerSideProps({req}) {
 
-    const tokenCookie = req.headers.cookie.split(";")
-    .find(c => c.trim().startsWith("token="));
-    const token = tokenCookie && tokenCookie.split('=')[1]
-    console.log('tk',token)
-
-    const myCollection = await getMyCollection({token: token});
-    return {
-        props: {
-            myCollection
+    if(req.headers.cookie) {
+        const tokenCookie = req.headers.cookie.split(";")
+        .find(c => c.trim().startsWith("token="));
+        const token = tokenCookie && tokenCookie.split('=')[1]
+        console.log('tk',token)
+    
+        const myCollection = await getMyCollection({token: token});
+        return {
+            props: {
+                myCollection,
+                isLogin: true
+            }
+        }
+    } else {
+        return {
+            props: {
+                myCollection: [],
+                isLogin: false
+            }
         }
     }
 
 }
 
-const MyCollections = ({myCollection, search_text}) => {
+const MyCollections = ({myCollection, isLogin, search_text}) => {
+
     console.log(myCollection)
     const router = useRouter()
     console.log(search_text)
+    const [isLogined, setIsLogined] = useState(isLogin)
+
+    useEffect(() => {
+        if(Cookies.get('token') === undefined)
+            setIsLogined(false)
+    },[Cookies.get('token')])
+
+    if(!isLogined) {
+        return (
+            <LoginPage />
+        )
+    }
 
     const goToCreate = () => {
         router.push('/collection/create')

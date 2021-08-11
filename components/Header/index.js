@@ -14,6 +14,7 @@ import {useRouter} from 'next/router'
 import {getListCategory} from '@/pages/api/category'
 import Cookies  from 'js-cookie'
 import avatarUser from '@/public/avatarUser.png'
+import { ToastContainer, toast } from 'react-toastify';
 
 const Header = () => {
 
@@ -57,6 +58,7 @@ const Header = () => {
     const logOut = () => {
         Cookies.remove('token')
         setIsLogined(false)
+        toast.dark('You have been logged out successfully!')
     }
 
     const categories = listCategory.length > 0 ? listCategory.map((item, index) => {
@@ -222,6 +224,7 @@ const Header = () => {
                 </div>
             </div>
             <Wallet isShowWallet={isShowWallet} setIsShowWallet={setIsShowWallet} />
+            <ToastContainer position="bottom-right" />
         </nav>
     );
 }

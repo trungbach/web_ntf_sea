@@ -43,7 +43,7 @@ import {getDetailNtfBlock, buyItem} from '@/pages/api/detail'
 import {useRouter} from 'next/router'
 
 export async function getServerSideProps({ params, req, res }) {
-    const tokenCookie = req.headers.cookie.split(";")
+    const tokenCookie = req.headers.cookie && req.headers.cookie.split(";")
     .find(c => c.trim().startsWith("token="));
     const token = tokenCookie && tokenCookie.split('=')[1]
     console.log('tk',token)
