@@ -3,14 +3,17 @@ import styles from './style.module.scss';
 import { Button, Card } from 'antd'
 import { useRouter } from 'next/router'
 import {getMyCollection} from '@/pages/api/collection'
-import LoginPage from '@/components/LoginPage'
+import LoginPage from '@/pages/login'
 import Link from 'next/link'
 import Image from 'next/image'
 import { connect } from 'react-redux'
 
-export async function getServerSideProps({req}) {
+export async function getServerSideProps({req, res}) {
 
-    if(req.headers.cookie) {
+    if(!req.headers.cookie) {
+        res.writeHead(302, { Location: `/login?${req.url}` })
+        res.end();
+    } else {
         const tokenCookie = req.headers.cookie.split(";")
         .find(c => c.trim().startsWith("token="));
         const token = tokenCookie && tokenCookie.split('=')[1]
@@ -20,12 +23,6 @@ export async function getServerSideProps({req}) {
         return {
             props: {
                 myCollection,
-            }
-        }
-    } else {
-        return {
-            props: {
-                myCollection: [],
             }
         }
     }
@@ -38,12 +35,15 @@ const MyCollections = ({myCollection, search_text, isLoggedIn}) => {
     const router = useRouter()
     console.log(search_text)
 
-    if(!isLoggedIn) {
-        return (
-            <LoginPage />
-        )
-    }
 
+
+    useEffect(() => {
+        if(!isLoggedIn) {
+           router.push('/login')
+        }
+    },[isLoggedIn])
+    
+   
     const goToCreate = () => {
         router.push('/collection/create')
     }

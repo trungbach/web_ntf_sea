@@ -10,9 +10,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import {checkPublicAddress, verifySignature} from '@/pages/api/login'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { loginAccount } from '@/store/login/action'
+import { loginAccount, toggleWallet } from '@/store/login/action'
 import avatarUser from '@/public/avatarUser.png'
-const Wallet = ({isShowWallet, setIsShowWallet, loginAccount, isLoggedIn}) => {
+const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
 
     console.log('isLoggedIn', isLoggedIn)
     const [widthScreen, setWidthScreen] = useState()
@@ -23,27 +23,27 @@ const Wallet = ({isShowWallet, setIsShowWallet, loginAccount, isLoggedIn}) => {
         setWidthScreen(window.screen.width)
     },[])
 
-    useEffect(() => {
-        const getBalance = async() => {
-            if (window.ethereum) {
-                window.web3 = new Web3(window.ethereum)
-                await window.ethereum.enable()
-              }
-            else if (window.web3) {
-                window.web3 = new Web3(window.web3.currentProvider)
-            }
+    // useEffect(() => {
+    //     const getBalance = async() => {
+    //         if (window.ethereum) {
+    //             window.web3 = new Web3(window.ethereum)
+    //             await window.ethereum.enable()
+    //           }
+    //         else if (window.web3) {
+    //             window.web3 = new Web3(window.web3.currentProvider)
+    //         }
     
-            const publicAddress = await web3.eth.getCoinbase()
-            const currentBalance = await web3.eth.getBalance(publicAddress)
-            console.log('currentBalance',currentBalance)
-            console.log('publicAddress',publicAddress)
-            setBalance(currentBalance)
-            setPublicAddress(publicAddress)
-        }
+    //         const publicAddress = await web3.eth.getCoinbase()
+    //         const currentBalance = await web3.eth.getBalance(publicAddress)
+    //         console.log('currentBalance',currentBalance)
+    //         console.log('publicAddress',publicAddress)
+    //         setBalance(currentBalance)
+    //         setPublicAddress(publicAddress)
+    //     }
 
-        getBalance()
+    //     getBalance()
 
-    },[])
+    // },[])
 
     const [metamaskInstalled, setMetamaskInstalled] = useState(false)
     const [account, setAccount] = useState()
@@ -81,7 +81,7 @@ const Wallet = ({isShowWallet, setIsShowWallet, loginAccount, isLoggedIn}) => {
                 // if(resSignature.status === 200) {
                 toast.dark('Login Success!')
                 loginAccount(resSignature.body.data)
-                setIsShowWallet(false)
+                toggleWallet()
                 // }
               }
           )
@@ -89,9 +89,9 @@ const Wallet = ({isShowWallet, setIsShowWallet, loginAccount, isLoggedIn}) => {
 
     return (
         <div className={styles.wallet}>
-           {isShowWallet && <div className={styles.overlay} onClick={()=>setIsShowWallet(false)}></div>}
+           {isOpenWallet && <div className={styles.overlay} onClick={toggleWallet}></div>}
            {!isLoggedIn ?
-            (<div className={styles.sideFilter} style={{right: isShowWallet ? '0' : (widthScreen >= 768 ? '-380px' : '-100%')}}>
+            (<div className={styles.sideFilter} style={{right: isOpenWallet ? '0' : (widthScreen >= 768 ? '-380px' : '-100%')}}>
                 <div className={styles.sideCollapse}>
                     <div className={styles.filterTitle}>
                         <AccountCircleIcon /> My wallet
@@ -117,22 +117,13 @@ const Wallet = ({isShowWallet, setIsShowWallet, loginAccount, isLoggedIn}) => {
                 </div>
             </div>)  : 
             
-            (<div className={styles.sideFilter} style={{right: isShowWallet ? '0' : (widthScreen >= 768 ? '-380px' : '-100%')}}>
+            (<div className={styles.sideFilter} style={{right: isOpenWallet ? '0' : (widthScreen >= 768 ? '-380px' : '-100%')}}>
                 <div className={styles.sideCollapse}>
                     <div className={styles.infoWallet}>
                         <div>
                             <Image src={avatarUser} alt='avatar' width={30} height={30} /> welcome!
                         </div>
                         <div>{publicAddress}</div>
-                    </div>
-                    <div className={styles.contentWallet}>
-                        <div className={styles.contentInner}>
-                            <p>Total balance</p>
-                            <h3>$ {balance} Wei</h3>
-                            <div className={styles.addFund}>
-                                <button className={styles.secondaryButton}>Add Funds</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>)
@@ -146,12 +137,15 @@ const Wallet = ({isShowWallet, setIsShowWallet, loginAccount, isLoggedIn}) => {
 }
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: state.login.isLoggedIn
+  isLoggedIn: state.login.isLoggedIn,
+  isOpenWallet: state.login.isOpenWallet
 })
 
 const mapDispatchToProps = (dispatch) => {
   return {
     loginAccount: bindActionCreators(loginAccount, dispatch),
+    toggleWallet: bindActionCreators(toggleWallet, dispatch),
+
   }
 }
 

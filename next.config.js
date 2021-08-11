@@ -8,7 +8,7 @@ module.exports = {
   images: {
     domains: ['opensea.io', "storage.googleapis.com", "lh3.googleusercontent.com", "img.favpng.com", "www.designyourway.net", "thedreamwithinpictures.com", 'ipfs.infura.io', 'payload.cargocollective.com', 'upload.wikimedia.org'],
   },
-  trailingSlash: true,
+  trailingSlash: false,
   react: {
     useSuspense: false,
     wait: true,

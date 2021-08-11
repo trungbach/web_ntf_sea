@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import styles from './style.module.scss';
 import Image from 'next/image'
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {Input, Select, Button, Tooltip } from 'antd';
@@ -15,13 +14,18 @@ import avatar from '@/public/30.png'
 import cover from '@/public/cover.jpg'
 import { Tabs } from 'antd';
 import { connect } from 'react-redux'
-import LoginPage from '@/components/LoginPage'
+import styles from './style.module.scss';
+import dynamic from 'next/dynamic'
 
 const { TabPane } = Tabs;
 const {Option} = Select;
 
-export async function getServerSideProps({ req }) {
-    if(req.headers.cookie) {
+export async function getServerSideProps({ req, res }) {
+    if(!req.headers.cookie) {
+        res.writeHead(302, { Location: `/login?${req.url}` })
+         res.end();
+        
+    } else {
         const tokenCookie = req.headers.cookie.split(";")
         .find(c => c.trim().startsWith("token="));
         const token = tokenCookie && tokenCookie.split('=')[1]
@@ -36,14 +40,6 @@ export async function getServerSideProps({ req }) {
                 myFavorited
             }
         }
-    } else {
-        return {
-            props: {
-                myAsset: [],
-                myCreated: [],
-                myFavorited: []
-            }
-        }
     }
 
 }
@@ -51,20 +47,26 @@ export async function getServerSideProps({ req }) {
 const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
     console.log('myCreated', myCreated)
     console.log('myFavorited', myFavorited)
+    const router = useRouter()
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
     const [searchText, setSearchText] = useState('');
     const [isShowSideBar, setIsShowSideBar] = useState(false);
-    const router = useRouter()
-
+    const {tab} = router.query
+    console.log(tab)
+    const [currentTab, setCurrentTab] = useState()
     const setPrice = (minPrice, maxPrice) => {
         setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
     }
 
-    if(!isLoggedIn) {
-        return (
-            <LoginPage />
-        )
-    }
+    useEffect(() => {
+        setCurrentTab(tab)
+    },[tab])
+
+    useEffect(() => {
+        if(!isLoggedIn) {
+           router.push('/login')
+      }
+    },[isLoggedIn])
 
   const handleChange = () => {}
 
@@ -101,7 +103,6 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
     if (router.isFallback) {
         return <div>Loading...</div>
     }
-
     return (
         <>
         <div className={styles.collection}>
@@ -161,18 +162,18 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
                         </div>
                     </div>
                 </div>
-                <Tabs tabPosition='left'>
-                    <TabPane tab="Collected" key="1">
+                <Tabs tabPosition='left' defaultActiveKey={currentTab}>
+                    <TabPane tab="Collected" key='collected'>
                         <div className="row">
                             {listMyAsset}
                         </div>
                     </TabPane>
-                    <TabPane tab="Created" key="2">
+                    <TabPane tab="Created" key='created'>
                         <div className="row">
                             {listMyCreated}
                         </div>
                     </TabPane>
-                    <TabPane tab="Favorited" key="3">
+                    <TabPane tab="Favorited" key="favorites">
                         <div className="row">
                             {listMyFavorited}
                         </div>
