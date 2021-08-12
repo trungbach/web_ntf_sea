@@ -76,18 +76,18 @@ const Listing = () => {
       ];
 
       const data = [
-        {
-            price: '0.2',
-            USD: '462.81',
-            expiration: '---',
-            from: 'Tagline',
-        },
-        {
-            price: '0.2',
-            USD: '462.81',
-            expiration: '---',
-            from: 'Tagline',
-        },
+        // {
+        //     price: '0.2',
+        //     USD: '462.81',
+        //     expiration: '---',
+        //     from: 'Tagline',
+        // },
+        // {
+        //     price: '0.2',
+        //     USD: '462.81',
+        //     expiration: '---',
+        //     from: 'Tagline',
+        // },
     ];
 
     return (

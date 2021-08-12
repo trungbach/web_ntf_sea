@@ -8,9 +8,13 @@ import LoadingItem from '@/components/LoadingItem'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import {getListItem} from '@/pages/api/asset'
 import {useAsset} from '@/lib/useAsset';
+import {useFilterCollection} from '@/lib/useCollection';
 import {getListCategory} from '../api/category';
 import {getListCollection} from '../api/collection';
 import {useRouter} from 'next/router';
+import {checkProperties} from '@/utils/index'
+import CloseIcon from '@material-ui/icons/Close';
+
 const {Option} = Select
 
 export async function getStaticProps() {
@@ -31,26 +35,45 @@ export async function getStaticProps() {
 
 
 const Assets = ({listItem, listCategory, listCollection}) => {
-    console.log( listCollection)
     const router = useRouter()
-    console.log('query',router.query)
-    const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '', collection_id: '', category_id: '' })
-
-    const {data} = useAsset(`category_id=${filterObj.category_id}&collection_id=${filterObj.collection_id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}`, listItem)
-    console.log(data)
-
-    const handleChangeTypeItem = () => {}
-    const handleChangeSortBy = () => {}
+    const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '', collection: '', category: ''})
+    const [collectionName, setCollectionName] = useState('')
     const [isShowSideBar, setIsShowSideBar] = useState(false);
+    const [isResetPrice, setIsResetPrice] = useState(false)
+    const [sort, setSort] = useState()
+    const {data} = useAsset(`category_id=${filterObj.category?.id || ''}&collection_id=${filterObj.collection?.id || ''}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`, listItem)
+   
+    const {filterCollection} = useFilterCollection(`key=${collectionName}`, listCollection)
+
+    useEffect(() => {
+      if(router.query.key === undefined) {
+        setFilterObj({...filterObj, key: ''})
+      }  else setFilterObj({...filterObj, key: router.query.key })
+    },[router.query.key])
+
 
     const setPrice = (minPrice, maxPrice) => {
         setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
     }
 
-    const onKeyDown = e => {
-        if(e.key === "Enter") {
-            setFilterObj({...filterObj, key: searchText})
+    const setCategory = (item) => {
+        if(item == -1) {
+            setFilterObj({ ...filterObj, category: {...item} })
+        } else {
+            setFilterObj({ ...filterObj, category: {...item}, collection: '' })
         }
+    }
+
+    const setCollection= (item) => {
+        if(item == -1) {
+            setFilterObj({ ...filterObj, collection: '' })
+        } else {
+            setFilterObj({ ...filterObj, collection: item, category: '' })
+        }
+    }
+
+    const handleChangeSortBy = (obj) => {
+        setSort(obj.value)
     }
 
     const listItemResponse = data.map((item, index) => {
@@ -59,14 +82,29 @@ const Assets = ({listItem, listCategory, listCollection}) => {
         )
     })
 
-    const setCollectionId = (id) => setFilterObj({...filterObj, collection_id: id})
-    const setCategoryId = (id) => setFilterObj({...filterObj, category_id: id})
+    const removeFilter = () => {
+        setFilterObj({ key: '', min_price: '', max_price: '', collection: '', category: '', sort: '' })
+        router.push('/assets', undefined, {shallow: true})
+        setIsResetPrice(true)
+    }
+
+    const sortBy = {
+        CREATED_SORT: 1,
+        PRICE_INCREASE_SORT: 2,
+        PRICE_REDUCED_SORT: 3,
+        FAVORITE_SORT: 4,
+        OLDEST_SORT :  5
+    }
 
     return (
         
         <div className={styles.assets}> 
-            <SideFilter setCollectionId={setCollectionId} setCategoryId={setCategoryId} 
-                        setPrice={setPrice} listCategory={listCategory} listCollection={listCollection} />
+            <SideFilter collectionName={collectionName} setCollectionName={setCollectionName} 
+                        minPrice={filterObj.min_price} maxPrice={filterObj.max_price} setIsResetPrice={setIsResetPrice}
+                        setCollection={setCollection} setCategory={setCategory} isResetPrice={isResetPrice}
+                        setPrice={setPrice} listCategory={listCategory} listCollection={filterCollection} 
+                        currentCollection={filterObj.collection} currentCategory={filterObj.category} />
+                        
             <SideFilterMobile isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
             <div className={styles.showFilter}>
                 <Button className={styles.buttonShowFilter} onClick={() =>setIsShowSideBar(true)}>Filter</Button>
@@ -74,10 +112,10 @@ const Assets = ({listItem, listCategory, listCollection}) => {
             <div className={styles.mainAsset}>
                 <div className={styles.heading}>
                     <div className={`${styles.totalResult} d-none d-md-block`}>
-                        {listItem.length} results
+                        {listItem.length > 0 ? ` ${listItem.length} results` : '0 result'}
                     </div>
                     <div className={styles.filter}>
-                        <Select
+                        {/* <Select
                         labelInValue
                         defaultValue={{ value: 'lucy' }}
                         dropdownClassName={styles.selectTypeItem}
@@ -86,46 +124,41 @@ const Assets = ({listItem, listCategory, listCollection}) => {
                             <Option value="lucy">All items</Option>
                             <Option value="single">Single Items</Option>
                             <Option value="bundles">Bundles</Option>
-                        </Select>
+                        </Select> */}
                         <Select
                             labelInValue
-                            defaultValue={{ value: 'lucy' }}
+                            placeholder="Sort by"
                             onChange={handleChangeSortBy}
                             >
-                            <Option value="lucy">Sort by</Option>
-                            <Option value="jack">Recently Listed</Option>
-                            <Option value="jack">Recently Sold</Option>
-                            <Option value="jacks">Ending Soon</Option>
-                            <Option value="jackss">Price: Low to High</Option>
-                            <Option value="jackss">Price: High to Low</Option>
-                            <Option value="jackss">Highest Last Sale</Option>
-                            <Option value="jackss">Most Viewed</Option>
-                            <Option value="jackss">Most Favorite</Option>
-                            <Option value="jackss">Oldest</Option>
+                            <Option value={sortBy.CREATED_SORT}>Recently Created</Option>
+                            <Option value={sortBy.PRICE_INCREASE_SORT}>Price: Low to High</Option>
+                            <Option value={sortBy.PRICE_REDUCED_SORT}>Price: High to Low</Option>
+                            <Option value={sortBy.FAVORITE_SORT}>Most Favorite</Option>
+                            <Option value={sortBy.OLDEST_SORT}>Oldest</Option>
                         </Select>
                     </div>
                 </div>
+                <ul className={styles.listAttributeFilter}>
+                    {filterObj.key !== '' && <li className={styles.attributeFilter}>{filterObj.key} <span onClick={()=>setFilterObj({ ...filterObj, key: '' })}><CloseIcon /></span></li>}
+
+                    {filterObj.category !== '' && <li className={styles.attributeFilter}>{filterObj.category.name} <span onClick={()=>setFilterObj({ ...filterObj, category: '' })}><CloseIcon /></span></li>}
+
+                    {filterObj.collection !== '' && <li className={styles.attributeFilter}>{filterObj.collection.name} <span onClick={()=>setFilterObj({ ...filterObj, collection: '' })}><CloseIcon /></span></li>}
+
+                    {filterObj.min_price !== '' && <li className={styles.attributeFilter}>Min: {filterObj.min_price} ETH <span onClick={()=>setFilterObj({ ...filterObj, min_price: '' })}><CloseIcon /></span></li>}
+
+                    {filterObj.max_price !== '' && <li className={styles.attributeFilter}>Max: {filterObj.max_price} ETH <span onClick={()=>setFilterObj({ ...filterObj, max_price: '' })}><CloseIcon /></span></li>}
+
+                    {!checkProperties(filterObj) && <li className={styles.removeFilter} onClick={removeFilter}>Clear All</li>}
+                </ul>
                 <div className={styles.assetsList}>
-                    {/* <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem />
-                    <LoadingItem /> */}
-                    {listItemResponse}
+                    {/* <LoadingItem />  */}
+                    {data.length ? listItemResponse : (
+                        <div className={styles.emptyResponse}>
+                            <h1>Not items found for this search</h1>
+                            <Button className={styles.secondaryButton} onClick={removeFilter}>Back to all items</Button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

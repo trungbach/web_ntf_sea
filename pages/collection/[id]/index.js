@@ -21,13 +21,15 @@ const {Option} = Select;
 
 const CollectionName = ({collection}) => {
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
-    const {data} = useCollection(`collection_id=${collection?.id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}`)
+    const [sort, setSort] = useState('')
+    const {data} = useCollection(`collection_id=${collection.id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`)
     const [isSeeMore, setIsSeeMore] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [heightDesc, setHeightDesc] = useState(-1);
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const refDesc = useRef();
     const router = useRouter()
+
     useEffect(() => {
         const height = refDesc.current.clientHeight
         setHeightDesc(height)
@@ -50,7 +52,6 @@ const CollectionName = ({collection}) => {
         setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
     }
 
-  const handleChange = () => {}
 
   const listItem = data?.map((item, index) => {
       return (
@@ -62,6 +63,7 @@ const CollectionName = ({collection}) => {
   
   const onKeyDown = e => {
     if(e.key === "Enter") {
+        e.preventDefault()
         setFilterObj({...filterObj, key: searchText})
     }
     }
@@ -69,6 +71,18 @@ const CollectionName = ({collection}) => {
     if (router.isFallback) {
         return <div>Loading...</div>
       }
+
+    const handleChangeSortBy = (obj) => {
+        setSort(obj.value)
+    }
+    
+    const sortBy = {
+        CREATED_SORT: 1,
+        PRICE_INCREASE_SORT: 2,
+        PRICE_REDUCED_SORT: 3,
+        FAVORITE_SORT: 4,
+        OLDEST_SORT :  5
+    }
 
     return (
         <>
@@ -138,26 +152,26 @@ const CollectionName = ({collection}) => {
                         : <div type='button' className={styles.seeMoreBtn} onClick={seeLess}> <ExpandLessIcon /></div>)}
                 </div>
                 <div className={styles.social}>
-                        <Link href='/'><a>
+                        {/* <Link href='/'><a> */}
                             <Tooltip title='Activity'>
                                 <span><PlaylistPlayIcon /></span>
                             </Tooltip>
-                        </a></Link>
-                        <Link href='/'><a>
+                        {/* </a></Link> */}
+                        {/* <Link href='/'><a> */}
                             <Tooltip title='Website'>
                                 <span><WebIcon /></span>
                             </Tooltip>
-                        </a></Link>
-                        <Link href='/'><a>
+                        {/* </a></Link> */}
+                        {/* <Link href='/'><a> */}
                             <Tooltip title='Discord'>
                             <span><i className="fab fa-discord"></i></span>
                             </Tooltip>
-                        </a></Link>
-                        <Link href='/'><a>
+                        {/* </a></Link> */}
+                        {/* <Link href='/'><a> */}
                             <Tooltip title='Activity'>
                                 <span><PlaylistPlayIcon /></span>
                             </Tooltip>
-                        </a></Link>
+                        {/* </a></Link> */}
                 </div>
                 <div className={styles.filter}>
                     <div>
@@ -166,19 +180,14 @@ const CollectionName = ({collection}) => {
                     <div className={styles.filterSelect}>
                         <Select
                             labelInValue
-                            defaultValue={{ value: 'lucy' }}
-                            onChange={handleChange}
+                            placeholder="Sort by"
+                            onChange={handleChangeSortBy}
                             >
-                            <Option value="lucy">Sort by</Option>
-                            <Option value="jac1k">Recently Listed</Option>
-                            <Option value="jack">Recently Sold</Option>
-                            <Option value="jacks">Ending Soon</Option>
-                            <Option value="jackss">Price: Low to High</Option>
-                            <Option value="jackss1">Price: High to Low</Option>
-                            <Option value="jackss2">Highest Last Sale</Option>
-                            <Option value="jackss3">Most Viewed</Option>
-                            <Option value="jackss4">Most Favorite</Option>
-                            <Option value="jackss5">Oldest</Option>
+                            <Option value={sortBy.CREATED_SORT}>Recently Created</Option>
+                            <Option value={sortBy.PRICE_INCREASE_SORT}>Price: Low to High</Option>
+                            <Option value={sortBy.PRICE_REDUCED_SORT}>Price: High to Low</Option>
+                            <Option value={sortBy.FAVORITE_SORT}>Most Favorite</Option>
+                            <Option value={sortBy.OLDEST_SORT}>Oldest</Option>
                         </Select>
                     </div>
                     <div>

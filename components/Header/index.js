@@ -32,15 +32,35 @@ const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
         getCategory();
     },[])
 
+    useEffect(()=> {
+        if(router.pathname !== '/assets') {
+            setSearchText('')
+        }
+    },[router.pathname])
+
     const onChange = (e) => {
         setSearchText(e.target.value)
     }
 
     const onKeyPress = e => {
         if(e.key === 'Enter') {
+            e.preventDefault()
+            console.log(router.pathname)
             if(router.pathname !== '/assets') {
-                router.push(`/assets?key=${searchText}`)
-            } 
+                if(searchText !== '') {
+                    router.push(`/assets?key=${searchText}`)
+                } else {
+                    router.push('/assets')
+                }
+
+            } else {
+                if(searchText !== '') {
+                    router.push(`/assets?key=${searchText}`, undefined, {shallow: true})
+                } else {
+                    router.push('/assets', undefined, {shallow: true})
+                }
+
+            }
         }
     }
 
@@ -181,7 +201,7 @@ const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
                 <span className="navbar-toggler-icon"></span>
                 </button>
                 <form className={`${styles.form} d-flex`}>
-                        <Input prefix={<SearchOutlined />} placeholder="Search items, categorys, and accounts" 
+                        <Input prefix={<SearchOutlined />} placeholder="Search items, categorys, and accounts"  value={searchText}
                         allowClear onChange={onChange} onKeyPress={onKeyPress} />
                 </form>
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -197,7 +217,7 @@ const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
                             <a className="nav-link" href="#">Resources</a>
                         </Dropdown> */}
                         <Dropdown overlay={menuUser} placement="bottomRight">
-                            <a className="nav-link" href="#">{isLoggedIn ? <Image width={40} height={40} src={avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
+                            <a className="nav-link" href="#">{isLoggedIn ? <Image width={30} height={30} src={avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
                         </Dropdown>
 
                         <span type='button' title='Wallet' className={`nav-link ${styles.walletBtn}`} onClick={toggleWallet}>

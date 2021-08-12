@@ -1,13 +1,11 @@
 import React, {useEffect, useState, useRef} from 'react';
 import styles from './style.module.scss';
 import Image from 'next/image'
-import bannerCollection from '@/public/bannerCollection.png';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {Input, Select, Button } from 'antd';
 import {SearchOutlined  } from '@ant-design/icons'
-import Link from 'next/link'
 import ItemSell from '@/components/ItemSell'
 import Footer from '@/components/Footer'
 import NavBar from '@/components/SideBar';
@@ -18,8 +16,9 @@ const {Option} = Select;
 
 const CategoryName = ({category}) => {
     const router = useRouter()
+    const [sort, setSort] = useState('')
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
-    const {data} = useCollection(`category_id=${category.id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}`)
+    const {data} = useCollection(`category_id=${category.id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`)
     console.log(data)
     const [isSeeMore, setIsSeeMore] = useState(false);
     const [heightDesc, setHeightDesc] = useState(-1);
@@ -45,8 +44,6 @@ const CategoryName = ({category}) => {
     setIsSeeMore(false)
   }
 
-  const handleChange = () => {}
-
    const listItem = data?.map((item, index) => {
        return (
             <div key={index} className="col-12 col-md-4 col-lg-3 mb-4">
@@ -57,10 +54,11 @@ const CategoryName = ({category}) => {
 
    const setPrice = (minPrice, maxPrice) => {
     setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
-}
+    }
 
     const onKeyDown = e => {
     if(e.key === "Enter") {
+        e.preventDefault()
         setFilterObj({...filterObj, key: searchText})
     }
     }
@@ -68,6 +66,18 @@ const CategoryName = ({category}) => {
 
    if (router.isFallback) {
     return <div>Loading...</div>
+    }
+
+    const handleChangeSortBy = (obj) => {
+        setSort(obj.value)
+    }
+
+    const sortBy = {
+        CREATED_SORT: 1,
+        PRICE_INCREASE_SORT: 2,
+        PRICE_REDUCED_SORT: 3,
+        FAVORITE_SORT: 4,
+        OLDEST_SORT :  5
     }
 
     return (
@@ -109,19 +119,14 @@ const CategoryName = ({category}) => {
                     <div className={styles.filterSelect}>
                         <Select
                             labelInValue
-                            defaultValue={{ value: 'lucy' }}
-                            onChange={handleChange}
+                            placeholder="Sort by"
+                            onChange={handleChangeSortBy}
                             >
-                            <Option value="lucy">Sort by</Option>
-                            <Option value="jack">Recently Listed</Option>
-                            <Option value="jack">Recently Sold</Option>
-                            <Option value="jacks">Ending Soon</Option>
-                            <Option value="jackss">Price: Low to High</Option>
-                            <Option value="jackss1">Price: High to Low</Option>
-                            <Option value="jackss2">Highest Last Sale</Option>
-                            <Option value="jackss3">Most Viewed</Option>
-                            <Option value="jackss4">Most Favorite</Option>
-                            <Option value="jackss5">Oldest</Option>
+                            <Option value={sortBy.CREATED_SORT}>Recently Created</Option>
+                            <Option value={sortBy.PRICE_INCREASE_SORT}>Price: Low to High</Option>
+                            <Option value={sortBy.PRICE_REDUCED_SORT}>Price: High to Low</Option>
+                            <Option value={sortBy.FAVORITE_SORT}>Most Favorite</Option>
+                            <Option value={sortBy.OLDEST_SORT}>Oldest</Option>
                         </Select>
                     </div>
                     <div>

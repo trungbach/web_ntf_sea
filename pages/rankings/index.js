@@ -4,18 +4,6 @@ import {Select, Table} from 'antd';
 const {Option} = Select;
 import styles from './style.module.scss'
 import all from '@/public/allnfts-light.svg';
-import art from '@/public/art-light.svg';
-import collectibles from '@/public/collectibles-light.svg';
-import domain from '@/public/domain-names-light.svg';
-import newlight from '@/public/new-light.svg';
-import music from '@/public/music-light.svg';
-import sports from '@/public/sports-light.svg';
-import trading from '@/public/trading-cards-light.svg';
-import utility from '@/public/utility-light.svg';
-import virtual from '@/public/virtual-worlds-light.svg';
-import polygon from '@/public/polygon.svg';
-import ethereum from '@/public/ethereum.png';
-import klaytn from '@/public/klaytn.png';
 import LinkIcon from '@material-ui/icons/Link';
 import {useRouter} from 'next/router'
 import Footer from '@/components/Footer'
@@ -23,11 +11,30 @@ import moment from 'moment'
 import {useRanking} from '@/lib/useRanking'
 import {getRankingCollection} from '@/pages/api/ranking'
 import {getListCategory} from '@/pages/api/category'
+import {DATE_TIME} from '@/config/constants'
+
+export async function getStaticProps() {
+
+  const rangeTime= [ moment().subtract(7, 'day').format(DATE_TIME), moment().format(DATE_TIME) ]
+  const rankingCollection = await getRankingCollection(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}`);
+
+  const listCategory = await getListCategory();
+
+  return {
+    props: {
+      rankingCollection,
+      listCategory
+    },
+    revalidate: 60
+  }
+}
 
 const Rankings = ({ rankingCollection, listCategory }) => {
-    const [rangeTime, setRangeTime] = useState([moment('2021-08-01 00:00:00').format('YYYY-MM-DD HH:mm:ss'), moment('2021-10-01 23:59:59').format('YYYY-MM-DD HH:mm:ss')])
-    const { data } = useRanking(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}`, rankingCollection)
+    const [rangeTime, setRangeTime] = useState([ moment().subtract(7, 'day').format(DATE_TIME), moment().format(DATE_TIME) ])
+    const [categoryId, setCategoryId] = useState('')
+    const { data } = useRanking(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}&category_id=${categoryId}`, rankingCollection)
     const router = useRouter();
+
     const columns = [
         {
           title: 'Collection',
@@ -143,21 +150,46 @@ const Rankings = ({ rankingCollection, listCategory }) => {
           hour24: '-31.83%',
           day7: '+98.00%',
           floor_price: '6.35',
-          owners: '4.9K',
-          assets: '10.0K'
+          owners: item.owner,
+          assets: '10.0K',
+          url: `/collection/${item.id}`
         }
       })
 
     const listCategoryUI = listCategory.map((item, index) => {
       return (
         <Option key={index} value={item.id}>
-          <Image width={24} height={24} src={newlight} alt='new'></Image>
-          {item.name}
+          <Image width={24} height={24} src={item.logo_url} alt={item.logo_url} />
+            {item.name}
         </Option>
       )
     })
       
-    const handleChange = () => {}
+    const handleChangeCategory = (obj) => {
+      setCategoryId(obj.value)
+    }
+
+    const lastTime = {
+      LAST_DAY: 0,
+      LAST_WEEK: 1,
+      LAST_MONTH: 2
+    }
+
+    const handleChangeTime = (obj) => {
+      switch (obj.value) {
+        case lastTime.LAST_DAY: 
+          setRangeTime([ moment().subtract(1, 'day').format(DATE_TIME), moment().format(DATE_TIME) ]) 
+          break;
+        case lastTime.LAST_WEEK: 
+          setRangeTime([ moment().subtract(7, 'day').format(DATE_TIME), moment().format(DATE_TIME) ]) 
+          break;
+        case lastTime.LAST_MONTH: 
+          setRangeTime([ moment().subtract(30, 'day').format(DATE_TIME), moment().format(DATE_TIME) ]) 
+          break;
+        default: 
+          break
+      }
+    }
 
     return (
       <>
@@ -171,13 +203,13 @@ const Rankings = ({ rankingCollection, listCategory }) => {
                     <div>
                          <Select
                           labelInValue
-                          defaultValue={{ value: 'lucy' }}
-                          onChange={handleChange}
+                          defaultValue={{ value: lastTime.LAST_WEEK }}
+                          onChange={handleChangeTime}
                           >
-                        <Option value="lucy">Last 24 hours</Option>
-                        <Option value="jack">Last 7 days</Option>
-                        <Option value="jacks">Last 30 days</Option>
-                        <Option value="jackss">All time</Option>
+                        <Option value={lastTime.LAST_DAY}>Last 24 hours</Option>
+                        <Option value={lastTime.LAST_WEEK}>Last 7 days</Option>
+                        <Option value={lastTime.LAST_MONTH}>Last 30 days</Option>
+                        {/* <Option value="jackss">All time</Option> */}
                     </Select>
                     </div>
                     <div>
@@ -185,7 +217,7 @@ const Rankings = ({ rankingCollection, listCategory }) => {
                     labelInValue
                     dropdownClassName={styles.dropdownMarket}
                     defaultValue={{ value: '' }}
-                    onChange={handleChange}
+                    onChange={handleChangeCategory}
                     >
                         <Option value="">
                             <Image width={24} height={24} src={all} alt='all'></Image>
@@ -204,7 +236,7 @@ const Rankings = ({ rankingCollection, listCategory }) => {
                             win?.focus();
                         }
                         else {
-                            router.push('/');
+                            router.push(record.url);
                         }
                       }, 
                     };
@@ -220,17 +252,4 @@ const Rankings = ({ rankingCollection, listCategory }) => {
 
 export default Rankings;
 
-export async function getStaticProps() {
 
-  const rangeTime= [moment('2021-08-01 00:00:00').format('YYYY-MM-DD HH:mm:ss'), moment('2021-10-01 23:59:59').format('YYYY-MM-DD HH:mm:ss')]
-  const rankingCollection = await getRankingCollection(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}`);
-
-  const listCategory = await getListCategory();
-
-  return {
-    props: {
-      rankingCollection,
-      listCategory
-    }
-  }
-}

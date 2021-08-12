@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styles from './style.module.scss';
 import { Button, Select, Form, Input } from 'antd'
 import { useRouter } from 'next/router'
@@ -40,7 +40,7 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
     const [logoUrl, setLogoUrl] = useState(null)
     const [bannerUrl, setBannerUrl] = useState(null)
     const [form] = Form.useForm();
-
+    console.log('router', router)
     useEffect(() => {
       if(!isLoggedIn) {
          router.push('/login')
@@ -124,7 +124,7 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
         const resCollection = await createMyCollection(values)
         await setLoading(false)
         if(resCollection.status === 200) {
-            router.push('/collections')
+            router.push(router.query.from || '/collections') 
             alert('Thêm collection thành công!')
         }
       }

@@ -40,8 +40,10 @@ import Web3Modal from "web3modal"
 import { ethers } from 'ethers'
 import Market from '@/artifacts/contracts/Market.sol/NFTMarket.json'
 import {getDetailNtfBlock, buyItem} from '@/pages/api/detail'
+import {createFavorite, deleteFavorite} from '@/pages/api/favorite'
 import {useRouter} from 'next/router'
 import { connect } from 'react-redux'
+import avatarUser from '@/public/avatarUser.png'
 const { Panel } = Collapse;
 const {Option} = Select
 
@@ -69,24 +71,32 @@ export async function getServerSideProps({ params, req, res }) {
 }
 
 const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
+
     const router = useRouter()
-   
-    console.log('item', item)
     const [loading, setLoading] = useState(false)
-    
+    const [nftBlock, setNftBlock] = useState()
+    const [isFavorite, setIsFavorite] = useState(item.is_favorite === null ? false : true)
+    const [numberFavorite, setNumberFavorite] = useState(item.number_favorites)
+
     useEffect(() => {
         if(!isLoggedIn) {
            router.push('/login')
       }
     },[isLoggedIn])
+
+    useEffect(() => {
+        const getNftBlock = async()=> {
+            const nft = await getDetailNtfBlock({id: item.block_id})
+            setNftBlock(nft)
+        }
+        getNftBlock()
+    },[])
     
     
     const handleChange = () => {}
 
     async function buyNft() {
         setLoading(true)
-        const nft = await getDetailNtfBlock({id: item.block_id})
-        console.log(nft)
         /* needs the user to sign the transaction, so will use Web3Provider and sign it */
         const web3Modal = new Web3Modal()
         const connection = await web3Modal.connect()
@@ -100,7 +110,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         /* user will be prompted to pay the asking proces to complete the transaction */
         const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
         console.log(price)
-        const transaction = await contract.createMarketSale(config.nftaddress, nft.tokenId, {
+        const transaction = await contract.createMarketSale(config.nftaddress, nftBlock.tokenId, {
           value: price,
         //   gasLimit: 2100000,
         //   gasPrice: 8000000000
@@ -114,7 +124,17 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
 
     }
 
-    const callback = (key) => {}
+    const handleCreateFavorite = () => {
+        createFavorite({item_id: item.id})
+        setIsFavorite(true)
+        setNumberFavorite(numberFavorite+1)
+    }
+
+    const handleDeleteFavorite = () => {
+        deleteFavorite({item_id: item.id})
+        setIsFavorite(false)
+        setNumberFavorite(numberFavorite-1)
+    }
 
     return (
     <>
@@ -125,7 +145,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                 <div className={`${styles.owner} d-block d-md-none mb-5`}>
                     <div>
                         <div>
-                            <Link href='/'><a>AIR22</a></Link>
+                            <Link href={`/collection/${item.collection_id}`}><a>{item.collection_name}</a></Link>
                         </div>
                         <div className={styles.action}>
                             <Tooltip title='Refresh metadata'>
@@ -142,45 +162,39 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                             </Tooltip>
                         </div>
                     </div>
-                    <header><h1>{item?.name}</h1></header>
+                    <header><h1>{item.name}</h1></header>
                 </div>
                 <div className={styles.imgDetail}>
                     <div className={styles.favorite}>
-                        <FavoriteBorderIcon /> <span>{item.number_favorites}</span>
+                        {!isFavorite  ? <span onClick={handleCreateFavorite}> <FavoriteBorderIcon /></span> 
+                         : <span className={styles.isFavorite} onClick={handleDeleteFavorite}><FavoriteIcon /></span>}
+                         <span>{numberFavorite}</span>
                     </div>
                     <div style={{position: 'relative', height: '45rem'}}>
                         <Image layout='fill' src={item.image_url} alt={item.image_url} />
                     </div> 
                 </div>
                 <div className={`${styles.about} d-none d-md-block`}>
-                    <Collapse  expandIconPosition="right" defaultActiveKey={['1']} onChange={callback}>
+                    <Collapse  expandIconPosition="right" defaultActiveKey={['1']} >
                         <Panel header={<div><SubjectOutlinedIcon /> Description</div>} key="1">
                             <div className={styles.description}>
                                 <div className={styles.descriptionHead}>
                                     <Image width={30} height={30} src='https://storage.googleapis.com/opensea-static/opensea-profile/25.png' alt='avatar' />
-                                    <span>Created by <Link href='/'><a>1B9BB7</a></Link></span>
+                                    <span>Created by <Link href={`/address/${item.owner}`}><a>{item.user_name}</a></Link></span>
                                 </div>
                                 <p>
-                                    10,000 unique on-chain avatar NFTs generated using a cellular automaton.
+                                    {nftBlock?.description}
                                 </p>
                             </div>
                             
                         </Panel>
-                        <Panel header={<div><VerticalSplitRoundedIcon /> About PixelGlyphs</div>} key="2">
+                        <Panel header={<div><VerticalSplitRoundedIcon /> About {item.collection_name}</div>} key="2">
                             <div className={styles.aboutPixel}>
                                 <div className='d-flex align-items-start'>
-                                    <Image  width={60} height={60} src='https://lh3.googleusercontent.com/CVNrW79CrsCsF_oiNHicb7p6dy6uO6suXgNZUvGBniFi2zYC2WPbZ7YEY5Nm99TDE1ph389Sa3ql0_GKWO0OmZpUXr6I8W4MmtG0=w128' alt='des' />
-                                    <span>Pixelglyphs are a set of 10,000 unique on-chain avatar NFTs created using a cellular automaton on the Ethereum blockchain.</span>
+                                    <Image  width={60} height={60} src={item.collection_logo} alt={item.collection_logo} />
+                                    <span>{item.collection_description}</span>
                                 </div>
-                                <p>
-                                    Your Pixelglyph is created at random during the minting process. The cellular automaton algorithm runs on-chain, an NFT first. Pixel data and colors are stored on-chain. Your Pixelglyph can be re-created at any time using code.
-                                </p>
-                                <p>
-                                    Your Pixelglyph can act as your anonymous avatar across the internet and within your favorite dApps.
-                                </p>
-                                <p>
-                                    Each Pixelglyph you own will allow you to redeem a &quot;.glyph&quot; NFT. Learn more at pixelglyphs.io
-                                </p>
+                                
                                 <div className={styles.social}>
                                     <Tooltip title='Activity'>
                                         <span><PlaylistPlayIcon /></span>
@@ -205,11 +219,11 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                                 </div>
                                 <div>
                                     <p>Token ID</p>
-                                    <p>6577</p>
+                                    <p style={{fontWeight: 500}}>{nftBlock?.tokenId}</p>
                                 </div>
                                 <div>
                                     <p>Blockchain</p>
-                                    <p>Ethereum</p>
+                                    <p style={{fontWeight: 500}}>Ethereum</p>
                                 </div>
                             </div>
                         </Panel>
@@ -220,7 +234,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                 <div className={`${styles.owner} d-none d-md-block`}>
                     <div>
                         <div>
-                            <Link href='/'><a>AIR22</a></Link>
+                            <Link href={`/collection/${item.collection_id}`}><a>{item.collection_name}</a></Link>
                         </div>
                         <div className={styles.action}>
                             <Tooltip title='Refresh metadata'>
@@ -242,12 +256,8 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                 <div className={styles.priceDetail}>
                     <div className='d-flex align-items-center'>
                         <div className={styles.imgOwner}>
-                            <Image  width={24} height={24} src='https://storage.googleapis.com/opensea-static/opensea-profile/14.png' alt='avatar' />
-                            <span>Owner by <Link href='/'>Tagline</Link></span>
-                        </div>
-                        <div>
-                            <VisibilityIcon />
-                            <span>1</span> view
+                            <Image  width={24} height={24} src={avatarUser} alt='avatar' />
+                            <span>Owner by <Link href={`/address/${item.owner}`}>{item.user_name}</Link></span>
                         </div>
                     </div>
                     <div className={styles.currentPrice}>
@@ -262,7 +272,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                             </div>
                         </div>
                       
-                        <Collapse  expandIconPosition="right" defaultActiveKey={['1','3']} onChange={callback}
+                        <Collapse  expandIconPosition="right" defaultActiveKey={['1','3']}
                                 className={styles.customCollapse}
                         >
                             <Panel className={styles.customCollapsePanel} header={<div><TimelineOutlinedIcon /> Price history</div>} key="1">
@@ -302,34 +312,24 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                     </div>
                 </div>
                 <div className={`${styles.about} d-block d-md-none mt-5`}>
-                    <Collapse  expandIconPosition="right" defaultActiveKey={['1']} onChange={callback}>
+                    <Collapse  expandIconPosition="right" defaultActiveKey={['1']} >
                         <Panel header={<div><SubjectOutlinedIcon /> Description</div>} key="1">
                             <div className={styles.description}>
                                 <div className={styles.descriptionHead}>
-                                    <Image width={30} height={30} src='https://storage.googleapis.com/opensea-static/opensea-profile/25.png' alt='avatar' />
-                                    <span>Created by <Link href='/'><a>1B9BB7</a></Link></span>
+                                    <Image width={30} height={30} src={avatarUser} alt='avatar' />
+                                    <span>Created by <Link href={`/address/${item.owner}`}><a>{item.user_name}</a></Link></span>
                                 </div>
-                                <p>
-                                    10,000 unique on-chain avatar NFTs generated using a cellular automaton.
-                                </p>
+                                <p>{nftBlock?.description}</p>
                             </div>
                             
                         </Panel>
-                        <Panel header={<div><VerticalSplitRoundedIcon /> About PixelGlyphs</div>} key="2">
+                        <Panel header={<div><VerticalSplitRoundedIcon /> About {item.collection_name}</div>} key="2">
                             <div className={styles.aboutPixel}>
                                 <div className='d-flex align-items-start'>
-                                    <Image  width={60} height={60} src='https://lh3.googleusercontent.com/CVNrW79CrsCsF_oiNHicb7p6dy6uO6suXgNZUvGBniFi2zYC2WPbZ7YEY5Nm99TDE1ph389Sa3ql0_GKWO0OmZpUXr6I8W4MmtG0=w128' alt='des' />
-                                    <span>Pixelglyphs are a set of 10,000 unique on-chain avatar NFTs created using a cellular automaton on the Ethereum blockchain.</span>
+                                    <Image  width={60} height={60} src={item.collection_logo} alt={item.collection_logo} />
+                                    <span>{item.collection_description}</span>
                                 </div>
-                                <p>
-                                    Your Pixelglyph is created at random during the minting process. The cellular automaton algorithm runs on-chain, an NFT first. Pixel data and colors are stored on-chain. Your Pixelglyph can be re-created at any time using code.
-                                </p>
-                                <p>
-                                    Your Pixelglyph can act as your anonymous avatar across the internet and within your favorite dApps.
-                                </p>
-                                <p>
-                                    Each Pixelglyph you own will allow you to redeem a &quot;.glyph&quot; NFT. Learn more at pixelglyphs.io
-                                </p>
+                                
                                 <div className={styles.social}>
                                     <Link href='/'><a>
                                         <Tooltip title='Activity'>
@@ -362,11 +362,11 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                                 </div>
                                 <div>
                                     <p>Token ID</p>
-                                    <p>6577</p>
+                                    <p style={{fontWeight: 500}}>{nftBlock?.tokenId}</p>
                                 </div>
                                 <div>
-                                    <p>Blockchain</p>
-                                    <p>Ethereum</p>
+                                    <p >Blockchain</p>
+                                    <p style={{fontWeight: 500}}>Ethereum</p>
                                 </div>
                             </div>
                         </Panel>
@@ -374,26 +374,25 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                 </div>
             </div>
         </div>
-            <div className={styles.history}>
-                <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']} onChange={callback}>
-                    <Panel header={<div><SwapVertRoundedIcon /> Trading History</div>} key="1">
-                        <TradingHistory />
-                    </Panel>
-                    <Panel header={<div><ViewModuleRoundedIcon /> More from this collection</div>} key="2">
-                        <MoreFromCollection moreFromCollection={moreFromCollection.filter(c => c.id !== item.id)} />
-                    </Panel>
-                </Collapse>
-            </div>
-            <div className={styles.viewCollection}>
-                <Link href={`/collection/${item.collection_id}`}>
-                    <a className={styles.primaryButton}>
-                    View Collection
-                    </a>
-                </Link>
-            </div>
+        <div className={styles.history}>
+            <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']} >
+                <Panel header={<div><SwapVertRoundedIcon /> Trading History</div>} key="1">
+                    <TradingHistory />
+                </Panel>
+                <Panel header={<div><ViewModuleRoundedIcon /> More from this collection</div>} key="2">
+                    <MoreFromCollection moreFromCollection={moreFromCollection.filter(c => c.id !== item.id)} />
+                </Panel>
+            </Collapse>
         </div>
-       
-        <Footer />
+        <div className={styles.viewCollection}>
+            <Link href={`/collection/${item.collection_id}`}>
+                <a className={styles.primaryButton}>
+                View Collection
+                </a>
+            </Link>
+        </div>
+    </div>
+    <Footer />
     </>
     );
 }

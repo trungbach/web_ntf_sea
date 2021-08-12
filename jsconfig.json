@@ -10,7 +10,8 @@
         "@/services/*": ["services/*"],
         "@/lib/*": ["lib/*"],
         "@/artifacts/*": ["artifacts/*"],
-        "@/store/*": ["store/*"]
+        "@/store/*": ["store/*"],
+        "@/utils/*": ["utils/*"]
       }
     }
   }

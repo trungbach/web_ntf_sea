@@ -17,6 +17,10 @@ export async function getItemByCategory(payload) {
 
 export async function getMyCollection(payload) {
     const res = await collectionService.getMyCollection(payload)
-    console.log(res)
+    return res.body.data
+}
+
+export async function getCollectionByName(payload) {
+    const res = await collectionService.getCollectionByName(payload)
     return res.body.data
 }

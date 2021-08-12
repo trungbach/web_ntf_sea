@@ -84,55 +84,55 @@ const TradingHistory = () => {
       ];
 
       const data = [
-        {
-            event: 'Sale',
-            price: '4',
-            from: 'Madmax',
-            to: 'OldisGold',
-            date: '10 months ago'
-        },
-        {
-          event: 'Sale',
-          price: '4',
-          from: 'Madmax',
-          to: 'OldisGold',
-          date: '10 months ago'
-        },
-        {
-          event: 'Sale',
-          price: '4',
-          from: 'Madmax',
-          to: 'OldisGold',
-          date: '10 months ago'
-        },
-        {
-            event: 'Sale',
-            price: '4',
-            from: 'Madmax',
-            to: 'OldisGold',
-            date: '10 months ago'
-        },
-        {
-          event: 'Sale',
-          price: '4',
-          from: 'Madmax',
-          to: 'OldisGold',
-          date: '10 months ago'
-        },
-        {
-          event: 'Sale',
-          price: '4',
-          from: 'Madmax',
-          to: 'OldisGold',
-          date: '10 months ago'
-        },
-        {
-          event: 'Sale',
-          price: '4',
-          from: 'Madmax',
-          to: 'OldisGold',
-          date: '10 months ago'
-      },
+      //   {
+      //       event: 'Sale',
+      //       price: '4',
+      //       from: 'Madmax',
+      //       to: 'OldisGold',
+      //       date: '10 months ago'
+      //   },
+      //   {
+      //     event: 'Sale',
+      //     price: '4',
+      //     from: 'Madmax',
+      //     to: 'OldisGold',
+      //     date: '10 months ago'
+      //   },
+      //   {
+      //     event: 'Sale',
+      //     price: '4',
+      //     from: 'Madmax',
+      //     to: 'OldisGold',
+      //     date: '10 months ago'
+      //   },
+      //   {
+      //       event: 'Sale',
+      //       price: '4',
+      //       from: 'Madmax',
+      //       to: 'OldisGold',
+      //       date: '10 months ago'
+      //   },
+      //   {
+      //     event: 'Sale',
+      //     price: '4',
+      //     from: 'Madmax',
+      //     to: 'OldisGold',
+      //     date: '10 months ago'
+      //   },
+      //   {
+      //     event: 'Sale',
+      //     price: '4',
+      //     from: 'Madmax',
+      //     to: 'OldisGold',
+      //     date: '10 months ago'
+      //   },
+      //   {
+      //     event: 'Sale',
+      //     price: '4',
+      //     from: 'Madmax',
+      //     to: 'OldisGold',
+      //     date: '10 months ago'
+      // },
     ];
 
     const handleChange = () => {}

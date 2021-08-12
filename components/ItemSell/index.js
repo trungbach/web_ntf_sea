@@ -7,7 +7,6 @@ import eth from '@/public/eth.svg'
 import polygon from '@/public/polygon.svg'
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import { Card } from 'antd';
-import itemThumb from '@/public/itemThumb.png';
 
 const ItemSell = ({item}) => {
     return (
@@ -26,7 +25,7 @@ const ItemSell = ({item}) => {
                             <div className={styles.sellItemContent}>
                                 <div>
                                     <div>
-                                        Zed Run <VerifiedUserIcon />
+                                        {item.collection_name} 
                                         <div className={styles.ownerName}>{item.name}</div>
                                     </div>
                                     <div className={styles.itemPrice}>
@@ -35,12 +34,12 @@ const ItemSell = ({item}) => {
                                     </div>
                                 </div>
                                 <div>
-                                    <div className={styles.itemType}>
+                                    {/* <div className={styles.itemType}>
                                         <Image src={polygon} alt='polygon'></Image>
-                                    </div>
-                                    <div className={styles.itemCoin}>
+                                    </div> */}
+                                    {/* <div className={styles.itemCoin}>
                                         Offer for <Image src={eth} alt='eth'></Image> <span>0,045</span>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </Card>

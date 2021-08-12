@@ -141,7 +141,9 @@ const CreateItem = (props) => {
     const newItem = await createItem(payload);
     console.log('newItem', newItem);
     await setLoading(false)
+
     router.push('/collections')
+
     alert('Add item success!')
   }
 
@@ -160,18 +162,22 @@ const CreateItem = (props) => {
 
   const labelCollection = listCollection.length > 0 ? (
     <div>
-      Collection: <Link href='/collection/create'><a>Create new one?</a></Link>
+      Collection: <Link href='/collection/create?from=/create'><a>Create new one?</a></Link>
     </div>
   ) : (
     <div>
-      Collection: <Link href='/collection/create'><a>You don&apos;t have any collections yet, click to create a new one!</a></Link>
+      Collection: <Link href='/collection/create?from=/create'><a>You don&apos;t have any collections yet, click to create a new one first!</a></Link>
     </div>
   )
 
+console.log(listCollection.length)
   return (
 
     <div className={`container ${styles.create}`}>
-      <h1>Create new item</h1>
+      <h1>Create new item {listCollection.length == 0 && <Link href='/collection/create?from=/create' style={{marginLeft: '3rem'}}><a>
+                                (You don&apos;t have any collections yet, click to create a new one first!)</a>
+                           </Link>}
+      </h1>
       <Form form={form}  onFinish={createMarket} onFinishFailed={onFinishFailed}  layout='vertical'>
           <Form.Item className={styles.fileContainer} name='fileUrl' label="Image, Video, Audio, or 3D Model" rules={[{ required: true, message: "Please choose your file!" }]}>
 

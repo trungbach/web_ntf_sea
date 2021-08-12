@@ -15,6 +15,10 @@ const collectionService =  {
 
     getMyCollection: payload => {
         return request.getWithAccessToken('/my-collections', {}, payload.token);
+    },
+
+    getCollectionByName: payload => {
+        return request.get('/collections', payload);
     }
 }
 

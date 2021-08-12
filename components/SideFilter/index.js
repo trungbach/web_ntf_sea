@@ -1,46 +1,40 @@
 import React, {useState,useEffect, useRef} from 'react';
-import { Layout, Collapse, Button, Select, Input, Checkbox  } from 'antd';
+import { Layout, Collapse, Button, Input  } from 'antd';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import styles from './style.module.scss';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import {SearchOutlined  } from '@ant-design/icons'
 import ether from '@/public/ether.png'
-import collectionSider from '@/public/collectionSider.png'
 import Image from 'next/image'
-import art from '../../public/art-light.svg';
-import collectibles from '../../public/collectibles-light.svg';
-import domain from '../../public/domain-names-light.svg';
-import music from '../../public/music-light.svg';
-import sports from '../../public/sports-light.svg';
-import trading from '../../public/trading-cards-light.svg';
-import utility from '../../public/utility-light.svg';
-import virtual from '../../public/virtual-worlds-light.svg';
-const {Option} = Select
 const { Panel } = Collapse;
 const { Sider } = Layout;
-const SideFilter = ({ setPrice, listCategory, listCollection, setCategoryId, setCollectionId }) => {
+
+const SideFilter = ({ setPrice, currentCategory, currentCollection,  listCategory, isResetPrice, setIsResetPrice,
+                      listCollection, setCategory, setCollection, collectionName, setCollectionName
+                    }) => {
 
     const sideRef = useRef()
-
-    const callback = (key) => {
-        console.log(key);
-    }
-
     const [widthScreen, setWidthScreen] = useState()
     const [minPrice, setMinPrice] = useState('')
     const [maxPrice, setMaxPrice] = useState('')
-    // const [categoryId, setCategoryId] = useState('')
-    // const [collectionId, setCollectionId] = useState('')
     const [wrongPrice, setWrongPrice] = useState(false)
 
     const handleKeyPrice = e => {
         if(e.key === '-' || e.key === ',') {
             e.preventDefault()
-        }
+        } 
     }
     useEffect(() => {
         setWidthScreen(window.screen.width)
-    },[])
+    },[]) 
+    
+    useEffect(() => {
+        console.log('isResetPrice', isResetPrice)
+        if(isResetPrice) {
+            setMinPrice('')
+            setMaxPrice('')
+        }
+    },[isResetPrice])
 
     const [collapsed, setCollapsed] = useState(false)
 
@@ -51,27 +45,37 @@ const SideFilter = ({ setPrice, listCategory, listCollection, setCategoryId, set
         setCollapsed(collapsed);
     };
 
-    const listCollectionUI = listCollection.map((item, index) => {
-        return (
-            <li key={index} onClick={()=>setCollectionId(item.id)} className='justify-content-center'>
-                 <Image layout='fill' src={item.logo_url} alt={item.logo_url} /> 
-                 {item.name}
-            </li>
-        )
-    })
+   
+
+    const handleSetCategory = (id) => {
+        currentCategory?.id == id ? setCategory(-1) : setCategory(id)
+    }
+
+    const handleSetCollection = (item) => {            
+        currentCollection?.id == item.id ? setCollection(-1) : setCollection(item)
+    }
 
     const listCategoryUI = listCategory.map((item, index) => {
         return (
-            <li key={index} onClick={()=>setCategoryId(item.id)}>
-                <Image width={24} height={24} src={item.logo_url} alt={item.logo_url}></Image>
+            <li key={index} onClick={()=>handleSetCategory(item)}>
+                <Image width={24} height={24} src={currentCategory?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_url} alt={item.logo_url} />
                     {item.name}
             </li>
         )
     })
 
-    const handleChange = () => {}
-    const onChangeCollections = () => {}
-    const onChangeSale = () => {}
+    const listCollectionUI = listCollection.map((item, index) => {
+        return (
+            <li key={index} onClick={()=>handleSetCollection(item)} className='justify-content-center'>
+                 <Image layout='fill' src={currentCollection?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_url} alt={item.logo_url} /> 
+                 {item.name}
+            </li>
+        )
+    })
+
+    const onChangeCollections = (e) => {
+        setCollectionName(e.target.value)
+    }
 
     const setMinMax = (e, type) => {
         if(type === -1) {
@@ -89,13 +93,14 @@ const SideFilter = ({ setPrice, listCategory, listCollection, setCategoryId, set
 
     const handleSetPrice = () => {
         setPrice(minPrice, maxPrice)
+        setIsResetPrice(false)
     }
 
     return (
         <div ref={sideRef} className={styles.sideFilter}>
             <Sider width={widthScreen >= 768 ? '300px' : '100%'} collapsedWidth={widthScreen >= 768 ? '60px' : '0px'} theme="light" collapsible collapsed={collapsed} onCollapse={onCollapse}>
                 <div id='collapseDiv'>
-                    <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']} onChange={callback}>
+                    <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']}>
                         <div className={styles.filterTitle}><FilterListIcon /> Filter
                         </div>
                         <Panel header="Price" key="1">
@@ -104,12 +109,12 @@ const SideFilter = ({ setPrice, listCategory, listCollection, setCategoryId, set
                                     <Image objectFit='contain' src={ether} alt='ether ETH' />Ether (ETH)
                                 </div>
                                 <div className={styles.rangePrice}>
-                                    <Input placeholder='Min' type="number" min="0" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' 
+                                    <Input placeholder='Min' type="number" min="0" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' value={minPrice}
                                                 onChange={e => setMinMax(e,-1)} onKeyPress={handleKeyPrice}/>
 
                                         <span>to</span>
 
-                                    <Input placeholder='Max' type="number" min="0" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' 
+                                    <Input placeholder='Max' type="number" min="0" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' value={maxPrice}
                                             onChange={e => setMinMax(e, 1)} onKeyPress={handleKeyPrice} />
                                 </div>
                                 {wrongPrice && <p className={styles.wrongPrice}>Minimum must be less than maximum</p>}
@@ -118,7 +123,7 @@ const SideFilter = ({ setPrice, listCategory, listCollection, setCategoryId, set
                         </Panel>
                         <Panel header="Collections" key="2">
                             <div className={styles.filterCollections}>
-                                <Input prefix={<SearchOutlined />} placeholder="Filter" allowClear onChange={onChangeCollections} />
+                                <Input value={collectionName} prefix={<SearchOutlined />} placeholder="Filter" allowClear onChange={onChangeCollections} />
                                 <ul style={{overflowY: 'auto'}}>
                                     {listCollectionUI}
                                 </ul>

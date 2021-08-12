@@ -82,57 +82,65 @@
                 .favorite {
                     padding: 1.5rem 2rem;
                     text-align: right;
+                    .isFavorite {
+                        svg {
+                            fill: red;
+                        }
+                    }
+                    svg {
+                        cursor: pointer;
+                        color: red;
+                        margin-right: 0.5rem;
+                    }
                 }
             }
-            .about {
-                .description {
-                    .descriptionHead {
-                        display: flex;
-                        align-items: center;
-                        & > div {
-                            margin-right: 1rem !important;
-                            margin-bottom: 1rem !important;
-                            img {
-                                border-radius: 50%;
-                            }
-                        }
-                    }
-                    p {
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        font-size: 1.4rem;
+        }
+        .description {
+            .descriptionHead {
+                display: flex;
+                align-items: center;
+                & > div {
+                    margin-right: 1rem !important;
+                    margin-bottom: 1rem !important;
+                    img {
+                        border-radius: 50%;
                     }
                 }
-                .aboutPixel {
-                    & > div:first-child > div{
-                        margin: 0 2rem 2rem 0 !important;
-                    }
-                    .social {
-                        display: flex;
-                        align-items: center;
-                        span {
-                            height: 50px;
-                            width: 50px;
-                            align-items: center;
-                            flex-direction: column;
-                            font-size: 14px;
-                            justify-content: center;
-                            padding: 10px 0px;
-                            text-align: center;
-                            color: rgb(138, 147, 155);
-                            display: inline-flex;
-                            border: 1px solid rgb(229, 232, 235);
-                            border-radius: 5px;
-                        }
-                    }
+            }
+            p {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size: 1.4rem;
+            }
+        }
+        .aboutPixel {
+            & > div:first-child > div{
+                margin: 0 2rem 2rem 0 !important;
+            }
+            .social {
+                display: flex;
+                align-items: center;
+                span {
+                    height: 50px;
+                    width: 50px;
+                    align-items: center;
+                    flex-direction: column;
+                    font-size: 14px;
+                    justify-content: center;
+                    padding: 10px 0px;
+                    text-align: center;
+                    color: rgb(138, 147, 155);
+                    display: inline-flex;
+                    border: 1px solid rgb(229, 232, 235);
+                    border-radius: 5px;
                 }
-                .detailsAddress {
-                    & > div {
-                        display: flex;
-                        justify-content: space-between;
-                        
-                    }
-                }
+            }
+        }
+        .detailsAddress {
+            & > div {
+                display: flex;
+                justify-content: space-between;
+                
             }
         }
         .detailRight {
