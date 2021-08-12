@@ -10,7 +10,7 @@ import {getListItem} from '@/pages/api/asset'
 import {useAsset} from '@/lib/useAsset';
 import {getListCategory} from '../api/category';
 import {getListCollection} from '../api/collection';
-
+import {useRouter} from 'next/router';
 const {Option} = Select
 
 export async function getStaticProps() {
@@ -32,6 +32,8 @@ export async function getStaticProps() {
 
 const Assets = ({listItem, listCategory, listCollection}) => {
     console.log( listCollection)
+    const router = useRouter()
+    console.log('query',router.query)
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '', collection_id: '', category_id: '' })
 
     const {data} = useAsset(`category_id=${filterObj.category_id}&collection_id=${filterObj.collection_id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}`, listItem)

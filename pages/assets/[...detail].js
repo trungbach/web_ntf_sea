@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styles from './detail.module.scss'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -41,13 +41,17 @@ import { ethers } from 'ethers'
 import Market from '@/artifacts/contracts/Market.sol/NFTMarket.json'
 import {getDetailNtfBlock, buyItem} from '@/pages/api/detail'
 import {useRouter} from 'next/router'
-import LoginPage from '@/components/LoginPage'
 import { connect } from 'react-redux'
 const { Panel } = Collapse;
 const {Option} = Select
 
-export async function getServerSideProps({ params, req }) {
-    if(req.headers.cookie) {
+export async function getServerSideProps({ params, req, res }) {
+    
+    if(!req.headers.cookie) {
+        res.writeHead(302, { Location: `/login?${req.url}` })
+         res.end();
+       
+    } else {
         const tokenCookie = req.headers.cookie.split(";")
         .find(c => c.trim().startsWith("token="));
         const token = tokenCookie && tokenCookie.split('=')[1]
@@ -60,13 +64,6 @@ export async function getServerSideProps({ params, req }) {
                 moreFromCollection
             }
         }
-    } else {
-        return {
-            props: {
-                item: {},
-                moreFromCollection: []
-            }
-        }
     }
    
 }
@@ -77,11 +74,12 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
     console.log('item', item)
     const [loading, setLoading] = useState(false)
     
-    if(!isLoggedIn) {
-        return (
-            <LoginPage />
-        )
-    }
+    useEffect(() => {
+        if(!isLoggedIn) {
+           router.push('/login')
+      }
+    },[isLoggedIn])
+    
     
     const handleChange = () => {}
 

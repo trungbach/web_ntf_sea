@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 import { useRouter } from 'next/router'
@@ -12,15 +12,17 @@ import styles from './style.module.scss'
 import {Select, Button, Form, Input} from 'antd'
 import {getMyCollection} from '@/pages/api/collection'
 import Link from 'next/link'
-import LoginPage from '@/components/LoginPage'
 import { connect } from 'react-redux'
 
 const {Option} = Select;
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
-export async function getServerSideProps({req}) {
+export async function getServerSideProps({req, res}) {
 
-  if(req.headers.cookie) {
+  if(!req.headers.cookie) {
+    res.writeHead(302, { Location: `/login?${req.url}` })
+    res.end();
+  } else {
     const tokenCookie =  req.headers.cookie.split(";")
     .find(c => c.trim().startsWith("token="));
     const token = tokenCookie && tokenCookie.split('=')[1]
@@ -31,12 +33,6 @@ export async function getServerSideProps({req}) {
           listCollection
         }
     }
-  } else {
-      return {
-        props: {
-          listCollection: []
-        }
-      }
   }
 
 }
@@ -49,11 +45,12 @@ const CreateItem = (props) => {
   const router = useRouter()
   const [form] = Form.useForm();
 
-  if(!isLoggedIn) {
-    return (
-        <LoginPage />
-    )
+  useEffect(() => {
+    if(!isLoggedIn) {
+       router.push('/login')
   }
+  },[isLoggedIn])
+
   async function loadNFTs() {
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()

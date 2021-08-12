@@ -16,9 +16,9 @@ import avatarUser from '@/public/avatarUser.png'
 import { ToastContainer, toast } from 'react-toastify';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { logoutAccount } from '@/store/login/action'
+import { logoutAccount, toggleWallet } from '@/store/login/action'
 
-const Header = ({isLoggedIn, logoutAccount}) => {
+const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
 
     const router = useRouter()
     const [searchText, setSearchText] =  useState('')
@@ -39,12 +39,11 @@ const Header = ({isLoggedIn, logoutAccount}) => {
     const onKeyPress = e => {
         if(e.key === 'Enter') {
             if(router.pathname !== '/assets') {
-                router.push({ pathname: '/assets', query: { key: e.target.value } })
-            } else router.push({ pathname: '/assets', query: { key: e.target.value } })
+                router.push(`/assets?key=${searchText}`)
+            } 
         }
     }
 
-    const [isShowWallet, setIsShowWallet] = useState(false)
 
     const logOut = () => {
         logoutAccount()
@@ -86,13 +85,6 @@ const Header = ({isLoggedIn, logoutAccount}) => {
                 <Link href='/rankings'>
                     <a>
                     Rankings
-                    </a>
-                </Link>
-            </Menu.Item>
-            <Menu.Item>
-                <Link href='/rankings'>
-                    <a>
-                        Activity
                     </a>
                 </Link>
             </Menu.Item>
@@ -156,14 +148,14 @@ const Header = ({isLoggedIn, logoutAccount}) => {
                 </Link>
             </Menu.Item>
             <Menu.Item key='2'>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                   My Favorites
-                </a>
+                <Link href='/account?tab=favorites'>
+                    <a>
+                        My Favorites
+                    </a>
+                </Link>
             </Menu.Item>
             <Menu.Item key='3'>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
                    My Account Settings
-                </a>
             </Menu.Item>
             {isLoggedIn &&  
                 <Menu.Item  key='4' onClick={logOut}>
@@ -208,13 +200,13 @@ const Header = ({isLoggedIn, logoutAccount}) => {
                             <a className="nav-link" href="#">{isLoggedIn ? <Image width={40} height={40} src={avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
                         </Dropdown>
 
-                        <span type='button' title='Wallet' className={`nav-link ${styles.walletBtn}`} onClick={() =>setIsShowWallet(!isShowWallet)}>
+                        <span type='button' title='Wallet' className={`nav-link ${styles.walletBtn}`} onClick={toggleWallet}>
                             <AccountBalanceWalletOutlinedIcon />
                         </span>
                     </div>
                 </div>
             </div>
-            <Wallet isShowWallet={isShowWallet} setIsShowWallet={setIsShowWallet} />
+            <Wallet />
             <ToastContainer position="bottom-right" />
         </nav>
     );
@@ -227,6 +219,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
     return {
         logoutAccount: bindActionCreators(logoutAccount, dispatch),
+        toggleWallet: bindActionCreators(toggleWallet, dispatch),
     }
 }
 
