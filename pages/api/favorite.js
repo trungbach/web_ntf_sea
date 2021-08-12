@@ -6,6 +6,6 @@ export async function createFavorite(payload) {
 }
 
 export async function deleteFavorite(payload) {
-    const res = await favoriteService.createFavorite(payload);
+    const res = await favoriteService.deleteFavorite(payload);
     return res.body.data;
 }
