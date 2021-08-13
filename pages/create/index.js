@@ -14,6 +14,7 @@ import {getMyCollection} from '@/pages/api/collection'
 import Link from 'next/link'
 import { connect } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
+import superagent from 'superagent'
 
 const {Option} = Select;
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
@@ -41,7 +42,6 @@ export async function getServerSideProps({req, res}) {
 const CreateItem = (props) => {
   const { listCollection, isLoggedIn} = props;
   const [fileUrl, setFileUrl] = useState(null)
-  const [itemPrice, setItemPrice] = useState()
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const [form] = Form.useForm();
@@ -65,26 +65,25 @@ const CreateItem = (props) => {
     
   }
 
-  async function fileSelect(e) {
-    const file = e.target.files[0]
-    try {
-      const added = await client.add(
-        file,
-        {
-          progress: (prog) => console.log(`received: ${prog}`)
-        }
-      )
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`
-      form.setFieldsValue({fileUrl: url})
-      setFileUrl(url)
-    } catch (error) {
-      console.log('Error uploading file: ', error)
-    }  
-  }
+    const fileSelect = async (e) => {
+      var file = e.target.files[0];
+      if (file) {
+          superagent
+              .post(config.API_DOMAIN + '/upload-file')
+              .attach('file', file)
+              .end((err, res) => {
+                  if (!err) {
+                      console.log(res.body.data.path)
+                      form.setFieldsValue({fileUrl: res.body.data.path})
+                      setFileUrl(res.body.data.path)
+                  }
+              })
+      }
+   }
+
 
   async function createMarket(values) {
     setLoading(true)
-    setItemPrice(values.price)
     const { name, description, price, fileUrl } = values
     // /* first, upload to IPFS */
     const data = JSON.stringify({
@@ -94,7 +93,6 @@ const CreateItem = (props) => {
       const added = await client.add(data)
       const url = `https://ipfs.infura.io/ipfs/${added.path}`
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      console.log(url)
       createSale(url, values)
     } catch (error) {
       console.log('Error uploading file: ', error)

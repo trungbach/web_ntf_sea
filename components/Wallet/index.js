@@ -16,34 +16,21 @@ const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
 
     console.log('isLoggedIn', isLoggedIn)
     const [widthScreen, setWidthScreen] = useState()
-    const [publicAddress, setPublicAddress] = useState(null)
-    const [balance, setBalance] = useState(null)
+    const [currentPublicAddress, setCurrentPublicAddress] = useState('')
 
     useEffect(() => {
         setWidthScreen(window.screen.width)
     },[])
-
-    // useEffect(() => {
-    //     const getBalance = async() => {
-    //         if (window.ethereum) {
-    //             window.web3 = new Web3(window.ethereum)
-    //             await window.ethereum.enable()
-    //           }
-    //         else if (window.web3) {
-    //             window.web3 = new Web3(window.web3.currentProvider)
-    //         }
-    
-    //         const publicAddress = await web3.eth.getCoinbase()
-    //         const currentBalance = await web3.eth.getBalance(publicAddress)
-    //         console.log('currentBalance',currentBalance)
-    //         console.log('publicAddress',publicAddress)
-    //         setBalance(currentBalance)
-    //         setPublicAddress(publicAddress)
-    //     }
-
-    //     getBalance()
-
-    // },[])
+   
+    useEffect(() => {
+        window.web3 = new Web3(window.ethereum)
+        const  getPublicAddress = async() => {
+             const publicAddress = await web3.eth.getCoinbase()
+             console.log(publicAddress)
+             setCurrentPublicAddress(publicAddress)
+        }
+        getPublicAddress()
+     },[])
 
     const [metamaskInstalled, setMetamaskInstalled] = useState(false)
     const [account, setAccount] = useState()
@@ -66,6 +53,7 @@ const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
         }
 
         const publicAddress = await web3.eth.getCoinbase()
+        setCurrentPublicAddress(publicAddress)
         const resNonce = await checkPublicAddress({public_address: publicAddress})
         setAccount(JSON.parse(resNonce.text).data)
         console.log(account)
@@ -78,11 +66,9 @@ const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
             async (err, signature) => {
                 console.log(signature)
                 const resSignature = await verifySignature({public_address: publicAddress, signature});
-                // if(resSignature.status === 200) {
                 toast.dark('Login Success!')
                 loginAccount(resSignature.body.data)
                 toggleWallet()
-                // }
               }
           )
       }
@@ -123,7 +109,7 @@ const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
                         <div>
                             <Image src={avatarUser} alt='avatar' width={30} height={30} /> welcome!
                         </div>
-                        <div>{publicAddress}</div>
+                        <div title={currentPublicAddress}>{currentPublicAddress}</div>
                     </div>
                 </div>
             </div>)

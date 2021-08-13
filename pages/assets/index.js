@@ -40,7 +40,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
     const [collectionName, setCollectionName] = useState('')
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const [isResetPrice, setIsResetPrice] = useState(false)
-    const [sort, setSort] = useState()
+    const [sort, setSort] = useState('')
     const {data} = useAsset(`category_id=${filterObj.category?.id || ''}&collection_id=${filterObj.collection?.id || ''}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`, listItem)
    
     const {filterCollection} = useFilterCollection(`key=${collectionName}`, listCollection)
@@ -112,7 +112,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
             <div className={styles.mainAsset}>
                 <div className={styles.heading}>
                     <div className={`${styles.totalResult} d-none d-md-block`}>
-                        {listItem.length > 0 ? ` ${listItem.length} results` : '0 result'}
+                        {data.length > 0 ? ` ${data.length} results` : '0 result'}
                     </div>
                     <div className={styles.filter}>
                         {/* <Select

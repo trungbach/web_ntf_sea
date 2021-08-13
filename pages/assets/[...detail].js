@@ -45,6 +45,7 @@ import {useRouter} from 'next/router'
 import { connect } from 'react-redux'
 import avatarUser from '@/public/avatarUser.png'
 import { ToastContainer, toast } from 'react-toastify';
+
 import Web3 from 'web3'
 
 const { Panel } = Collapse;
@@ -63,19 +64,17 @@ export async function getServerSideProps({ params, req, res }) {
         const item = await getDetailItem({ id: params.detail[1], token: token })
     
         const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
-        const nftBlock = await getDetailNtfBlock({id: item.block_id});
         return {
             props: {
                 item,
                 moreFromCollection,
-                nftBlock
             }
         }
     }
    
 }
 
-const DetailItem = ({item, moreFromCollection, isLoggedIn, nftBlock}) => {
+const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
 
     const router = useRouter()
     const [loading, setLoading] = useState(false)
@@ -83,6 +82,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, nftBlock}) => {
     const [numberFavorite, setNumberFavorite] = useState(item.number_favorites)
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [currentAddress, setCurrentAddress] = useState()
+    const [nftBlock, setNftBlock] = useState(null)
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -95,6 +95,15 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, nftBlock}) => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+
+    useEffect(() => {
+        const getNftBlock = async()=> {
+            const nft = await getDetailNtfBlock({id: item.block_id})
+            setNftBlock(nft)
+        }
+        getNftBlock()
+    },[])
+
 
 
     useEffect(() => {
@@ -226,7 +235,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, nftBlock}) => {
                          : <span className={styles.isFavorite} onClick={handleDeleteFavorite}><FavoriteIcon /></span>}
                          <span>{numberFavorite}</span>
                     </div>
-                    <div style={{position: 'relative', height: '45rem'}}>
+                    <div style={{position: 'relative', height: '45rem'}} className={styles.imageItem}>
                         <Image layout='fill' src={item.image_url} alt={item.image_url} />
                     </div> 
                 </div>
@@ -271,11 +280,19 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, nftBlock}) => {
                             <div className={styles.detailsAddress}>
                                 <div>
                                     <p>Contract Address</p>
-                                    <Link href='/'><a>0xdf38d...4ea6</a></Link>
+                                    <Link href='/'><a>{config.nftaddress}</a></Link>
                                 </div>
                                 <div>
                                     <p>Token ID</p>
                                     <p style={{fontWeight: 500}}>{nftBlock?.tokenId}</p>
+                                </div>
+                                <div>
+                                    <p>Seller</p>
+                                    <p style={{fontWeight: 500}}>{item.owner}</p>
+                                </div>
+                                <div>
+                                    <p>NFT</p>
+                                    <p style={{fontWeight: 500}}>{item.block_id}</p>
                                 </div>
                                 <div>
                                     <p>Blockchain</p>
@@ -324,7 +341,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, nftBlock}) => {
                                 <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
                             <div className={styles.buyNow} >
-                                <Button disabled={currentAddress == item.owner} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                <Button disabled={currentAddress == item.owner || nftBlock == null} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
                             </div>
                         </div>
                       
@@ -414,11 +431,19 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, nftBlock}) => {
                             <div className={styles.detailsAddress}>
                                 <div>
                                     <p>Contract Address</p>
-                                    <Link href='/'><a>0xdf38d...4ea6</a></Link>
+                                    <Link href='/'><a>{config.nftaddress}</a></Link>
                                 </div>
                                 <div>
                                     <p>Token ID</p>
                                     <p style={{fontWeight: 500}}>{nftBlock?.tokenId}</p>
+                                </div>
+                                <div>
+                                    <p>Seller</p>
+                                    <p style={{fontWeight: 500}}>{item.owner}</p>
+                                </div>
+                                <div>
+                                    <p>NFT</p>
+                                    <p style={{fontWeight: 500}}>{item.block_id}</p>
                                 </div>
                                 <div>
                                     <p >Blockchain</p>

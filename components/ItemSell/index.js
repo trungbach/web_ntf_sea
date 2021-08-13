@@ -11,7 +11,7 @@ import { Card } from 'antd';
 const ItemSell = ({item}) => {
     return (
         <div className={styles.sellItemContainer}>
-            <Link href={`/assets/${item.owner}/${item.id}`} >
+            <Link href={`/assets/${item.owner}/${item.item_id || item.id}`} >
                     <a className={styles.sellItem}>
                         <Card
                             hoverable

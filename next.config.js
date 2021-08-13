@@ -6,7 +6,11 @@ module.exports = {
   },
   reactStrictMode: true,
   images: {
-    domains: ['opensea.io', "storage.googleapis.com", "lh3.googleusercontent.com", "img.favpng.com", "www.designyourway.net", "thedreamwithinpictures.com", 'ipfs.infura.io', 'payload.cargocollective.com', 'upload.wikimedia.org'],
+    domains: ['opensea.io', "storage.googleapis.com", "lh3.googleusercontent.com", "img.favpng.com", 
+              "www.designyourway.net", "thedreamwithinpictures.com", 'ipfs.infura.io', 
+              'payload.cargocollective.com', 'upload.wikimedia.org',
+              '139.177.188.72'
+            ],
   },
   trailingSlash: false,
   react: {

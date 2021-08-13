@@ -9,7 +9,6 @@ import Image from 'next/image'
 import {getListCategory} from '@/pages/api/category'
 import config from '@/config/index'
 import superagent from 'superagent'
-import Cookies from 'js-cookie'
 import ImageIcon from '@material-ui/icons/Image';
 import { connect } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
@@ -41,75 +40,40 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
     const [logoUrl, setLogoUrl] = useState(null)
     const [bannerUrl, setBannerUrl] = useState(null)
     const [form] = Form.useForm();
-    console.log('router', router)
     useEffect(() => {
       if(!isLoggedIn) {
          router.push('/login')
       }
    },[isLoggedIn])
    
-    // const fileSelectLogo = async (e) => {
-    //     var file = e.target.files[0];
-    //     if (file) {
-    //         superagent
-    //             .post(config.API_DOMAIN + '/collections')
-    //             .set('x-access-token', Cookies.get('token'))
-    //             .attach('file', file)
-    //             .end((err, res) => {
-    //                 if (!err) {
-    //                     console.log(res)
-    //                 }
-    //             });
-    //     }
-    // }
-
-    // const fileSelectBanner = async (e) => {
-    //     var file = e.target.files[0];
-    //     if (file) {
-    //         superagent
-    //             .post(config.API_DOMAIN + '/collections')
-    //             .set('x-access-token', Cookies.get('token'))
-    //             .attach('file', file)
-    //             .end((err, res) => {
-    //                 if (!err) {
-    //                     console.log(res)
-    //                 }
-    //             });
-    //     }
-    // }
-
-    async function fileSelectLogo(e) {
-      const file = e.target.files[0]
-      try {
-        const added = await client.add(
-          file,
-          {
-            progress: (prog) => console.log(`received: ${prog}`)
-          }
-        )
-        const url = `https://ipfs.infura.io/ipfs/${added.path}`
-        form.setFieldsValue({logo_url: url})
-        setLogoUrl(url)
-      } catch (error) {
-        console.log('Error uploading file: ', error)
-      }  
+    const fileSelectLogo = async (e) => {
+        var file = e.target.files[0];
+        if (file) {
+            superagent
+                .post(config.API_DOMAIN + '/upload-file')
+                .attach('file', file)
+                .end((err, res) => {
+                    if (!err) {
+                        form.setFieldsValue({logo_url: res.body.data.path})
+                        setLogoUrl(res.body.data.path)
+                    }
+                });
+        }
     }
 
-    async function fileSelectBanner(e) {
-      const file = e.target.files[0]
-      try {
-        const added = await client.add(
-          file,
-          {
-            progress: (prog) => console.log(`received: ${prog}`)
-          }
-        )
-        const url = `https://ipfs.infura.io/ipfs/${added.path}`
-        form.setFieldsValue({banner_url: url})
-        setBannerUrl(url)
-      } catch (error) {
-        console.log('Error uploading file: ', error)
-      }  
+    const fileSelectBanner = async (e) => {
+        var file = e.target.files[0];
+        if (file) {
+            superagent
+                .post(config.API_DOMAIN + '/upload-file')
+                .attach('file', file)
+                .end((err, res) => {
+                    if (!err) {
+                        form.setFieldsValue({banner_url: res.body.data.path})
+                        setBannerUrl(res.body.data.path)
+                    }
+                });
+        }
     }
 
     const categories = listCategory?.map((item, index) => {
