@@ -10,6 +10,10 @@ const favoriteService = {
     deleteFavorite: payload => {
         return request.post('/delete-favorites', payload);
     },
+
+    getMostFavorite: payload => {
+        return request.get('/most-favorite-item', payload);
+    },
     
 }
 

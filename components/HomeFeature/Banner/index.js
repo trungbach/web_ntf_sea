@@ -1,14 +1,15 @@
 import React from 'react';
 import styles from './style.module.scss'
 import {Card} from 'antd';
-import hotItem from '@/public/hotItem.png';
 import hotItemExtra from '@/public/30.png';
 import Link from 'next/link'
 import Image from 'next/image'
-const Banner = () => {
+const Banner = ({mostFavoriteItem}) => {
+
+    console.log("mostFavoriteItem", mostFavoriteItem)
     return (
         <div className={styles.banner}>
-            <div className={styles.bannerBackground}>
+            <div className={styles.bannerBackground} style={{backgroundImage: `url(${mostFavoriteItem.image_url})`}}>
             </div>
             <div className={styles.bannerContent}>
                 <div className='container h-100'>
@@ -24,7 +25,7 @@ const Banner = () => {
                             </div>
                             <div className={styles.cta}>
                                 <Link href='/assets'><a className={styles.secondaryButton}>Explore</a></Link>
-                                {/* <Link href='/collections'>Create</Link> */}
+                                <Link href='/create'><a className={styles.primaryButton}>Create</a></Link>
                             </div>
                             {/* <div className={styles.getFeatured}>
                                 <span>Get featured on the homepage</span>
@@ -32,13 +33,13 @@ const Banner = () => {
                         </div>
                         <div className={`col-md-6 col-12 ${styles.bannerRight}`}>
                             <div className={styles.hotItem}>
-                                <Link href={`/assets/1`}>
+                                <Link href={`/assets/${mostFavoriteItem.owner}/${mostFavoriteItem.id}`}>
                                     <a>
                                         <Card
                                             hoverable
-                                            cover={<Image width={500} height={420} alt="hot asset" src={hotItem} />}
+                                            cover={<Image src={mostFavoriteItem.image_url}  width={500} height={420} alt={mostFavoriteItem.image_url}/>}
                                         >
-                                            <div><Image src={hotItemExtra} alt='30' /> <span>THOUGHTS</span></div>
+                                            <div><Image src={hotItemExtra} alt='avatar' /> <span>{mostFavoriteItem.name}</span></div>
                                         </Card>
                                     </a>
                                 </Link>

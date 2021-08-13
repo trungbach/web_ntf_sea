@@ -1,8 +1,8 @@
 @import '@/styles/base.scss';
+
 .banner {
     position: relative;
     .bannerBackground {
-        background-image: url(https://lh3.googleusercontent.com/5MvKT5tVARYV1__9xY3BFLGY2YxHTV3YNYIlkvImvI-Ue-L0oP-9fRqVGkkHelVY2FWyjWQpjhfLGMewHY8o5EVI_fvwO7N7Z16-=s250);
         height: 780px;
         background-size: cover;
         background-color: rgb(255, 255, 255);
@@ -87,6 +87,10 @@
                     }
                 }
             }
+            a:first-child {
+
+                margin-right: 1rem;
+            }
             
         }
         .getFeatured {
@@ -117,6 +121,7 @@
             background-color: transparent;
             z-index: 2;
             max-width: 35.5rem;
+            border-radius: 1rem;
             overflow: hidden;
             @media (min-width: 993px) {
                 & {

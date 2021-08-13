@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import styles from './detail.module.scss'
 import Link from 'next/link'
 import Image from 'next/image'
-import {Tooltip, Button, Collapse, Select} from 'antd'
+import {Tooltip, Button, Collapse, Select, Modal} from 'antd'
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ShareIcon from '@material-ui/icons/Share';
 import LaunchIcon from '@material-ui/icons/Launch';
@@ -44,6 +44,9 @@ import {createFavorite, deleteFavorite} from '@/pages/api/favorite'
 import {useRouter} from 'next/router'
 import { connect } from 'react-redux'
 import avatarUser from '@/public/avatarUser.png'
+import { ToastContainer, toast } from 'react-toastify';
+import Web3 from 'web3'
+
 const { Panel } = Collapse;
 const {Option} = Select
 
@@ -60,23 +63,49 @@ export async function getServerSideProps({ params, req, res }) {
         const item = await getDetailItem({ id: params.detail[1], token: token })
     
         const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
+        const nftBlock = await getDetailNtfBlock({id: item.block_id});
         return {
             props: {
                 item,
-                moreFromCollection
+                moreFromCollection,
+                nftBlock
             }
         }
     }
    
 }
 
-const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
+const DetailItem = ({item, moreFromCollection, isLoggedIn, nftBlock}) => {
 
     const router = useRouter()
     const [loading, setLoading] = useState(false)
-    const [nftBlock, setNftBlock] = useState()
     const [isFavorite, setIsFavorite] = useState(item.is_favorite === null ? false : true)
     const [numberFavorite, setNumberFavorite] = useState(item.number_favorites)
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [currentAddress, setCurrentAddress] = useState()
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+
+    useEffect(() => {
+       window.web3 = new Web3(window.ethereum)
+       const  getPublicAddress = async() => {
+            const publicAddress = await web3.eth.getCoinbase()
+            console.log(publicAddress)
+            setCurrentAddress(publicAddress)
+       }
+       getPublicAddress()
+    },[])
 
     useEffect(() => {
         if(!isLoggedIn) {
@@ -84,15 +113,6 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
       }
     },[isLoggedIn])
 
-    useEffect(() => {
-        const getNftBlock = async()=> {
-            const nft = await getDetailNtfBlock({id: item.block_id})
-            setNftBlock(nft)
-        }
-        getNftBlock()
-    },[])
-    
-    
     const handleChange = () => {}
 
     async function buyNft() {
@@ -103,24 +123,26 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
+        console.log('contract',contract)
         // var currentGasPrice = await provider.getGasPrice();
         // let gas_price = ethers.utils.hexlify(parseInt(currentGasPrice));
         // console.log(`gas_price: ${ gas_price }`);
         // console.log(`getListingPrice: ${ await contract.getListingPrice() }`);
         /* user will be prompted to pay the asking proces to complete the transaction */
-        const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
+        const price = ethers.utils.parseUnits(nftBlock.price.toString(), 'ether')   
         console.log(price)
         const transaction = await contract.createMarketSale(config.nftaddress, nftBlock.tokenId, {
           value: price,
         //   gasLimit: 2100000,
         //   gasPrice: 8000000000
         });
-        // console.log(transaction)
+        console.log(transaction)
         await transaction.wait()
         setLoading(false)
+        handleOk()
         await buyItem({id: item.id})
+        toast.dark('Buy Success!')
         router.push('/assets')
-        alert('Buy success!')
 
     }
 
@@ -138,8 +160,42 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
 
     return (
     <>
-        <div className={`${styles.detail} container-xl`}>
-
+    <div className={`${styles.detail} container-xl`}>
+        <Modal  width={700} centered title="Complete checkout" visible={isModalVisible} 
+                onOk={handleOk} onCancel={handleCancel}
+                footer={[
+                    <Button style={{padding: '1.5rem 3rem'}} className={styles.secondaryButton} key="submit" loading={loading} onClick={buyNft}>
+                      Checkout
+                    </Button>
+                  ]}
+        >
+            <div className={styles.checkoutForm}>
+                <div>
+                    <div>Item</div>
+                    <div>Subtotal</div> 
+                </div>
+                <div>
+                    <div className={styles.itemCheckout}>
+                        <Image src={item.image_url} alt={item.image_url} width={80} height={100} />
+                        <div>
+                            <Link href={`/collection/${item.collection_id}`}><a>{item.collection_name}</a></Link>
+                            <div>{item.name}</div>
+                        </div>
+                    </div>
+                    <div className={styles.price}>
+                        <Image src={ether} alt='ether' width={12} height={15} objectFit='contain' />
+                        <span>{item.price}</span>
+                    </div>
+                </div>
+                <div>
+                    <div>Total</div>
+                    <div className={styles.total}>
+                        <Image src={ether} alt='ether' width={12} height={15} objectFit='contain' />
+                        <span className={styles.totalPrice}>{item.price}</span>
+                    </div>
+                </div>
+            </div>
+        </Modal>
         <div className={styles.detailContainer}>
             <div className={styles.detailLeft}>
                 <div className={`${styles.owner} d-block d-md-none mb-5`}>
@@ -267,8 +323,8 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                                 <Image src={ether} alt='ether' />
                                 <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
-                            <div className={styles.buyNow} onClick={buyNft}>
-                                <Button loading={loading}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                            <div className={styles.buyNow} >
+                                <Button disabled={currentAddress == item.owner} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
                             </div>
                         </div>
                       
@@ -392,6 +448,9 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
             </Link>
         </div>
     </div>
+    <ToastContainer
+        position="top-right"
+    />
     <Footer />
     </>
     );

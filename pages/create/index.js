@@ -13,6 +13,7 @@ import {Select, Button, Form, Input} from 'antd'
 import {getMyCollection} from '@/pages/api/collection'
 import Link from 'next/link'
 import { connect } from 'react-redux'
+import { ToastContainer, toast } from 'react-toastify';
 
 const {Option} = Select;
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
@@ -82,7 +83,7 @@ const CreateItem = (props) => {
   }
 
   async function createMarket(values) {
-    console.log(values)
+    setLoading(true)
     setItemPrice(values.price)
     const { name, description, price, fileUrl } = values
     // /* first, upload to IPFS */
@@ -124,10 +125,9 @@ const CreateItem = (props) => {
     console.log(transaction)
 
     const data = await loadNFTs();
+    setLoading(false)
     console.log('created', data)
-
     const { name, description, collection_id } = values;
-    
     const payload = {
       name,
       description,
@@ -140,11 +140,9 @@ const CreateItem = (props) => {
     }
     const newItem = await createItem(payload);
     console.log('newItem', newItem);
-    await setLoading(false)
 
     router.push('/collections')
-
-    alert('Add item success!')
+    toast.dark('Add item Success!', {position: "top-right",})
   }
 
   const collections = listCollection?.map((item, index) => {
@@ -212,10 +210,14 @@ console.log(listCollection.length)
           <Form.Item>
                 <Button htmlType="submit" loading={loading} className={styles.secondaryButton}>
                   Create 
-              </Button>
+                </Button>
+               {loading && <span className={styles.notifyProccess}>Please wait... The process may take a few minutes</span>}
           </Form.Item>
 
       </Form>
+      <ToastContainer
+        position="top-right"
+      />
     </div>
   )
 

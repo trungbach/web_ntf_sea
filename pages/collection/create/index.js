@@ -12,6 +12,7 @@ import superagent from 'superagent'
 import Cookies from 'js-cookie'
 import ImageIcon from '@material-ui/icons/Image';
 import { connect } from 'react-redux'
+import { ToastContainer, toast } from 'react-toastify';
 
 const {Option} = Select
 
@@ -122,10 +123,11 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
       const createCollection = async(values) => {
         setLoading(true)
         const resCollection = await createMyCollection(values)
-        await setLoading(false)
+        setLoading(false)
         if(resCollection.status === 200) {
             router.push(router.query.from || '/collections') 
-            alert('Thêm collection thành công!')
+            toast.dark('Add collection Success!', {position: "top-right",})
+
         }
       }
 
@@ -181,6 +183,9 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
                       </Form.Item>
                   </Form>
               </div>
+              <ToastContainer
+                position="top-right"
+              />
           </div> )
 }
 

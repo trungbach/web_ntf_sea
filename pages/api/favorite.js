@@ -9,3 +9,9 @@ export async function deleteFavorite(payload) {
     const res = await favoriteService.deleteFavorite(payload);
     return res.body.data;
 }
+
+export async function getMostFavorite(payload) {
+    const res = await favoriteService.getMostFavorite(payload);
+    console.log(res.body)
+    return res.body.data;
+}

@@ -89,6 +89,10 @@
        display: block;
        padding:0 1rem;
        :global {
+           .ant-card-cover {
+                position: relative;
+                height: 30rem;
+           }
           .ant-card-body {
               padding: 0;
               position: relative;

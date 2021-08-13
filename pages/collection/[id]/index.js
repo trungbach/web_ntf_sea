@@ -29,6 +29,7 @@ const CollectionName = ({collection}) => {
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const refDesc = useRef();
     const router = useRouter()
+  
 
     useEffect(() => {
         const height = refDesc.current.clientHeight
@@ -212,7 +213,7 @@ export async function getStaticPaths() {
     const listCollection = await getListCollection();
     return {
         paths: listCollection?.map(collection => ({ params: { id: collection.id.toString() } })) || [],
-        fallback: true
+        fallback: "blocking"
     }
 
 }

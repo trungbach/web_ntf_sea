@@ -10,7 +10,6 @@ import { bindActionCreators } from 'redux'
 import {useRouter} from 'next/router'
 
 const LoginPage = ({openWallet, isLoggedIn}) => {
-
     const router = useRouter()
     Object.keys(router.query).length ? console.log(router.query ) : console.log('no')
     if(isLoggedIn) {

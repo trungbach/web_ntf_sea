@@ -149,8 +149,8 @@ export async function getStaticPaths() {
     const listCategory = await getListCategory();
     console.log(listCategory?.map(category => ({params: { id: (category.id).toString() }})))
     return {
-        paths: listCategory?.map(category => ({params: { id: (category.id).toString() }})) || [],
-        fallback: false
+        paths: listCategory.map(category => ({params: { id: (category.id).toString() }} )) || [],
+        fallback: "blocking"
     }
 }
 
@@ -161,6 +161,7 @@ export async function getStaticProps({params}) {
     return {
         props: {
             category
-        }
+        },
+        revalidate: 10
     }
 }

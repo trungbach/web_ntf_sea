@@ -264,3 +264,45 @@
         margin-bottom: 1.5rem;
     }
 }
+
+.checkoutForm {
+    & > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        font-size: 1.6rem;
+        padding: 2rem 0;
+        color: rgb(4, 17, 29);
+        .itemCheckout {
+            display: flex;
+            align-items: center;
+            & > div:first-child {
+                margin-right: 1rem !important;
+                img {
+                    border-radius: 1rem;
+                }
+            }
+        }
+        .price {
+            & > div {
+                margin-right: 0.7rem !important;
+            }
+        }
+        .total {
+            & > div {
+                img {
+                    margin-right: 0.3rem !important;
+                }
+            }
+            .totalPrice {
+                font-size: 1.8rem;
+                font-weight: 600;
+                color: rgb(32, 129, 226);
+            }
+        }
+    }
+    & > div:not(:last-child) {
+        border-bottom: 1px solid #dddd;
+    }
+}

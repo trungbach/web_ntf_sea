@@ -8,15 +8,25 @@ import styles from '../styles/Home.module.css'
 import FeatureTrending from '@/components/HomeFeature/FeatureTrending';
 import Footer from '@/components/Footer'
 import {getListCategory} from '@/pages/api/category'
+import {getMostFavorite} from '@/pages/api/favorite'
+import {getRankingCollection} from '@/pages/api/ranking'
+import {DATE_TIME} from '@/config/constants'
+import moment from 'moment'
+import {useRanking} from '@/lib/useRanking'
+import {useState, useEffect} from 'react';
 
-export default function Home({listCategory}) {
-  console.log(listCategory)
+export default function Home({listCategory, mostFavoriteItem, rankingCollection}) {
+  const rangeTime= [ moment().subtract(7, 'day').format(DATE_TIME), moment().format(DATE_TIME) ]
+  const [categoryId, setCategoryId] = useState('')
+
+  const { data } = useRanking(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}&category_id=${categoryId}`, rankingCollection)
+
   return (
     <>
       <div className={styles.content}>
-        <Banner />
+        <Banner mostFavoriteItem={mostFavoriteItem} />
         <FeatureExclusive />
-        <FeatureTrending />
+        <FeatureTrending rankingCollection={data} setCategoryId={setCategoryId} listCategory={listCategory}/>
         <FeatureSell />
         <FeatureResource />
         <FeatureCategory listCategory={listCategory} />
@@ -31,43 +41,17 @@ export default function Home({listCategory}) {
 export async function getStaticProps({params}) {
 
   const listCategory = await getListCategory();
+  const mostFavoriteItem = await getMostFavorite();
 
+  const rangeTime= [ moment().subtract(7, 'day').format(DATE_TIME), moment().format(DATE_TIME) ]
+  const rankingCollection = await getRankingCollection(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}`);
+ 
   return {
       props: {
-         listCategory
-      }
+         listCategory, 
+         mostFavoriteItem,
+         rankingCollection,
+      },
+      revalidate: 60
   }
 }
-// import { useEffect } from 'react'
-// import { connect } from 'react-redux'
-// import { bindActionCreators } from 'redux'
-// import Page from '../components/Page'
-// import { addCount } from '../store/count/action'
-// import { wrapper } from '../store/store'
-// import { serverRenderClock, startClock } from '../store/tick/action'
-
-// const Index = (props) => {
-//   useEffect(() => {
-//     const timer = props.startClock()
-
-//     return () => {
-//       clearInterval(timer)
-//     }
-//   }, [props])
-
-//   return <Page title="Index Page" linkTo="/other" />
-// }
-
-// export const getStaticProps = wrapper.getStaticProps((store) => () => {
-//   store.dispatch(serverRenderClock(true))
-//   store.dispatch(addCount())
-// })
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     addCount: bindActionCreators(addCount, dispatch),
-//     startClock: bindActionCreators(startClock, dispatch),
-//   }
-// }
-
-// export default connect(null, mapDispatchToProps)(Index)
