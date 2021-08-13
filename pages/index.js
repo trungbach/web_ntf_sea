@@ -25,10 +25,10 @@ export default function Home({listCategory, mostFavoriteItem, rankingCollection}
     <>
       <div className={styles.content}>
         <Banner mostFavoriteItem={mostFavoriteItem} />
-        <FeatureExclusive />
+        {/* <FeatureExclusive /> */}
         <FeatureTrending rankingCollection={data} setCategoryId={setCategoryId} listCategory={listCategory}/>
         <FeatureSell />
-        <FeatureResource />
+        {/* <FeatureResource /> */}
         <FeatureCategory listCategory={listCategory} />
         <FeatureConnect />
       </div>

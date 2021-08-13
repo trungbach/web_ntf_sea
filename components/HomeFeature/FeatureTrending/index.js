@@ -44,7 +44,7 @@ const FeatureTrending = ({rankingCollection, listCategory, setCategoryId}) => {
     const listTrending = rankingCollection.map((item, index) => {
         if(index < 12) {
             return (
-            <Link key={index} href='/category/coca-cola' >
+            <Link key={index} href={`/collection/${item.id}`} >
                 <a  className={styles.trendingItem}>
                     <Card
                         hoverable

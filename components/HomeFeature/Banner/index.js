@@ -25,7 +25,7 @@ const Banner = ({mostFavoriteItem}) => {
                             </div>
                             <div className={styles.cta}>
                                 <Link href='/assets'><a className={styles.secondaryButton}>Explore</a></Link>
-                                <Link href='/create'><a className={styles.primaryButton}>Create</a></Link>
+                                {/* <Link href='/create'><a className={styles.primaryButton}>Create</a></Link> */}
                             </div>
                             {/* <div className={styles.getFeatured}>
                                 <span>Get featured on the homepage</span>
