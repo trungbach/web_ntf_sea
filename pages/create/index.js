@@ -36,7 +36,7 @@ export async function getServerSideProps({req, res}) {
       res.writeHead(302, { Location: `/login?${req.url}` })
       res.end();
     } else {
-        const listCollection = {...rest.res.body}
+        const listCollection = [...rest.res.body.data]
         return {
           props: {
             listCollection
