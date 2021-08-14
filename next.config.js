@@ -12,7 +12,7 @@ module.exports = {
               '139.177.188.72'
             ],
   },
-  trailingSlash: false,
+  trailingSlash: true,
   react: {
     useSuspense: false,
     wait: true,

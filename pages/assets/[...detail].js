@@ -150,7 +150,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         setLoading(false)
         handleOk()
         await buyItem({id: item.id})
-        toast.dark('Buy Success!')
+        toast.dark('Buy Success!', {position: "top-right",})
         router.push('/assets')
 
     }
