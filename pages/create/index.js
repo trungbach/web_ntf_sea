@@ -29,10 +29,18 @@ export async function getServerSideProps({req, res}) {
     .find(c => c.trim().startsWith("token="));
     const token = tokenCookie && tokenCookie.split('=')[1]
   
-    const listCollection = await getMyCollection({token: token});
-    return {
-        props: {
-          listCollection
+    const rest = await getMyCollection({token: token});
+
+    if(rest.status === 401) {
+      res.setHeader('Set-Cookie','token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
+      res.writeHead(302, { Location: `/login?${req.url}` })
+      res.end();
+    } else {
+        const listCollection = {...rest.res.body}
+        return {
+          props: {
+            listCollection
+          }
         }
     }
   }

@@ -17,25 +17,27 @@ export async function getServerSideProps({req, res}) {
         const tokenCookie = req.headers.cookie.split(";")
         .find(c => c.trim().startsWith("token="));
         const token = tokenCookie && tokenCookie.split('=')[1]
-        console.log('tk',token)
     
-        const myCollection = await getMyCollection({token: token});
-        return {
+        const rest = await getMyCollection({token: token});
+  
+      if(rest.status === 401) {
+        res.setHeader('Set-Cookie','token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
+        res.writeHead(302, { Location: `/login?${req.url}` })
+        res.end();
+      } else {
+          const myCollection = [...rest.res.body.data]
+          return {
             props: {
                 myCollection,
             }
-        }
+          }
+      }
     }
-
-}
+  
+  }
 
 const MyCollections = ({myCollection, search_text, isLoggedIn}) => {
-    console.log('isLoggedIn', isLoggedIn)
-    console.log(myCollection)
     const router = useRouter()
-    console.log(search_text)
-
-
 
     useEffect(() => {
         if(!isLoggedIn) {

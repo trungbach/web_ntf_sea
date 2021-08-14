@@ -2,7 +2,6 @@ import superagent from 'superagent';
 import Cookies from 'js-cookie';
 import config from '@/config/index';
 import Router from 'next/router'
-
 const request = {
   get: (url, data = {}) => 
     superagent
@@ -24,15 +23,19 @@ const request = {
       .query(data)
       .set('Accept', 'application/json')    
       .set('x-access-token', token)
-      .use((req) =>                                      
+      // .catch(err => {
+      //   if(err.status === 401) {
+      //   }
+      // }),
+      .use((req, res) =>                                      
         req.on('error', (err) => {
           if (err.status === 401) {
             // Cookies.remove('token');
-            // Router.push({ pathname: '/' });
+            // Router.push({ pathname: '/login' });
+            console.log('ressss',err)
           }
         }))
       ,
-
   post: (url, data = {}, params = null) => 
     superagent
       .post(config.API_DOMAIN + url)

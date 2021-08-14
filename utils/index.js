@@ -5,7 +5,3 @@ export function checkProperties(obj) {
     }
     return true;
 }
-
-export function getCookieFromServier(req) {
-   
-}

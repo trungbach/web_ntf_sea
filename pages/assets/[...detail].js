@@ -61,15 +61,22 @@ export async function getServerSideProps({ params, req, res }) {
         const tokenCookie = req.headers.cookie.split(";")
         .find(c => c.trim().startsWith("token="));
         const token = tokenCookie && tokenCookie.split('=')[1]
-        const item = await getDetailItem({ id: params.detail[1], token: token })
-    
-        const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
-        return {
-            props: {
-                item,
-                moreFromCollection,
+        const rest = await getDetailItem({ id: params.detail[1], token: token, res })
+        if(rest.status === 401) {
+            res.setHeader('Set-Cookie','token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
+            res.writeHead(302, { Location: `/login?${req.url}` })
+            res.end();
+        } else {
+            const item = {...rest.res.body}
+            const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
+            return {
+                props: {
+                    item,
+                    moreFromCollection,
+                }
             }
         }
+        
     }
    
 }
@@ -110,7 +117,6 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
        window.web3 = new Web3(window.ethereum)
        const  getPublicAddress = async() => {
             const publicAddress = await web3.eth.getCoinbase()
-            console.log(publicAddress)
             setCurrentAddress(publicAddress)
        }
        getPublicAddress()
@@ -479,6 +485,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
     <Footer />
     </>
     );
+   
 }
 
 const mapStateToProps = (state) => ({

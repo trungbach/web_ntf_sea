@@ -17,7 +17,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 const {Option} = Select
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
 
     const listItem = await getListItem();
     const listCategory = await getListCategory();
@@ -28,8 +28,7 @@ export async function getStaticProps() {
             listItem,
             listCategory,
             listCollection
-        },
-        revalidate: 60
+        }
     }
 }
 

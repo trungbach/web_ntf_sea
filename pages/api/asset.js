@@ -8,20 +8,38 @@ export async function getListItem(payload) {
 
 export async function getMyAsset(payload) {
    
-    const res = await assetService.getMyAsset(payload)
-    return res.body.data
+    try {
+        const res = await assetService.getMyAsset(payload)
+        return {status: 200, res}
+    } catch(err) {
+        if(err.status === 401) {
+            return {status: 401}
+        }
+    }
 }
 
 export async function getMyCreated(payload) {
-   
-    const res = await assetService.getMyCreated(payload)
-    return res.body.data
+
+    try {
+        const res = await assetService.getMyCreated(payload)
+        return {status: 200, res}
+    } catch(err) {
+        if(err.status === 401) {
+            return {status: 401}
+        }
+    }
 }
   
 export async function getMyFavorited(payload) {
    
-    const res = await assetService.getMyFavorited(payload)
-    return res.body.data
+    try {
+        const res = await assetService.getMyFavorited(payload)
+        return {status: 200, res}
+    } catch(err) {
+        if(err.status === 401) {
+            return {status: 401}
+        }
+    }
 }
   
     

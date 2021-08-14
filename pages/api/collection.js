@@ -16,8 +16,14 @@ export async function getItemByCategory(payload) {
 }
 
 export async function getMyCollection(payload) {
-    const res = await collectionService.getMyCollection(payload)
-    return res.body.data
+    try {
+        const res = await collectionService.getMyCollection(payload)
+        return {status: 200, res}
+    } catch(err) {
+        if(err.status === 401) {
+            return {status: 401}
+        }
+    }
 }
 
 export async function getCollectionByName(payload) {

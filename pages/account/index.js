@@ -29,17 +29,23 @@ export async function getServerSideProps({ req, res }) {
         const tokenCookie = req.headers.cookie.split(";")
         .find(c => c.trim().startsWith("token="));
         const token = tokenCookie && tokenCookie.split('=')[1]
-        const myAsset = await getMyAsset({ token: token })
-        const myCreated = await getMyCreated({ token: token })
-        const myFavorited = await getMyFavorited({ token: token })
-    
-        return {
-            props: {
-                myAsset,
-                myCreated,
-                myFavorited
+        const myAssetResponse = await getMyAsset({ token: token })
+        const myCreatedResponse = await getMyCreated({ token: token })
+        const myFavoritedResponse = await getMyFavorited({ token: token })
+        if(myAssetResponse.status === 401 || myCreatedResponse.status === 401 || myFavoritedResponse.status === 401) {
+            res.setHeader('Set-Cookie','token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
+            res.writeHead(302, { Location: `/login?${req.url}` })
+            res.end();
+        } else {
+            return {
+                props: {
+                    myAsset: [...myAssetResponse.res.body.data],
+                    myCreated: [...myCreatedResponse.res.body.data],
+                    myFavorited:  [...myFavoritedResponse.res.body.data]
+                }
             }
         }
+       
     }
 
 }

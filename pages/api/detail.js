@@ -1,8 +1,14 @@
 import detailService from '@/services/detail'
 
 export async function getDetailItem(payload) {
-    const res = await detailService.getDetailItem(payload);
-    return res.body;
+    try {
+        const res = await detailService.getDetailItem(payload)
+        return {status: 200, res}
+    } catch(err) {
+        if(err.status === 401) {
+            return {status: 401}
+        }
+    }
 }
 
 export async function getMoreFromCollection(payload) {
@@ -17,7 +23,6 @@ export async function getDetailNtfBlock(payload) {
 
 export async function buyItem(payload) {
     const res = await detailService.buyItem(payload);
-    console.log(res)
     return res.body.data;
 }
 
