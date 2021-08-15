@@ -67,7 +67,7 @@ const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
 
     const logOut = () => {
         logoutAccount()
-        toast.dark('You have been logged out successfully!')
+        toast.dark('You have been logged out successfully!', {position: "bottom-right" })
 
     }
 

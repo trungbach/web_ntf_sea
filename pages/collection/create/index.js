@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import styles from './style.module.scss';
 import { Button, Select, Form, Input } from 'antd'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 import {createMyCollection} from '@/pages/api/create'
 import Image from 'next/image'
@@ -12,22 +11,20 @@ import superagent from 'superagent'
 import ImageIcon from '@material-ui/icons/Image';
 import { connect } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
+import {getTokenFromServer} from '@/utils/index'
 
 const {Option} = Select
 
 export async function getServerSideProps({req, res}) {
     
-    if(!req.headers.cookie) {
-      res.writeHead(302, { Location: `/login?${req.url}` })
-      res.end();
-    } else {
-      const listCategory = await getListCategory();
-    
-      return {
-          props: {
-            listCategory
-          }
-      }
+    const token = getTokenFromServer(req, res)
+
+    const listCategory = await getListCategory();
+  
+    return {
+        props: {
+          listCategory
+        }
     }
 }
 
@@ -88,10 +85,9 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
         setLoading(true)
         const resCollection = await createMyCollection(values)
         setLoading(false)
-        if(resCollection.status === 200) {
-            router.push(router.query.from || '/collections') 
-            toast.dark('Add collection Success!', {position: "top-right",})
-
+        if(resCollection?.status === 200) {
+          router.push(router.query.from || '/collections') 
+          toast.dark('Add collection Success!', { position: "top-right" })
         }
       }
 

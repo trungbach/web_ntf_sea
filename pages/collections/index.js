@@ -1,42 +1,27 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import styles from './style.module.scss';
 import { Button, Card } from 'antd'
 import { useRouter } from 'next/router'
 import {getMyCollection} from '@/pages/api/collection'
-import LoginPage from '@/pages/login'
 import Link from 'next/link'
 import Image from 'next/image'
 import { connect } from 'react-redux'
+import {getTokenFromServer} from '@/utils/index'
 
 export async function getServerSideProps({req, res}) {
 
-    if(!req.headers.cookie) {
-        res.writeHead(302, { Location: `/login?${req.url}` })
-        res.end();
-    } else {
-        const tokenCookie = req.headers.cookie.split(";")
-        .find(c => c.trim().startsWith("token="));
-        const token = tokenCookie && tokenCookie.split('=')[1]
-    
-        const rest = await getMyCollection({token: token});
+    const token = getTokenFromServer(req, res)
+    const myCollection = await getMyCollection({token: token, res, from: req.url || '/' });
   
-      if(rest.status === 401) {
-        res.setHeader('Set-Cookie','token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
-        res.writeHead(302, { Location: `/login?${req.url}` })
-        res.end();
-      } else {
-          const myCollection = [...rest.res.body.data]
-          return {
-            props: {
-                myCollection,
-            }
-          }
-      }
+    return {
+        props: {
+            myCollection,
+        }
     }
-  
-  }
+}
 
-const MyCollections = ({myCollection, search_text, isLoggedIn}) => {
+const MyCollections = ({myCollection, isLoggedIn}) => {
+
     const router = useRouter()
 
     useEffect(() => {

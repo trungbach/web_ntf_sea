@@ -12,6 +12,5 @@ export async function deleteFavorite(payload) {
 
 export async function getMostFavorite(payload) {
     const res = await favoriteService.getMostFavorite(payload);
-    console.log(res.body)
     return res.body.data;
 }

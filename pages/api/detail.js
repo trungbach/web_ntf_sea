@@ -1,14 +1,8 @@
 import detailService from '@/services/detail'
 
 export async function getDetailItem(payload) {
-    try {
-        const res = await detailService.getDetailItem(payload)
-        return {status: 200, res}
-    } catch(err) {
-        if(err.status === 401) {
-            return {status: 401}
-        }
-    }
+    const res = await detailService.getDetailItem(payload)
+    return res.body
 }
 
 export async function getMoreFromCollection(payload) {

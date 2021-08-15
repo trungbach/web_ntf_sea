@@ -11,7 +11,7 @@ import {useRouter} from 'next/router'
 
 const LoginPage = ({openWallet, isLoggedIn}) => {
     const router = useRouter()
-    Object.keys(router.query).length ? console.log(router.query ) : console.log('no')
+
     if(isLoggedIn) {
         Object.keys(router.query).length ? router.push(Object.keys(router.query)[0]) : router.push('/')
     }

@@ -15,37 +15,23 @@ import Link from 'next/link'
 import { connect } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
 import superagent from 'superagent'
+import {getTokenFromServer} from '@/utils/index'
 
 const {Option} = Select;
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 export async function getServerSideProps({req, res}) {
 
-  if(!req.headers.cookie) {
-    res.writeHead(302, { Location: `/login?${req.url}` })
-    res.end();
-  } else {
-    const tokenCookie =  req.headers.cookie.split(";")
-    .find(c => c.trim().startsWith("token="));
-    const token = tokenCookie && tokenCookie.split('=')[1]
-  
-    const rest = await getMyCollection({token: token});
+    const token = getTokenFromServer(req, res)
 
-    if(rest.status === 401) {
-      res.setHeader('Set-Cookie','token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
-      res.writeHead(302, { Location: `/login?${req.url}` })
-      res.end();
-    } else {
-        const listCollection = [...rest.res.body.data]
-        return {
-          props: {
-            listCollection
-          }
-        }
+    const listCollection = await getMyCollection({token: token, res, from: req.url || '/' });
+    return {
+      props: {
+        listCollection
+      }
     }
-  }
-
 }
+
 
 const CreateItem = (props) => {
   const { listCollection, isLoggedIn} = props;
@@ -108,13 +94,33 @@ const CreateItem = (props) => {
   }
 
   async function createSale(url, values) {
+    // if(isNaN(values.price) || values.price < 0.01) {
+
+    // }
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)    
     const signer = provider.getSigner()
     /* next, create the item */
+
+    var isUserSigned = true;
     let contract = new ethers.Contract(config.nftaddress, NFT.abi, signer)
-    let transaction = await contract.createToken(url)
+    let transaction = await contract.createToken(url).catch(function (e) {
+      // Transaction rejected or failed
+      if(e.code === 4001) {
+        isUserSigned = false
+        setLoading(false)
+        return
+      }
+      // if(e.message.include('User denied transaction signature.')) {
+      //   setLoading(false)
+      // }
+
+    });
+    if(!isUserSigned) {
+      return
+    }
+ 
     let tx = await transaction.wait()
     let event = tx.events[0]
     let value = event.args[2]
@@ -128,11 +134,9 @@ const CreateItem = (props) => {
     
     transaction = await contract.createMarketItem(config.nftaddress, tokenId, price, { value: listingPrice })
     await transaction.wait()
-    console.log(transaction)
 
     const data = await loadNFTs();
     setLoading(false)
-    console.log('created', data)
     const { name, description, collection_id } = values;
     const payload = {
       name,
@@ -174,7 +178,6 @@ const CreateItem = (props) => {
     </div>
   )
 
-console.log(listCollection.length)
   return (
 
     <div className={`container ${styles.create}`}>
@@ -200,7 +203,8 @@ console.log(listCollection.length)
 
           <Form.Item name='price' label="Price" rules={[{ required: true, message: "Please input item price!" }]}
           >
-            <Input />
+            <Input type="number" min="0.01" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' />
+            
           </Form.Item>
 
           <Form.Item label="Description" name='description' rules={[{ required: true, message: "Please input your description" }]}>

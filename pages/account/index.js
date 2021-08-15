@@ -16,38 +16,26 @@ import { Tabs } from 'antd';
 import { connect } from 'react-redux'
 import styles from './style.module.scss';
 import dynamic from 'next/dynamic'
+import {getTokenFromServer} from '@/utils/index'
 
 const { TabPane } = Tabs;
 const {Option} = Select;
 
 export async function getServerSideProps({ req, res }) {
-    if(!req.headers.cookie) {
-        res.writeHead(302, { Location: `/login?${req.url}` })
-         res.end();
-        
-    } else {
-        const tokenCookie = req.headers.cookie.split(";")
-        .find(c => c.trim().startsWith("token="));
-        const token = tokenCookie && tokenCookie.split('=')[1]
-        const myAssetResponse = await getMyAsset({ token: token })
-        const myCreatedResponse = await getMyCreated({ token: token })
-        const myFavoritedResponse = await getMyFavorited({ token: token })
-        if(myAssetResponse.status === 401 || myCreatedResponse.status === 401 || myFavoritedResponse.status === 401) {
-            res.setHeader('Set-Cookie','token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
-            res.writeHead(302, { Location: `/login?${req.url}` })
-            res.end();
-        } else {
-            return {
-                props: {
-                    myAsset: [...myAssetResponse.res.body.data],
-                    myCreated: [...myCreatedResponse.res.body.data],
-                    myFavorited:  [...myFavoritedResponse.res.body.data]
-                }
-            }
-        }
-       
-    }
+   
+    const token = getTokenFromServer(req, res)
+    
+    const myAsset = await getMyAsset({ token: token,res, from: req.url || '/'  })
+    const myCreated = await getMyCreated({ token: token, res, from: req.url || '/'  })
+    const myFavorited = await getMyFavorited({ token: token, res, from: req.url || '/'})
 
+    return {
+        props: {
+            myAsset,
+            myCreated,
+            myFavorited
+        }
+    }
 }
 
 const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
@@ -58,7 +46,7 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
     const [searchText, setSearchText] = useState('');
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const {tab} = router.query
-    console.log(tab)
+    
     const [currentTab, setCurrentTab] = useState()
     const setPrice = (minPrice, maxPrice) => {
         setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})

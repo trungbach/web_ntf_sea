@@ -45,40 +45,24 @@ import {useRouter} from 'next/router'
 import { connect } from 'react-redux'
 import avatarUser from '@/public/avatarUser.png'
 import { ToastContainer, toast } from 'react-toastify';
-
+import {getTokenFromServer} from '@/utils/index'
 import Web3 from 'web3'
 
 const { Panel } = Collapse;
 const {Option} = Select
 
 export async function getServerSideProps({ params, req, res }) {
-    
-    if(!req.headers.cookie) {
-        res.writeHead(302, { Location: `/login?${req.url}` })
-         res.end();
-       
-    } else {
-        const tokenCookie = req.headers.cookie.split(";")
-        .find(c => c.trim().startsWith("token="));
-        const token = tokenCookie && tokenCookie.split('=')[1]
-        const rest = await getDetailItem({ id: params.detail[1], token: token, res })
-        if(rest.status === 401) {
-            res.setHeader('Set-Cookie','token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
-            res.writeHead(302, { Location: `/login?${req.url}` })
-            res.end();
-        } else {
-            const item = {...rest.res.body}
-            const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
-            return {
-                props: {
-                    item,
-                    moreFromCollection,
-                }
-            }
+
+    const token = getTokenFromServer(req, res)
+    const item = await getDetailItem({ id: params.detail[1], token: token, res, from: req.url || '/'  })
+    const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
+    return {
+        props: {
+            item,
+            moreFromCollection,
         }
-        
     }
-   
+    
 }
 
 const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
@@ -138,20 +122,31 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
-        console.log('contract',contract)
         // var currentGasPrice = await provider.getGasPrice();
         // let gas_price = ethers.utils.hexlify(parseInt(currentGasPrice));
         // console.log(`gas_price: ${ gas_price }`);
         // console.log(`getListingPrice: ${ await contract.getListingPrice() }`);
         /* user will be prompted to pay the asking proces to complete the transaction */
         const price = ethers.utils.parseUnits(nftBlock.price.toString(), 'ether')   
-        console.log(price)
+
+        var isUserSigned = true;
         const transaction = await contract.createMarketSale(config.nftaddress, nftBlock.tokenId, {
           value: price,
-        //   gasLimit: 2100000,
-        //   gasPrice: 8000000000
-        });
-        console.log(transaction)
+        }).catch(function (e) {
+            // Transaction rejected or failed
+            if(e.code === 4001) {
+              isUserSigned = false
+              setLoading(false)
+              return
+            }
+            // if(e.message.include('User denied transaction signature.')) {
+            //   setLoading(false)
+            // }
+      
+          });
+        if(!isUserSigned) {
+            return
+        }
         await transaction.wait()
         setLoading(false)
         handleOk()
@@ -181,7 +176,8 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                 footer={[
                     <Button style={{padding: '1.5rem 3rem'}} className={styles.secondaryButton} key="submit" loading={loading} onClick={buyNft}>
                       Checkout
-                    </Button>
+                    </Button>,
+                    <span key='loading' className={styles.notifyProccess}>{loading &&  `Please wait... The process may take a few minutes`}</span>
                   ]}
         >
             <div className={styles.checkoutForm}>
