@@ -343,7 +343,8 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                                 <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
                             <div className={styles.buyNow} >
-                                <Button disabled={currentAddress == item.owner || item.owner !== item.created} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                <Button disabled={currentAddress == item.owner || item.sell == 0 || item.owner !== item.created} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                <span className={styles.notifyDisable}>{currentAddress == item.owner ? 'This is your item!' : (item.sell == 0 ? 'This item is no longer for sale!' : (item.owner !== item.created ? 'This item has been sold!' : ''))}</span>
                             </div>
                         </div>
                       
