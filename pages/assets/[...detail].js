@@ -342,7 +342,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                                 <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
                             <div className={styles.buyNow} >
-                                <Button disabled={currentAddress == item.owner || nftBlock == null} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                <Button disabled={currentAddress == item.owner || nftBlock == null || item.owner !== item.created} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
                             </div>
                         </div>
                       
