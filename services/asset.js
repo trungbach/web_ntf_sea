@@ -7,15 +7,15 @@ const assetService = {
     },
 
     getMyAsset: payload => {
-        return request.getWithAccessToken('/my-assets-items', {}, payload.token, payload.res, payload.from)
+        return request.getWithAccessToken('/my-assets-items', {}, payload.req, payload.res)
     },
 
     getMyCreated: payload => {
-        return request.getWithAccessToken('/my-created-items', {}, payload.token, payload.res, payload.from)
+        return request.getWithAccessToken('/my-created-items', {}, payload.req, payload.res)
     },
 
     getMyFavorited: payload => {
-        return request.getWithAccessToken('/favorite-items', {}, payload.token, payload.res, payload.from)
+        return request.getWithAccessToken('/favorite-items', {}, payload.req, payload.res)
     }
 
 }

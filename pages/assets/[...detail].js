@@ -45,7 +45,6 @@ import {useRouter} from 'next/router'
 import { connect } from 'react-redux'
 import avatarUser from '@/public/avatarUser.png'
 import { ToastContainer, toast } from 'react-toastify';
-import {getTokenFromServer} from '@/utils/index'
 import Web3 from 'web3'
 
 const { Panel } = Collapse;
@@ -53,8 +52,7 @@ const {Option} = Select
 
 export async function getServerSideProps({ params, req, res }) {
 
-    const token = getTokenFromServer(req, res)
-    const item = await getDetailItem({ id: params.detail[1], token: token, res, from: req.url || '/'  })
+    const item = await getDetailItem({ id: params.detail[1], req, res})
     const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
     return {
         props: {
@@ -136,6 +134,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
             // Transaction rejected or failed
             if(e.code === 4001) {
               isUserSigned = false
+              toast.error(e.message, {position: 'top-right'})
               setLoading(false)
               return
             }

@@ -6,12 +6,10 @@ import {getMyCollection} from '@/pages/api/collection'
 import Link from 'next/link'
 import Image from 'next/image'
 import { connect } from 'react-redux'
-import {getTokenFromServer} from '@/utils/index'
 
 export async function getServerSideProps({req, res}) {
 
-    const token = getTokenFromServer(req, res)
-    const myCollection = await getMyCollection({token: token, res, from: req.url || '/' });
+    const myCollection = await getMyCollection({ req, res });
   
     return {
         props: {

@@ -14,7 +14,7 @@ const collectionService =  {
     },
 
     getMyCollection: payload => {
-        return request.getWithAccessToken('/my-collections', {}, payload.token, payload.res, payload.from);
+        return request.getWithAccessToken('/my-collections', {}, payload.req, payload.res);
     },
 
     getCollectionByName: payload => {

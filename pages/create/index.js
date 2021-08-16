@@ -15,16 +15,14 @@ import Link from 'next/link'
 import { connect } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
 import superagent from 'superagent'
-import {getTokenFromServer} from '@/utils/index'
 
 const {Option} = Select;
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 export async function getServerSideProps({req, res}) {
 
-    const token = getTokenFromServer(req, res)
 
-    const listCollection = await getMyCollection({token: token, res, from: req.url || '/' });
+    const listCollection = await getMyCollection({ req, res });
     return {
       props: {
         listCollection
@@ -109,6 +107,7 @@ const CreateItem = (props) => {
       // Transaction rejected or failed
       if(e.code === 4001) {
         isUserSigned = false
+        toast.error(e.message, {position: 'top-right'})
         setLoading(false)
         return
       }

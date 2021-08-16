@@ -19,8 +19,8 @@ export function getTokenFromServer(req, res) {
       }
 }
 
-export function handleExprireToken (res, from) {
+export function handleExprireToken (req, res) {
     res.setHeader('Set-Cookie','token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT')
-    res.writeHead(302, { Location: `/login?${from}` })
+    res.writeHead(302, { Location: `/login?${req.url || '/'}` })
     res.end();
 }

@@ -2,8 +2,7 @@ import superagent from 'superagent';
 import Cookies from 'js-cookie';
 import config from '@/config/index';
 import Router from 'next/router'
-import {handleExprireToken} from '@/utils/index'
-
+import {handleExprireToken, getTokenFromServer} from '@/utils/index'
 const request = {
   get: (url, data = {}) => 
     superagent
@@ -17,15 +16,15 @@ const request = {
         }))
       ,
 
-  getWithAccessToken: (url, data = {}, token, res, from) => 
+  getWithAccessToken: (url, data = {}, req, res) => 
     superagent
       .get(config.API_DOMAIN + url)                                              
       .query(data)
       .set('Accept', 'application/json')    
-      .set('x-access-token', token)
+      .set('x-access-token', getTokenFromServer(req, res))
       .catch(err => {
         if(err.status === 401) {
-          handleExprireToken(res, from)
+          handleExprireToken(req, res)
         }
       }),
       

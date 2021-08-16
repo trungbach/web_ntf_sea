@@ -15,19 +15,15 @@ import cover from '@/public/cover.jpg'
 import { Tabs } from 'antd';
 import { connect } from 'react-redux'
 import styles from './style.module.scss';
-import dynamic from 'next/dynamic'
-import {getTokenFromServer} from '@/utils/index'
 
 const { TabPane } = Tabs;
 const {Option} = Select;
 
 export async function getServerSideProps({ req, res }) {
    
-    const token = getTokenFromServer(req, res)
-    
-    const myAsset = await getMyAsset({ token: token,res, from: req.url || '/'  })
-    const myCreated = await getMyCreated({ token: token, res, from: req.url || '/'  })
-    const myFavorited = await getMyFavorited({ token: token, res, from: req.url || '/'})
+    const myAsset = await getMyAsset({ req, res })
+    const myCreated = await getMyCreated({ req, res })
+    const myFavorited = await getMyFavorited({ req, res })
 
     return {
         props: {

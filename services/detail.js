@@ -3,7 +3,7 @@ import request from './request'
 const detailService = {
     
     getDetailItem: payload => {
-        return request.getWithAccessToken(`/items/${payload.id}`,{}, payload.token, payload.res, payload.from)
+        return request.getWithAccessToken(`/items/${payload.id}`, {}, payload.req, payload.res)
     },
     
     getMoreFromCollection: payload => {
