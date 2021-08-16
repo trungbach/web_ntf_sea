@@ -14,7 +14,6 @@ import { loginAccount, toggleWallet } from '@/store/login/action'
 import avatarUser from '@/public/avatarUser.png'
 const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
 
-    console.log('isLoggedIn', isLoggedIn)
     const [widthScreen, setWidthScreen] = useState()
     const [currentPublicAddress, setCurrentPublicAddress] = useState('')
 
@@ -23,13 +22,14 @@ const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
     },[])
    
     useEffect(() => {
-        window.web3 = new Web3(window.ethereum)
-        const  getPublicAddress = async() => {
-             const publicAddress = await web3.eth.getCoinbase()
-             console.log(publicAddress)
-             setCurrentPublicAddress(publicAddress)
+        if(typeof window.web3 !== 'undefined') {
+            window.web3 = new Web3(window.ethereum)
+            const  getPublicAddress = async() => {
+                 const publicAddress = await web3.eth.getCoinbase()
+                 setCurrentPublicAddress(publicAddress)
+            }
+            getPublicAddress()
         }
-        getPublicAddress()
      },[])
 
     const [metamaskInstalled, setMetamaskInstalled] = useState(false)
@@ -56,7 +56,6 @@ const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
         setCurrentPublicAddress(publicAddress)
         const resNonce = await checkPublicAddress({public_address: publicAddress})
         setAccount(JSON.parse(resNonce.text).data)
-        console.log(account)
         const {nonce} = JSON.parse(resNonce.text).data
         
         // handleSignMessage
@@ -64,7 +63,6 @@ const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
             web3.utils.fromUtf8(`I am signing my one-time nonce: ${nonce}`),
             publicAddress,
             async (err, signature) => {
-                console.log(signature)
                 const resSignature = await verifySignature({public_address: publicAddress, signature});
                 toast.dark('Login Success!')
                 loginAccount(resSignature.body.data)

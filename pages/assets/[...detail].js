@@ -128,7 +128,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         const price = ethers.utils.parseUnits(nftBlock.price.toString(), 'ether')   
 
         var isUserSigned = true;
-        const transaction = await contract.createMarketSale(config.nftaddress, nftBlock.tokenId, {
+        const transaction = await contract.createMarketSale(config.nftaddress, item.block_id, {
           value: price,
         }).catch(function (e) {
             // Transaction rejected or failed

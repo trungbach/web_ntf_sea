@@ -65,14 +65,12 @@ const CreateItem = (props) => {
               .attach('file', file)
               .end((err, res) => {
                   if (!err) {
-                      console.log(res.body.data.path)
                       form.setFieldsValue({fileUrl: res.body.data.path})
                       setFileUrl(res.body.data.path)
                   }
               })
       }
    }
-
 
   async function createMarket(values) {
     setLoading(true)
