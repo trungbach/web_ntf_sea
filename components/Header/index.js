@@ -67,7 +67,7 @@ const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
 
     const logOut = () => {
         logoutAccount()
-        toast.dark('You have been logged out successfully!', {position: "bottom-right" })
+        toast.dark('You have been logged out successfully!', {position: "bottom-right", autoClose: 2000 })
 
     }
 
@@ -227,7 +227,7 @@ const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
                 </div>
             </div>
             <Wallet />
-            <ToastContainer position="bottom-right" />
+            <ToastContainer position="bottom-right"  autoClose={2000}/>
         </nav>
     );
 }

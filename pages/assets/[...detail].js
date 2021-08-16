@@ -125,32 +125,33 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         // console.log(`gas_price: ${ gas_price }`);
         // console.log(`getListingPrice: ${ await contract.getListingPrice() }`);
         /* user will be prompted to pay the asking proces to complete the transaction */
-        const price = ethers.utils.parseUnits(nftBlock.price.toString(), 'ether')   
 
-        var isUserSigned = true;
+        const price = ethers.utils.parseUnits(item.price.toString(), 'ether') 
+
         const transaction = await contract.createMarketSale(config.nftaddress, item.block_id, {
           value: price,
         }).catch(function (e) {
             // Transaction rejected or failed
-            if(e.code === 4001) {
-              isUserSigned = false
-              toast.error(e.message, {position: 'top-right'})
-              setLoading(false)
-              return
+             if(e.code == 'INSUFFICIENT_FUNDS' ) {
+                toast.error('INSUFFICIENT FUNDS', {position: 'top-right', autoClose: 2000})
+                setLoading(false)
+                return
+            } else {
+                toast.error(e.message, {position: 'top-right', autoClose: 2000})
+                setLoading(false)
+                return
             }
-            // if(e.message.include('User denied transaction signature.')) {
-            //   setLoading(false)
-            // }
-      
           });
-        if(!isUserSigned) {
+
+        if(transaction === undefined){
             return
-        }
+        } 
+      
         await transaction.wait()
         setLoading(false)
         handleOk()
         await buyItem({id: item.id})
-        toast.dark('Buy Success!', {position: "top-right",})
+        toast.dark('Buy Success!', {position: "top-right", autoClose: 2000,})
         router.push('/assets')
 
     }
@@ -342,7 +343,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                                 <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
                             <div className={styles.buyNow} >
-                                <Button disabled={currentAddress == item.owner || nftBlock == null || item.owner !== item.created} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                <Button disabled={currentAddress == item.owner || item.owner !== item.created} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
                             </div>
                         </div>
                       
@@ -476,6 +477,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
     </div>
     <ToastContainer
         position="top-right"
+        autoClose={2000}
     />
     <Footer />
     </>

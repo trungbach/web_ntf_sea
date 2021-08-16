@@ -64,7 +64,7 @@ const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
             publicAddress,
             async (err, signature) => {
                 const resSignature = await verifySignature({public_address: publicAddress, signature});
-                toast.dark('Login Success!')
+                toast.dark('Login Success!', { position: "bottom-right", autoClose: 2000})
                 loginAccount(resSignature.body.data)
                 toggleWallet()
               }
@@ -115,6 +115,7 @@ const Wallet = ({ loginAccount, isLoggedIn, isOpenWallet, toggleWallet }) => {
 
             <ToastContainer
                 position="bottom-right"
+                autoClose={2000}
             />
         </div>
     );
