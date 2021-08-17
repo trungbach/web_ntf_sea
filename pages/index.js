@@ -13,7 +13,7 @@ import {getRankingCollection} from '@/pages/api/ranking'
 import {DATE_TIME} from '@/config/constants'
 import moment from 'moment'
 import {useRanking} from '@/lib/useRanking'
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 
 export default function Home({listCategory, mostFavoriteItem, rankingCollection}) {
   const rangeTime= [ moment().subtract(7, 'day').format(DATE_TIME), moment().format(DATE_TIME) ]
@@ -52,6 +52,6 @@ export async function getStaticProps({params}) {
          mostFavoriteItem,
          rankingCollection,
       },
-      revalidate: 60
+      revalidate: 600
   }
 }

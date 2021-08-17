@@ -39,7 +39,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
     const [collectionName, setCollectionName] = useState('')
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const [isResetPrice, setIsResetPrice] = useState(false)
-    const [sort, setSort] = useState('')
+    const [sort, setSort] = useState(5)
     const {data} = useAsset(`category_id=${filterObj.category?.id || ''}&collection_id=${filterObj.collection?.id || ''}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`, listItem)
    
     const {filterCollection} = useFilterCollection(`key=${collectionName}`, listCollection)
@@ -88,11 +88,11 @@ const Assets = ({listItem, listCategory, listCollection}) => {
     }
 
     const sortBy = {
-        CREATED_SORT: 1,
+        CREATED_SORT: 5,
         PRICE_INCREASE_SORT: 2,
         PRICE_REDUCED_SORT: 3,
         FAVORITE_SORT: 4,
-        OLDEST_SORT :  5
+        OLDEST_SORT :  1
     }
 
     return (
@@ -138,7 +138,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
                     </div>
                 </div>
                 <ul className={styles.listAttributeFilter}>
-                    {filterObj.key !== '' && <li className={styles.attributeFilter}>{filterObj.key} <span onClick={()=>setFilterObj({ ...filterObj, key: '' })}><CloseIcon /></span></li>}
+                    {filterObj.key !== '' && <li className={styles.attributeFilter}>{filterObj.key} <span onClick={()=>{setFilterObj({ ...filterObj, key: '' });router.push('/assets', undefined, {shallow: true})}}><CloseIcon /></span></li>}
 
                     {filterObj.category !== '' && <li className={styles.attributeFilter}>{filterObj.category.name} <span onClick={()=>setFilterObj({ ...filterObj, category: '' })}><CloseIcon /></span></li>}
 

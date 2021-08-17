@@ -3,7 +3,6 @@ import styles from './style.module.scss';
 import { Button, Select, Form, Input } from 'antd'
 import { useRouter } from 'next/router'
 import { create as ipfsHttpClient } from 'ipfs-http-client';
-import {createMyCollection} from '@/pages/api/create'
 import Image from 'next/image'
 import {getListCategory} from '@/pages/api/category'
 import config from '@/config/index'
@@ -12,31 +11,31 @@ import ImageIcon from '@material-ui/icons/Image';
 import { connect } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
 import {getTokenFromServer} from '@/utils/index'
+import { getCollectionBySlug, editMyCollection} from '@/pages/api/collection'
 
 const {Option} = Select
 
-export async function getServerSideProps({req, res}) {
+export async function getServerSideProps({req, res, query}) {
     
     const token = getTokenFromServer(req, res)
-
+    const collection = await getCollectionBySlug({id: query.id})
     const listCategory = await getListCategory();
   
     return {
         props: {
+          collection,
           listCategory
         }
     }
 }
 
-const CreateCollection = ({listCategory, isLoggedIn}) => {
-    
-    const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
-
+const EditCollection = ({collection, listCategory, isLoggedIn}) => {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
-    const [logoUrl, setLogoUrl] = useState(null)
-    const [bannerUrl, setBannerUrl] = useState(null)
+    const [logoUrl, setLogoUrl] = useState(collection?.logo_url)
+    const [bannerUrl, setBannerUrl] = useState(collection?.cover_url)
     const [form] = Form.useForm();
+
     useEffect(() => {
       if(!isLoggedIn) {
          router.push('/login')
@@ -51,7 +50,7 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
                 .attach('file', file)
                 .end((err, res) => {
                     if (!err) {
-                        form.setFieldsValue({logo_id: res.body.data.id})
+                        form.setFieldsValue({logo_url: res.body.data.logo_id})
                         setLogoUrl(res.body.data.original_url)
                     }
                 });
@@ -66,7 +65,7 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
                 .attach('file', file)
                 .end((err, res) => {
                     if (!err) {
-                        form.setFieldsValue({cover_id: res.body.data.id})
+                        form.setFieldsValue({banner_url: res.body.data.logo_id})
                         setBannerUrl(res.body.data.original_url)
                     }
                 });
@@ -81,13 +80,13 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
         )
       }) || []
 
-      const createCollection = async(values) => {
+      const editCollection = async(values) => {
         setLoading(true)
-        const resCollection = await createMyCollection(values)
+        const resCollection = await editMyCollection({ id:collection.id, data: {...values} })
         setLoading(false)
         if(resCollection?.status === 200) {
           router.push(router.query.from || '/collections') 
-          toast.dark('Add collection Success!', { position: "top-right" })
+          toast.dark('Edit collection Success!', { position: "top-right" })
         }
       }
 
@@ -98,10 +97,11 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
     return (
             <div className={styles.collections}>
               <div className="container">
-                  <h1>Create your collection</h1>
+                  <h1>Edit your collection</h1>
                   <h3 className="my-5">Create, curate, and manage collections of unique NFTs to share and sell</h3>
                   
-                  <Form form={form}  onFinish={createCollection} onFinishFailed={onFinishFailed}  layout='vertical'>
+                  <Form form={form}  onFinish={editCollection} onFinishFailed={onFinishFailed}  layout='vertical' 
+                  initialValues={{logo_id: collection.logo_id, cover_id: collection.cover_id, name: collection.name, description: collection.description, category_id: collection.category_id}} >
                       <Form.Item className={styles.fileContainer} name='logo_id' label="Logo image" rules={[{ required: true, message: "Please upload your logo !" }]}>
                          
                           <div className={styles.labelForFileLogo}>
@@ -138,7 +138,7 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
   
                       <Form.Item>
                           <Button htmlType="submit" loading={loading} className={styles.secondaryButton}>
-                            Create 
+                            Update 
                           </Button>
                       </Form.Item>
                   </Form>
@@ -153,4 +153,4 @@ const mapStateToProps = (state) => ({
   isLoggedIn: state.login.isLoggedIn
 })
 
-export default connect(mapStateToProps)(CreateCollection)
+export default connect(mapStateToProps)(EditCollection)

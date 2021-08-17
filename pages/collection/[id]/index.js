@@ -21,7 +21,7 @@ const {Option} = Select;
 
 const CollectionName = ({collection}) => {
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
-    const [sort, setSort] = useState('')
+    const [sort, setSort] = useState(5)
     const {data} = useCollection(`collection_id=${collection.id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`)
     const [isSeeMore, setIsSeeMore] = useState(false);
     const [searchText, setSearchText] = useState('');
@@ -78,18 +78,18 @@ const CollectionName = ({collection}) => {
     }
     
     const sortBy = {
-        CREATED_SORT: 1,
+        CREATED_SORT: 5,
         PRICE_INCREASE_SORT: 2,
         PRICE_REDUCED_SORT: 3,
         FAVORITE_SORT: 4,
-        OLDEST_SORT :  5
+        OLDEST_SORT :  1
     }
 
     return (
         <>
         <div className={styles.collection}>
             <div className={styles.banner}>
-                <Image layout='fill' objectFit='cover' src={collection.banner_url} alt="banner-collection" />
+                <Image layout='fill' objectFit='cover' src={collection.cover_url} alt="cover-collection" />
             </div>
             <div onClick={()=>setIsShowSideBar(false)} className={styles.overlay} style={{display: isShowSideBar ? 'block' : 'none'}}></div>
             <NavBar setPrice={setPrice} isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
@@ -97,7 +97,7 @@ const CollectionName = ({collection}) => {
                 <div className="container">
                 <div className={styles.heading}>
                     <div className={styles.avatar}>
-                        <Image layout='fill' style={{objectFit: 'cover'}} src={collection.logo_url} alt="logo-collection" />
+                        <Image layout='fill' style={{objectFit: 'cover'}} src={collection.logo_url} alt={collection.logo_url} />
                     </div>
                     <h1>{collection.name}</h1>
                     <div className={styles.about}>
@@ -225,7 +225,7 @@ export async function getStaticProps({params}) {
         props: {
             collection
         },
-        revalidate: 10,
+        revalidate: 20,
     }
 }
 

@@ -282,7 +282,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                             <div className={styles.detailsAddress}>
                                 <div>
                                     <p>Contract Address</p>
-                                    <Link href='/'><a>{config.nftaddress}</a></Link>
+                                    <p  style={{fontWeight: 500}}>{config.nftaddress}</p>
                                 </div>
                                 <div>
                                     <p>Token ID</p>
@@ -332,7 +332,8 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                     <div className='d-flex align-items-center'>
                         <div className={styles.imgOwner}>
                             <Image  width={24} height={24} src={avatarUser} alt='avatar' />
-                            <span>Owner by <Link href={`/address/${item.owner}`}>{item.user_name}</Link></span>
+                            {/* <span>Owner by <Link href={`/address/${item.owner}`}>{item.user_name}</Link></span> */}
+                            <span>Owner by {item.user_name}</span>
                         </div>
                     </div>
                     <div className={styles.currentPrice}>
@@ -434,7 +435,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                             <div className={styles.detailsAddress}>
                                 <div>
                                     <p>Contract Address</p>
-                                    <Link href='/'><a>{config.nftaddress}</a></Link>
+                                    <p style={{fontWeight: 500}}>{config.nftaddress}</p>
                                 </div>
                                 <div>
                                     <p>Token ID</p>

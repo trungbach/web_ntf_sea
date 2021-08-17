@@ -17,6 +17,11 @@
       height: 100%;
       background: #fff;
       overflow-y: auto;
+      .publicAddress {
+          margin-top: 1rem;
+          font-weight: 500;
+          padding: 1rem;
+      }
       .infoWallet {
         display: flex;
         justify-content: space-between;
@@ -24,12 +29,6 @@
         border-bottom: 1px solid #dddd;
         align-items: center;
         font-size: 1.5rem;
-        & > div:last-child {
-            width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-weight: 500;
-        }
         & > div:first-child {
             display: flex;
             align-items: center;

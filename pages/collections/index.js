@@ -6,6 +6,7 @@ import {getMyCollection} from '@/pages/api/collection'
 import Link from 'next/link'
 import Image from 'next/image'
 import { connect } from 'react-redux'
+import EditIcon from '@material-ui/icons/Edit';
 
 export async function getServerSideProps({req, res}) {
 
@@ -33,18 +34,25 @@ const MyCollections = ({myCollection, isLoggedIn}) => {
         router.push('/collection/create')
     }
 
+    const goToEdit = (id) => {
+        router.push(`/collection/edit?id=${id}`)
+    }
+
     const listCollection = myCollection.map((item, index) => {
         return (
-            <div key={index} className={styles.sellItemContainer}>
+            <div key={index} className={`${styles.sellItemContainer} col-12 col-md-4 col-lg-3`}>
+                <Button className={styles.goToEdit} onClick={()=>goToEdit(item.id)}><EditIcon /> Edit</Button>
+
                 <Link href={`/collection/${item.id}`} >
                     <a  className={styles.trendingItem}>
                         <Card
                             hoverable
-                            cover={<Image width={250} height={300} alt="hot asset" src={item.banner_url} />}
+                            cover={<Image layout='fill' alt={item.cover_thumb_url} src={item.cover_thumb_url} />}
                         >
+                           
                             <div className={styles.trendingItemContent}>
                                 <div className={styles.avatar}>
-                                    <Image width={30} height={30} src={item.logo_url} alt='avatar' />
+                                    <Image width={30} height={30} src={item.logo_thumb_url} alt='logo_thumb_url' />
                                 </div>
                                 <h3>
                                     {item.name}
@@ -69,7 +77,7 @@ const MyCollections = ({myCollection, isLoggedIn}) => {
                 <div className={styles.btnCreate}>
                     <Button className={styles.secondaryButton} onClick={goToCreate}>Create a collection</Button>
                 </div>
-                <div className={styles.listCollection}>
+                <div className={`${styles.listCollection} row`}>
                     {listCollection}
                 </div>
             </div>

@@ -12,7 +12,7 @@ const FeatureCategory = ({listCategory}) => {
                     <a  className={styles.categoryItem}>
                         <Card
                             hoverable
-                            cover={<Image layout='fill' alt={item.image_url} src={item.image_url} />}
+                            cover={<Image layout='fill' alt={item.cover_thumb_url} src={item.cover_thumb_url} />}
                         >
                             <div className={styles.categoryItemContent}>
                                 <h3>

@@ -18,11 +18,16 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { logoutAccount, toggleWallet } from '@/store/login/action'
 
-const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
-
+const Header = ({isLoggedIn, user, logoutAccount, toggleWallet}) => {
+    
     const router = useRouter()
     const [searchText, setSearchText] =  useState('')
     const [listCategory, setListCategory] = useState([])
+    const [avatarUrl, setAvatarUrl] = useState()
+    
+    useEffect(() => {
+        user && setAvatarUrl(user.avatar_url)
+    },[user])
 
     useEffect(() => {
         const getCategory = async() => {
@@ -175,7 +180,11 @@ const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
                 </Link>
             </Menu.Item>
             <Menu.Item key='3'>
-                   My Account Settings
+                <Link href='/account/edit'>
+                    <a>
+                        My Account Settings
+                    </a>
+                </Link>
             </Menu.Item>
             {isLoggedIn &&  
                 <Menu.Item  key='4' onClick={logOut}>
@@ -217,7 +226,7 @@ const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
                             <a className="nav-link" href="#">Resources</a>
                         </Dropdown> */}
                         <Dropdown overlay={menuUser} placement="bottomRight">
-                            <a className="nav-link" href="#">{isLoggedIn ? <Image width={30} height={30} src={avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
+                            <a className="nav-link" href="#">{isLoggedIn ? <Image width={30} height={30} src={avatarUrl || avatarUser} alt='avatar'/> : <AccountCircleOutlinedIcon />}</a>
                         </Dropdown>
 
                         <span type='button' title='Wallet' className={`nav-link ${styles.walletBtn}`} onClick={toggleWallet}>
@@ -233,7 +242,8 @@ const Header = ({isLoggedIn, logoutAccount, toggleWallet}) => {
 }
 
 const mapStateToProps = (state) => ({
-    isLoggedIn: state.login.isLoggedIn
+    isLoggedIn: state.login.isLoggedIn,
+    user: state.login.user
 })
   
 const mapDispatchToProps = (dispatch) => {

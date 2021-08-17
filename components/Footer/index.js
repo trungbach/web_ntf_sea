@@ -1,11 +1,25 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './style.module.scss';
 import {Input, Button} from 'antd';
 import MailOutlinedIcon from '@material-ui/icons/MailOutlined';
 import Link from 'next/link'
 import Image from 'next/image'
 import openseaWhite from '../../public/opensea-white.svg'
+import {getListCategory} from '@/pages/api/category'
+
 const Footer = () => {
+
+    const [listCategory, setListCategory] = useState([])
+
+    useEffect(() => {
+
+        const listCategory = async() => {
+            const categories = await getListCategory();
+            setListCategory(categories)
+        } 
+        listCategory()
+    }, [])
+
     return (
         <footer className={styles.footer}>
             <div className="container">
@@ -81,28 +95,24 @@ const Footer = () => {
                     <div className={`col-lg-9 col-12 row ${styles.navFooter}`}>
                         <div className='col-6 col-md-3'>
                             <h4>Marketplace</h4>
-                            <Link href='/'>All NTFs</Link>
-                            <Link href='/'>New</Link>
-                            <Link href='/'>Art</Link>
-                            <Link href='/'>Music</Link>
-                            <Link href='/'>Domain Names</Link>
-                            <Link href='/'>Virtual Worlds</Link>
-                            <Link href='/'>Trading Cards</Link>
-                            <Link href='/'>Collectibles</Link>
-                            <Link href='/'>Sports</Link>
-                            <Link href='/'>Utility</Link>
+                            <Link href='/assets'><a>All NFTs</a></Link>
+                            {listCategory.map((item, index) => {
+                                return (
+                                    <Link key={index} href={`/category/${item.id}`}><a>{item.name}</a></Link>
+                                )
+                            })}
                         </div>
                         <div  className='col-6 col-md-3'>
                             <h4>My Account</h4>
-                            <Link href='/'>My Profile</Link>
-                            <Link href='/'>My Collections</Link>
-                            <Link href='/'>My Favorites</Link>
-                            <Link href='/'>My Account Settings</Link>
+                            <Link href='/account'>My Profile</Link>
+                            <Link href='/collections'>My Collections</Link>
+                            <Link href='/collection?tab=favorites'>My Favorites</Link>
+                            <Link href='/account/edit'>My Account Settings</Link>
                             <h4 className='mt-5'>Rankings</h4>
-                            <Link href='/'>Rankings</Link>
-                            <Link href='/'>Activity</Link>
+                            <Link href='/rankings'>Rankings</Link>
+                            {/* <Link href='/'>Activity</Link> */}
                         </div>
-                        <div  className='col-6 col-md-3'>
+                        {/* <div  className='col-6 col-md-3'>
                             <h4>Resources</h4>
                             <Link href='/'>Help Center</Link>
                             <Link href='/'>Partners</Link>
@@ -111,12 +121,12 @@ const Footer = () => {
                             <Link href='/'>Blog</Link>
                             <Link href='/'>Docs</Link>
                             <Link href='/'>Newsletter</Link>
-                        </div>
-                        <div  className='col-6 col-md-3'>
+                        </div> */}
+                        {/* <div  className='col-6 col-md-3'>
                             <h4>Company</h4>
                             <Link href='/'>About</Link>
                             <Link href='/'>Careers</Link>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className={styles.copyright}>

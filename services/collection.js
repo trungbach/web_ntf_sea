@@ -17,6 +17,10 @@ const collectionService =  {
         return request.getWithAccessToken('/my-collections', {}, payload.req, payload.res);
     },
 
+    editMyCollection: payload => {
+        return request.put(`/collections/${payload.id}`, payload.data);
+    },
+
     getCollectionByName: payload => {
         return request.get('/collections', payload);
     }

@@ -34,7 +34,8 @@
     
     .mainAsset {
         flex: 1;
-        overflow-y: scroll;
+        overflow-y: auto;
+        height: 100%;   
         padding: 4rem;
         .heading {
             display: flex;

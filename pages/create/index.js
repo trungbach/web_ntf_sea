@@ -21,7 +21,6 @@ const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
 export async function getServerSideProps({req, res}) {
 
-
     const listCollection = await getMyCollection({ req, res });
     return {
       props: {
@@ -65,8 +64,8 @@ const CreateItem = (props) => {
               .attach('file', file)
               .end((err, res) => {
                   if (!err) {
-                      form.setFieldsValue({fileUrl: res.body.data.path})
-                      setFileUrl(res.body.data.path)
+                      form.setFieldsValue({image_id: res.body.data.id})
+                      setFileUrl(res.body.data.original_url)
                   }
               })
       }
@@ -74,7 +73,7 @@ const CreateItem = (props) => {
 
   async function createMarket(values) {
     setLoading(true)
-    const { name, description, price, fileUrl } = values
+    const { name, description, price } = values
     // /* first, upload to IPFS */
     const data = JSON.stringify({
       name, description, image: fileUrl
@@ -90,9 +89,6 @@ const CreateItem = (props) => {
   }
 
   async function createSale(url, values) {
-    // if(isNaN(values.price) || values.price < 0.01) {
-
-    // }
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)    
@@ -109,11 +105,8 @@ const CreateItem = (props) => {
         setLoading(false)
         return
       }
-      // if(e.message.include('User denied transaction signature.')) {
-      //   setLoading(false)
-      // }
-
     });
+    
     if(!isUserSigned) {
       return
     }
@@ -134,12 +127,12 @@ const CreateItem = (props) => {
 
     const data = await loadNFTs();
     setLoading(false)
-    const { name, description, collection_id } = values;
+    const { name, description, collection_id, image_id } = values;
     const payload = {
       name,
       description,
       price: values.price, 
-      image_url: fileUrl,
+      image_id: image_id,
       symbol: 'ETH',
       collection_id: collection_id.split(',')[0],
       category_id: collection_id.split(',')[1],
@@ -183,7 +176,7 @@ const CreateItem = (props) => {
                            </Link>}
       </h1>
       <Form form={form}  onFinish={createMarket} onFinishFailed={onFinishFailed}  layout='vertical'>
-          <Form.Item className={styles.fileContainer} name='fileUrl' label="Image, Video, Audio, or 3D Model" rules={[{ required: true, message: "Please choose your file!" }]}>
+          <Form.Item className={styles.fileContainer} name='image_id' label="Image, Video, Audio, or 3D Model" rules={[{ required: true, message: "Please choose your file!" }]}>
 
               <div className={styles.labelForFile}>
                 {fileUrl && <Image src={fileUrl} alt={fileUrl} layout='fill' objectFit='cover' />}

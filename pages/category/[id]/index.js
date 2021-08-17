@@ -16,10 +16,9 @@ const {Option} = Select;
 
 const CategoryName = ({category}) => {
     const router = useRouter()
-    const [sort, setSort] = useState('')
+    const [sort, setSort] = useState(5)
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
     const {data} = useCollection(`category_id=${category.id}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`)
-    console.log(data)
     const [isSeeMore, setIsSeeMore] = useState(false);
     const [heightDesc, setHeightDesc] = useState(-1);
     const [searchText, setSearchText] = useState('');
@@ -73,11 +72,11 @@ const CategoryName = ({category}) => {
     }
 
     const sortBy = {
-        CREATED_SORT: 1,
+        OLDEST_SORT :  1,
         PRICE_INCREASE_SORT: 2,
         PRICE_REDUCED_SORT: 3,
         FAVORITE_SORT: 4,
-        OLDEST_SORT :  5
+        CREATED_SORT: 5,
     }
 
     return (
@@ -85,7 +84,7 @@ const CategoryName = ({category}) => {
         <div className={styles.collection}>
 
             <div className={styles.banner}>
-                <Image objectFit layout='fill' src={category.image_url} alt="banner-collection" />
+                <Image objectFit layout='fill' src={category.cover_url} alt="banner-collection" />
             </div>
 
             <div onClick={()=>setIsShowSideBar(false)} className={styles.overlay} style={{display: isShowSideBar ? 'block' : 'none'}}></div>
@@ -162,6 +161,6 @@ export async function getStaticProps({params}) {
         props: {
             category
         },
-        revalidate: 10
+        revalidate: 60
     }
 }

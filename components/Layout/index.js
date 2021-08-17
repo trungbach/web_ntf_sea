@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './styles.module.scss';
 import Header from '../Header';
 import Meta from '../Meta';
+import Footer from '../Footer';
 import HeaderMobile from '../HeaderMobile';
 const Layout = ({children}) => {
     return (
@@ -9,9 +10,7 @@ const Layout = ({children}) => {
             <Meta />
             <Header/>
             <HeaderMobile />
-            <div>
-                {React.cloneElement(children, {search_text: 'trung'})}
-            </div>
+            {children}
         </div>
     );
 }

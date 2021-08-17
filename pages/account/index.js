@@ -10,11 +10,10 @@ import NavBar from '@/components/SideBar';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import {getMyAsset, getMyCreated, getMyFavorited} from '@/pages/api/asset'
 import {useRouter} from 'next/router'
-import avatar from '@/public/30.png'
-import cover from '@/public/cover.jpg'
 import { Tabs } from 'antd';
 import { connect } from 'react-redux'
 import styles from './style.module.scss';
+import avatar from '@/public/30.png'
 
 const { TabPane } = Tabs;
 const {Option} = Select;
@@ -24,7 +23,6 @@ export async function getServerSideProps({ req, res }) {
     const myAsset = await getMyAsset({ req, res })
     const myCreated = await getMyCreated({ req, res })
     const myFavorited = await getMyFavorited({ req, res })
-
     return {
         props: {
             myAsset,
@@ -34,23 +32,22 @@ export async function getServerSideProps({ req, res }) {
     }
 }
 
-const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
-    console.log('myCreated', myCreated)
-    console.log('myFavorited', myFavorited)
+const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user}) => {
     const router = useRouter()
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
     const [searchText, setSearchText] = useState('');
     const [isShowSideBar, setIsShowSideBar] = useState(false);
-    const {tab} = router.query
-    
-    const [currentTab, setCurrentTab] = useState()
+    const [avatarUrl, setAvatarUrl] = useState()
+    const [coverUrl, setCoverUrl] = useState()
+    const [currentTab, setCurrentTab] = useState('collected')
+    console.log('user', user)
     const setPrice = (minPrice, maxPrice) => {
         setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
     }
 
     useEffect(() => {
-        setCurrentTab(tab)
-    },[tab])
+        setCurrentTab(router.query.tab)
+    },[router.query])
 
     useEffect(() => {
         if(!isLoggedIn) {
@@ -58,11 +55,18 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
       }
     },[isLoggedIn])
 
-  const handleChange = () => {}
+    useEffect(() => {
+        if(user !== undefined) {
+            setAvatarUrl(user.avatar_url)
+            setCoverUrl(user.cover_url)
+        }
+    }, [user, router])
+
+    const handleChange = () => {}
 
     const listMyCreated = myCreated.length > 0 ? myCreated.map((item, index) => {
       return (
-        <div key={index} className="col-12 col-md-4 col-lg-3 mb-4">
+        <div key={index} className="col-12 col-md-4 col-xl-3 col-xxl-2 mb-4">
             <ItemSell item={item}/>
         </div>
       )
@@ -70,7 +74,7 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
   
     const listMyAsset = myAsset.length > 0 ? myAsset.map((item, index) => {
         return (
-          <div key={index} className="col-12 col-md-4 col-lg-3 mb-4">
+          <div key={index} className="col-12 col-md-4 col-xl-3 col-xxl-2 mb-4 ">
               <ItemSell item={item}/>
           </div>
         )
@@ -78,7 +82,7 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
 
     const listMyFavorited =  myFavorited.length > 0 ? myFavorited.map((item, index) => {
         return (
-            <div key={index} className="col-12 col-md-4 col-lg-3 mb-4">
+            <div key={index} className="col-12 col-md-4 col-xl-3 col-xxl-2 mb-4">
                 <ItemSell item={item}/>
             </div>
         )
@@ -97,22 +101,22 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
         <>
         <div className={styles.collection}>
             <div className={styles.banner}>
-                <Image layout='fill' objectFit='cover' src={cover} alt="cover" />
+                {coverUrl && <Image layout='fill' objectFit='cover' src={coverUrl} alt="cover" />}
             </div>
             <div onClick={()=>setIsShowSideBar(false)} className={styles.overlay} style={{display: isShowSideBar ? 'block' : 'none'}}></div>
             <NavBar setPrice={setPrice} isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
             <div className={styles.content}>
-                <div className="container">
+                <div className="container" style={{marginBottom: '5rem'}}>
                     <div className={styles.heading}>
                         <div className={styles.avatar}>
-                            <Image layout='fill' style={{objectFit: 'cover'}} src={avatar} alt="avatar" />
+                           <Image layout='fill' style={{objectFit: 'cover'}} src={avatarUrl || avatar} alt="avatar" />
                         </div>
-                        {/* <h1>{collection.name}</h1> */}
+                        <h1>{user?.username}</h1>
                         <div className={styles.about}>
-                            {/* address */}
+                            {user?.public_address}
                         </div>
                     </div>
-                    <div className={styles.social}>
+                    {/* <div className={styles.social}>
                         <Link href='/'><a>
                             <Tooltip title='Settings'>
                             <span><i className="fab fa-discord"></i></span>
@@ -123,9 +127,9 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
                                 <span><PlaylistPlayIcon /></span>
                             </Tooltip>
                         </a></Link>
-                    </div>
+                    </div> */}
             
-                    <div className={styles.filter}>
+                    {/* <div className={styles.filter}>
                         <div>
                             <Input prefix={<SearchOutlined />} placeholder="Search" onChange={e => setSearchText(e.target.value)}  onKeyPress={onKeyDown} />
                         </div>
@@ -150,9 +154,9 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
                         <div>
                             <Button className={styles.buttonShowFilter} onClick={()=>setIsShowSideBar(true)}><FilterListIcon />Filter</Button>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
-                <Tabs tabPosition='left' defaultActiveKey={currentTab}>
+                <Tabs tabPosition='left' activeKey={currentTab} onChange={(activeKey)=>setCurrentTab(activeKey)}>
                     <TabPane tab="Collected" key='collected'>
                         <div className="row">
                             {listMyAsset}
@@ -168,9 +172,9 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
                             {listMyFavorited}
                         </div>
                     </TabPane>
-                    <TabPane tab="Hidden" key="4">
+                    {/* <TabPane tab="Hidden" key="4">
                         Hidden
-                    </TabPane>
+                    </TabPane> */}
                 </Tabs>
             </div>
         </div>
@@ -180,10 +184,11 @@ const CollectionName = ({myAsset, myCreated, myFavorited, isLoggedIn}) => {
 }
 
 const mapStateToProps = (state) => ({
-    isLoggedIn: state.login.isLoggedIn
+    isLoggedIn: state.login.isLoggedIn,
+    user: state.login.user
 })
 
-export default connect(mapStateToProps)(CollectionName)
+export default connect(mapStateToProps)(Account)
 
 
 

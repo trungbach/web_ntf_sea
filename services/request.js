@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import config from '@/config/index';
 import Router from 'next/router'
 import {handleExprireToken, getTokenFromServer} from '@/utils/index'
+
 const request = {
   get: (url, data = {}) => 
     superagent
@@ -38,6 +39,7 @@ const request = {
       .catch(err => {
         if(err.status === 401) {
             Cookies.remove('token');
+            Cookies.remove('user');
             Router.push({ pathname: '/' });
         }
       }),
@@ -46,23 +48,20 @@ const request = {
     superagent
       .put(config.API_DOMAIN + url)
       .send(data)
-      .set('Authorization', 'Bearer ' + Cookies.get('token'))
       .set('x-access-token', Cookies.get('token'))
       .set('Accept', 'application/json, multipart/form-data')
-      .use((req) =>
-        req.on('error', (err) => {
-          if (err.status === 401) {
+      .catch(err => {
+        if(err.status === 401) {
             Cookies.remove('token');
-            router.push({ pathname: '/' });
-          }
-        }),
-      ),
+            Cookies.remove('user');
+            Router.push({ pathname: '/' });
+        }
+      }),
 
   delete: (url, data = {}) =>
     superagent
       .delete(config.API_DOMAIN + url)
       .send(data)
-      .set('Authorization', 'Bearer ' + Cookies.get('token'))
       .set('Accept', 'application/json')
       .use((req) =>
         req.on('error', (err) => {

@@ -58,7 +58,7 @@ const SideFilter = ({ setPrice, currentCategory, currentCollection,  listCategor
     const listCategoryUI = listCategory.map((item, index) => {
         return (
             <li key={index} onClick={()=>handleSetCategory(item)}>
-                <Image width={24} height={24} src={currentCategory?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_url} alt={item.logo_url} />
+                <Image width={24} height={24} src={currentCategory?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_thumb_url} alt={item.logo_thumb_url} />
                     {item.name}
             </li>
         )
@@ -67,7 +67,7 @@ const SideFilter = ({ setPrice, currentCategory, currentCollection,  listCategor
     const listCollectionUI = listCollection.map((item, index) => {
         return (
             <li key={index} onClick={()=>handleSetCollection(item)} className='justify-content-center'>
-                 <Image layout='fill' src={currentCollection?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_url} alt={item.logo_url} /> 
+                 <Image layout='fill' src={currentCollection?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_thumb_url} alt={item.logo_thumb_url} /> 
                  {item.name}
             </li>
         )

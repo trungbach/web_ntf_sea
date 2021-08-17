@@ -9,7 +9,6 @@ import Slider from "react-slick";
 
 const FeatureTrending = ({rankingCollection, listCategory, setCategoryId}) => {
 
-    console.log('rankings collection', rankingCollection)
     const reference = useRef();
     const [currentCategory, setCurrentCategory] = useState('all categories')
 
@@ -17,7 +16,7 @@ const FeatureTrending = ({rankingCollection, listCategory, setCategoryId}) => {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: 2,
         slidesToScroll: 1,
         initialSlide: 0,
         responsive: [
@@ -48,18 +47,15 @@ const FeatureTrending = ({rankingCollection, listCategory, setCategoryId}) => {
                 <a  className={styles.trendingItem}>
                     <Card
                         hoverable
-                        cover={<Image layout='fill' alt={item.banner_url} src={item.banner_url} />}
+                        cover={<Image layout='fill' alt={item.cover_thumb_url} src={item.cover_thumb_url} />}
                     >
                         <div className={styles.trendingItemContent}>
                             <div className={styles.avatar}>
-                                <Image layout='fill' src={item.logo_url} alt={item.logo_url} />
+                                <Image layout='fill' src={item.logo_thumb_url} alt={item.logo_thumb_url} />
                             </div>
                             <h3>
                                 {item.name}
                             </h3>
-                            <p>
-                                by <Link href='/'>Gridacity</Link>
-                            </p>
                             <p>{item.description}</p>
                         </div>
                     </Card>
@@ -72,7 +68,7 @@ const FeatureTrending = ({rankingCollection, listCategory, setCategoryId}) => {
     const categories = listCategory.length > 0 ? listCategory.map((item, index) => {
         return (
             <Menu.Item key={index+1} onClick={()=>{setCategoryId(item.id); setCurrentCategory(item.name)}}>
-                <Image width={24} height={24} src={item.logo_url} alt={item.logo_url} />
+                <Image width={24} height={24} src={item.logo_thumb_url} alt={item.logo_thumb_url} />
                 {item.name}
             </Menu.Item>
         )

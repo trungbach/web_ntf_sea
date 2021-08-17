@@ -1,8 +1,8 @@
 import loginService from '@/services/login'
 
 export async function checkPublicAddress(payload) {
-    const res = loginService.checkPublicAddress(payload);
-    return res;
+    const res = await loginService.checkPublicAddress(payload);
+    return res.body.data;
 }
 
 export async function verifySignature(payload) {
