@@ -45,7 +45,8 @@ import {useRouter} from 'next/router'
 import { connect } from 'react-redux'
 import avatarUser from '@/public/avatarUser.png'
 import { ToastContainer, toast } from 'react-toastify';
-import Web3 from 'web3'
+import { getMyCreated } from '@/pages/api/asset'
+
 import NFT from '@/artifacts/contracts/NFT.sol/NFT.json'
 
 const { Panel } = Collapse;
@@ -55,6 +56,7 @@ export async function getServerSideProps({ params, req, res }) {
 
     const item = await getDetailItem({ id: params.detail[1], req, res})
     const moreFromCollection = await getMoreFromCollection({ collection_id: item.collection_id });
+   
     return {
         props: {
             item,
@@ -65,17 +67,15 @@ export async function getServerSideProps({ params, req, res }) {
 }
 
 const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
-
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [isFavorite, setIsFavorite] = useState(item.is_favorite === null ? false : true)
     const [numberFavorite, setNumberFavorite] = useState(item.number_favorites)
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isModalResell, setIsModalResell] = useState(false);
-    const [currentAddress, setCurrentAddress] = useState()
     const [nftBlock, setNftBlock] = useState(null)
     const [currentPrice, setCurrentPrice] = useState(item.price)
-
+    const [isCreated, setIsCreated] = useState(false)
     const showModal = () => {
         setIsModalVisible(true);
     };
@@ -108,16 +108,13 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
         getNftBlock()
     },[])
 
-
-
-    // useEffect(() => {
-    //    window.web3 = new Web3(window.ethereum)
-    //    const  getPublicAddress = async() => {
-    //         const publicAddress = await web3.eth.getCoinbase()
-    //         setCurrentAddress(publicAddress)
-    //    }
-    //    getPublicAddress()
-    // },[])
+    useEffect(() => {
+        const checkCreated = async()=> {
+            const myCreated = await getMyCreated({user_id: item.user_id})
+            setIsCreated(myCreated.length > 0 ? true : false)
+        }
+        checkCreated()
+    }, [])
 
     useEffect(() => {
         if(!isLoggedIn) {
@@ -174,7 +171,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         let contract = new ethers.Contract(config.nftaddress, NFT.abi, signer)
-        await contract.userApproval()
+        isCreated && await contract.userApproval()
         contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
         const price = ethers.utils.parseUnits(newPrice, 'ether')
         const fee = ethers.utils.parseUnits((Number(newPrice)/100).toString(), 'ether')
@@ -201,7 +198,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
         handleOkResell()
         await reSellItem({id: item.id, data: {price: currentPrice}})
         toast.dark('Resell Success!', {position: "top-right", autoClose: 2000,})
-        // router.push('/assets')
+        router.push('/assets')
     }
 
     const handleCreateFavorite = () => {
@@ -307,8 +304,8 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                         <Panel header={<div><SubjectOutlinedIcon /> Description</div>} key="1">
                             <div className={styles.description}>
                                 <div className={styles.descriptionHead}>
-                                    <Image width={30} height={30} src='https://storage.googleapis.com/opensea-static/opensea-profile/25.png' alt='avatar' />
-                                    <span>Created by <Link href={`/address/${item.owner}`}><a>{item.user_name}</a></Link></span>
+                                    <Image width={30} height={30} src={item.avatar_url || avatarUser} alt='avatar' />
+                                    <span>Created by <Link href={`/account?user_id=${item.user_id}`}><a>{item.user_name}</a></Link></span>
                                 </div>
                                 <p>
                                     {nftBlock?.description}
@@ -392,9 +389,9 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                 <div className={styles.priceDetail}>
                     <div className='d-flex align-items-center'>
                         <div className={styles.imgOwner}>
-                            <Image  width={24} height={24} src={avatarUser} alt='avatar' />
+                            <Image  width={24} height={24} src={item.avatar_url || avatarUser} alt='avatar' />
                             {/* <span>Owner by <Link href={`/address/${item.owner}`}>{item.user_name}</Link></span> */}
-                            <span>Created by {item.user_name}</span>
+                            <span>Created by <Link href={`/account?user_id=${item.user_id}`}><a>{item.user_name}</a></Link></span>
                         </div>
                     </div>
                     <div className={styles.currentPrice}>
@@ -405,9 +402,9 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                                 <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
                             <div className={styles.buyNow} >
-                                {user?.public_address == item.owner ?  
+                                {(user?.public_address == item.owner && item.sell == 0) ?  
                                 <Button onClick={showModalResell}><AccountBalanceWalletOutlinedIcon /> Resell</Button> :
-                                <Button disabled={item.sell == 0} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                <Button disabled={item.sell == 0 || user?.public_address == item.owner} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
                                 }
                                 {/* <span className={styles.notifyDisable}>{currentAddress == item.owner ? 'This is your item!' : (item.sell == 0 ? 'This item is no longer for sale!' : (item.owner !== item.created ? 'This item has been sold!' : ''))}</span> */}
                             </div>
@@ -457,8 +454,8 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                         <Panel header={<div><SubjectOutlinedIcon /> Description</div>} key="1">
                             <div className={styles.description}>
                                 <div className={styles.descriptionHead}>
-                                    <Image width={30} height={30} src={avatarUser} alt='avatar' />
-                                    <span>Created by {item.user_name}</span>
+                                    <Image width={30} height={30} src={item.avatar_url || avatarUser} alt='avatar' />
+                                    <span>Created by <Link href={`/account?user_id=${item.user_id}`}><a>{item.user_name}</a></Link></span>
                                 </div>
                                 <p>{nftBlock?.description}</p>
                             </div>

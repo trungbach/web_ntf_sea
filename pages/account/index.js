@@ -17,30 +17,29 @@ import avatar from '@/public/30.png'
 import bannerCollection from '@/public/bannerCollection.png'
 const { TabPane } = Tabs;
 const {Option} = Select;
+import { getProfileById} from '@/pages/api/user'
 
-export async function getServerSideProps({ req, res }) {
-   
-    const myAsset = await getMyAsset({ req, res })
-    const myCreated = await getMyCreated({ req, res })
-    const myFavorited = await getMyFavorited({ req, res })
+export async function getServerSideProps({ req, res, query }) {
+    const myAsset = await getMyAsset({ user_id: query.user_id })
+    const myCreated = await getMyCreated({ user_id: query.user_id })
+    const myFavorited = await getMyFavorited({ user_id: query.user_id })
+    const infoUser = await getProfileById({ id: query.user_id })
     return {
         props: {
             myAsset,
             myCreated,
-            myFavorited
+            myFavorited,
+            infoUser
         }
     }
 }
 
-const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user}) => {
+const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user, infoUser}) => {
     const router = useRouter()
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '' })
     const [searchText, setSearchText] = useState('');
     const [isShowSideBar, setIsShowSideBar] = useState(false);
-    const [avatarUrl, setAvatarUrl] = useState()
-    const [coverUrl, setCoverUrl] = useState()
     const [currentTab, setCurrentTab] = useState('collected')
-    console.log('user', user)
     const setPrice = (minPrice, maxPrice) => {
         setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
     }
@@ -54,13 +53,6 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user}) => {
            router.push('/login')
       }
     },[isLoggedIn])
-
-    useEffect(() => {
-        if(user !== undefined) {
-            setAvatarUrl(user.avatar_url)
-            setCoverUrl(user.cover_url)
-        }
-    }, [user, router])
 
     const handleChange = () => {}
 
@@ -101,20 +93,20 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user}) => {
         <>
         <div className={styles.collection}>
             <div className={styles.banner}>
-              <Image layout='fill' objectFit='cover' src={coverUrl || bannerCollection} alt="cover" />
+              <Image layout='fill' objectFit='cover' src={infoUser.cover_url || bannerCollection} alt="cover" />
             </div>
-            <div onClick={()=>setIsShowSideBar(false)} className={styles.overlay} style={{display: isShowSideBar ? 'block' : 'none'}}></div>
+            {/* <div onClick={()=>setIsShowSideBar(false)} className={styles.overlay} style={{display: isShowSideBar ? 'block' : 'none'}}></div> */}
             {/* <NavBar setPrice={setPrice} isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} /> */}
             <div className={styles.content}>
                 <div className="container" style={{marginBottom: '5rem'}}>
                     <div className={styles.heading}>
                         <div className={styles.avatar}>
-                           <Image layout='fill' style={{objectFit: 'cover'}} src={avatarUrl || avatar} alt="avatar" />
+                           <Image layout='fill' style={{objectFit: 'cover'}} src={infoUser.avatar_url || avatar} alt="avatar" />
                         </div>
-                        <h1>{user?.username}</h1>
-                        <p>{user?.description}</p>
+                        <h1>{infoUser.username}</h1>
+                        <p>{infoUser.description}</p>
                         <div className={styles.about}>
-                            {user?.public_address}
+                            {infoUser.public_address}
                         </div>
                     </div>
                     {/* <div className={styles.social}>
@@ -173,9 +165,6 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user}) => {
                             {listMyFavorited}
                         </div>
                     </TabPane>
-                    {/* <TabPane tab="Hidden" key="4">
-                        Hidden
-                    </TabPane> */}
                 </Tabs>
             </div>
         </div>

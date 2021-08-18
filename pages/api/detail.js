@@ -22,7 +22,6 @@ export async function buyItem(payload) {
 
 export async function reSellItem(payload) {
     const res = await detailService.reSellItem(payload);
-    console.log('res',res)
     return res.body.data;
 }
 

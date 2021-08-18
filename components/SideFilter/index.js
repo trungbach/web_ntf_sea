@@ -29,7 +29,6 @@ const SideFilter = ({ setPrice, currentCategory, currentCollection,  listCategor
     },[]) 
     
     useEffect(() => {
-        console.log('isResetPrice', isResetPrice)
         if(isResetPrice) {
             setMinPrice('')
             setMaxPrice('')
@@ -66,8 +65,8 @@ const SideFilter = ({ setPrice, currentCategory, currentCollection,  listCategor
 
     const listCollectionUI = listCollection.map((item, index) => {
         return (
-            <li key={index} onClick={()=>handleSetCollection(item)} className='justify-content-center'>
-                 <Image layout='fill' src={currentCollection?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_thumb_url} alt={item.logo_thumb_url} /> 
+            <li key={index} onClick={()=>handleSetCollection(item)}>
+                 <Image width={24} height={24} src={currentCollection?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_thumb_url} alt={item.logo_thumb_url} /> 
                  {item.name}
             </li>
         )

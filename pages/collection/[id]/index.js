@@ -103,44 +103,28 @@ const CollectionName = ({collection}) => {
                     <div className={styles.about}>
                     <div className={styles.aboutContainer}>
                         <div>
-                            <Link href='/assets'>
-                                <a>
-                                    <h3>
-                                        {collection.created}
-                                    </h3>
-                                    <span>items</span>
-                                </a>
-                            </Link>
+                            <h3>
+                                {collection.total_item}
+                            </h3>
+                            <span>items</span>
                         </div>
                         <div>
-                            <Link href='/assets'>
-                                <a>
-                                    <h3>
-                                        {collection.owner}
-                                    </h3>
-                                    <span>owners</span>
-                                </a>
-                            </Link>
+                            <h3>
+                                {collection.total_bought_item}
+                            </h3>
+                            <span>owners</span>
                         </div>
                         <div>
-                            <Link href='/assets'>
-                                <a>
-                                    <h3>
-                                      <Image width={20} height={20} src={etherSvg} alt='Ether' />  4.75
-                                    </h3>
-                                    <span>floor price</span>
-                                </a>
-                            </Link>
+                            <h3>
+                                <Image width={20} height={20} src={etherSvg} alt='Ether' />  {collection.min_price}
+                            </h3>
+                            <span>min price</span>
                         </div>
                         <div>
-                            <Link href='/assets'>
-                                <a>
-                                    <h3>
-                                        <Image width={20} height={20} src={etherSvg} alt='Ether' />  586
-                                    </h3>
-                                    <span>volume traded</span>
-                                </a>
-                            </Link>
+                            <h3>
+                                <Image width={20} height={20} src={etherSvg} alt='Ether' />  {collection.max_price}
+                            </h3>
+                            <span>max price</span>
                         </div>
                     </div>
                     </div>

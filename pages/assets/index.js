@@ -40,7 +40,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const [isResetPrice, setIsResetPrice] = useState(false)
     const [sort, setSort] = useState(5)
-    const {data} = useAsset(`category_id=${filterObj.category?.id || ''}&collection_id=${filterObj.collection?.id || ''}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`, listItem)
+    const {data} = useAsset(`category_id=${filterObj.category?.id || ''}&collection_id=${filterObj.collection?.id || ''}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`, listItem.reverse())
    
     const {filterCollection} = useFilterCollection(`key=${collectionName}`, listCollection)
 
@@ -59,7 +59,9 @@ const Assets = ({listItem, listCategory, listCollection}) => {
         if(item == -1) {
             setFilterObj({ ...filterObj, category: {...item} })
         } else {
-            setFilterObj({ ...filterObj, category: {...item}, collection: '' })
+            if(item.id == filterObj.collection?.category_id) {
+                setFilterObj({ ...filterObj, category: {...item} })
+            } else setFilterObj({ ...filterObj, category: {...item}, collection: '' })
         }
     }
 
@@ -67,7 +69,10 @@ const Assets = ({listItem, listCategory, listCollection}) => {
         if(item == -1) {
             setFilterObj({ ...filterObj, collection: '' })
         } else {
-            setFilterObj({ ...filterObj, collection: item, category: '' })
+            if(item.category_id == filterObj.category?.id) {
+                setFilterObj({ ...filterObj, collection: item})
+            } else setFilterObj({ ...filterObj, collection: item, category: ''})
+           
         }
     }
 

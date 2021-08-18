@@ -156,10 +156,10 @@ const Header = ({isLoggedIn, user, logoutAccount, toggleWallet}) => {
         </Menu>
     )
 
-    const menuUser = (
-        <Menu className={styles.menuUser}>
+    const menuUser = ( 
+        <Menu style={{opacity: isLoggedIn ? 1 : 0}} className={styles.menuUser}>
             <Menu.Item key='0'>
-                <Link href='/account'>
+                <Link href={`/account?user_id=${user?.id}`}>
                     <a>
                         My Profile
                     </a>
@@ -186,13 +186,11 @@ const Header = ({isLoggedIn, user, logoutAccount, toggleWallet}) => {
                     </a>
                 </Link>
             </Menu.Item>
-            {isLoggedIn &&  
-                <Menu.Item  key='4' onClick={logOut}>
-                    Log Out
-                </Menu.Item>
-            }
+            <Menu.Item  key='4' onClick={logOut}>
+                Log Out
+            </Menu.Item>
         </Menu>
-    )
+    ) 
 
     return (
 
