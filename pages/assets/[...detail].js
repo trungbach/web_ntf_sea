@@ -64,7 +64,7 @@ export async function getServerSideProps({ params, req, res }) {
     
 }
 
-const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
+const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
 
     const router = useRouter()
     const [loading, setLoading] = useState(false)
@@ -110,14 +110,14 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
 
 
 
-    useEffect(() => {
-       window.web3 = new Web3(window.ethereum)
-       const  getPublicAddress = async() => {
-            const publicAddress = await web3.eth.getCoinbase()
-            setCurrentAddress(publicAddress)
-       }
-       getPublicAddress()
-    },[])
+    // useEffect(() => {
+    //    window.web3 = new Web3(window.ethereum)
+    //    const  getPublicAddress = async() => {
+    //         const publicAddress = await web3.eth.getCoinbase()
+    //         setCurrentAddress(publicAddress)
+    //    }
+    //    getPublicAddress()
+    // },[])
 
     useEffect(() => {
         if(!isLoggedIn) {
@@ -201,7 +201,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
 
         setLoading(false)
         handleOkResell()
-        await reSellItem({id: item.id})
+        await reSellItem({id: item.id, data: {price: currentPrice}})
         toast.dark('Resell Success!', {position: "top-right", autoClose: 2000,})
         // router.push('/assets')
     }
@@ -407,7 +407,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                                 <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
                             <div className={styles.buyNow} >
-                                {currentAddress == item.owner ?  
+                                {user?.public_address == item.owner ?  
                                 <Button onClick={showModalResell}><AccountBalanceWalletOutlinedIcon /> Resell</Button> :
                                 <Button disabled={item.sell == 0 && item.owner !== item.created} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
                                 }
@@ -554,7 +554,8 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
 }
 
 const mapStateToProps = (state) => ({
-    isLoggedIn: state.login.isLoggedIn
+    isLoggedIn: state.login.isLoggedIn,
+    user: state.login.user
   })
   
 export default connect(mapStateToProps)(DetailItem)

@@ -19,7 +19,7 @@ const detailService = {
     },
 
     reSellItem: payload => {
-        return request.put(`/resell-item/${payload.id}`);
+        return request.put(`/resell-item/${payload.id}`, payload.data);
     },
 
 }
