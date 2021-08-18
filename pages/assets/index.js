@@ -40,7 +40,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const [isResetPrice, setIsResetPrice] = useState(false)
     const [sort, setSort] = useState(5)
-    const {data} = useAsset(`category_id=${filterObj.category?.id || ''}&collection_id=${filterObj.collection?.id || ''}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`, listItem.reverse())
+    const {data} = useAsset(`category_id=${filterObj.category?.id || ''}&collection_id=${filterObj.collection?.id || ''}&min_price=${filterObj.min_price}&max_price=${filterObj.max_price}&key=${filterObj.key}&sort=${sort}`)
    
     const {filterCollection} = useFilterCollection(`key=${collectionName}`, listCollection)
 
@@ -80,11 +80,11 @@ const Assets = ({listItem, listCategory, listCollection}) => {
         setSort(obj.value)
     }
 
-    const listItemResponse = data.map((item, index) => {
+    const listItemResponse = data?.map((item, index) => {
         return (
             <ItemSell item={item} key={index} />
         )
-    })
+    }) || []
 
     const removeFilter = () => {
         setFilterObj({ key: '', min_price: '', max_price: '', collection: '', category: '', sort: '' })
@@ -116,7 +116,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
             <div className={styles.mainAsset}>
                 <div className={styles.heading}>
                     <div className={`${styles.totalResult} d-none d-md-block`}>
-                        {data.length > 0 ? ` ${data.length} results` : '0 result'}
+                        {data?.length > 0 ? `${data.length} results` : '0 result'}
                     </div>
                     <div className={styles.filter}>
                         {/* <Select
@@ -157,7 +157,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
                 </ul>
                 <div className={styles.assetsList}>
                     {/* <LoadingItem />  */}
-                    {data.length ? listItemResponse : (
+                    {data?.length ? listItemResponse : (
                         <div className={styles.emptyResponse}>
                             <h1>Not items found for this search</h1>
                             <Button className={styles.secondaryButton} onClick={removeFilter}>Back to all items</Button>

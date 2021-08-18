@@ -62,7 +62,7 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user, infoUser}) 
             <ItemSell item={item}/>
         </div>
       )
-    }) : (<div style={{textAlign: 'center', fontWeigh: 500, fontSize: '2rem'}}>You are not create any item.</div>)
+    }) : (<div style={{textAlign: 'center', fontWeigh: 500, fontSize: '2rem'}}>User are not create any item.</div>)
   
     const listMyAsset = myAsset.length > 0 ? myAsset.map((item, index) => {
         return (
@@ -70,7 +70,7 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user, infoUser}) 
               <ItemSell item={item}/>
           </div>
         )
-      }) : (<div style={{textAlign: 'center', fontWeigh: 500, fontSize: '2rem'}} >You are not buy any item !</div>)
+      }) : (<div style={{textAlign: 'center', fontWeigh: 500, fontSize: '2rem'}} >User are not buy any item !</div>)
 
     const listMyFavorited =  myFavorited.length > 0 ? myFavorited.map((item, index) => {
         return (
@@ -78,7 +78,7 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user, infoUser}) 
                 <ItemSell item={item}/>
             </div>
         )
-    }) : (<div style={{textAlign: 'center', fontWeigh: 500, fontSize: '2rem'}}>You have not favorited any item yet !</div>)
+    }) : (<div style={{textAlign: 'center', fontWeigh: 500, fontSize: '2rem'}}>User have not favorited any item yet !</div>)
 
     const onKeyDown = e => {
         if(e.key === "Enter") {
