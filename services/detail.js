@@ -18,6 +18,10 @@ const detailService = {
         return request.put(`/buy-item/${payload.id}`);
     },
 
+    reSellItem: payload => {
+        return request.put(`/resell-item/${payload.id}`);
+    },
+
 }
 
 export default detailService;

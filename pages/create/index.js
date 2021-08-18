@@ -119,10 +119,10 @@ const CreateItem = (props) => {
   
     /* then list the item for sale on the marketplace */
     contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
-    let listingPrice = await contract.getListingPrice()
-    listingPrice = listingPrice.toString()
     
-    transaction = await contract.createMarketItem(config.nftaddress, tokenId, price, { value: listingPrice })
+    const fee = ethers.utils.parseUnits((Number(values.price)/100).toString(), 'ether')
+    transaction = await contract.createMarketItem(nftaddress, tokenId, price, { value: fee })
+
     await transaction.wait()
 
     const data = await loadNFTs();
@@ -138,11 +138,23 @@ const CreateItem = (props) => {
       category_id: collection_id.split(',')[1],
       block_id: data[data.length-1].itemId.toNumber(),
     }
-    const newItem = await createItem(payload);
-    console.log('newItem', newItem);
-
+    await createItem(payload);
     router.push('/collections')
     toast.dark('Add item Success!', {position: "top-right",})
+  }
+
+  async function reSell(nft, newPrice) {
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+    const signer = provider.getSigner()
+    let contract = new ethers.Contract(config.nftaddress, NFT.abi, signer)
+    await contract.userApproval()
+    contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
+    const price = ethers.utils.parseUnits(newPrice, 'ether')
+    const fee = ethers.utils.parseUnits((Number(newPrice)/100).toString(), 'ether')
+    const transaction = await contract.reCreateMarketItem(nftaddress, nft.itemId, price, { value: fee })
+    await transaction.wait()
   }
 
   const collections = listCollection?.map((item, index) => {

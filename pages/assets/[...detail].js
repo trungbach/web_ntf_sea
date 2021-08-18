@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import styles from './detail.module.scss'
 import Link from 'next/link'
 import Image from 'next/image'
-import {Tooltip, Button, Collapse, Select, Modal} from 'antd'
+import {Tooltip, Button, Collapse, Select, Modal, Input} from 'antd'
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ShareIcon from '@material-ui/icons/Share';
 import LaunchIcon from '@material-ui/icons/Launch';
@@ -39,13 +39,14 @@ import config from '@/config/index'
 import Web3Modal from "web3modal"
 import { ethers } from 'ethers'
 import Market from '@/artifacts/contracts/Market.sol/NFTMarket.json'
-import {getDetailNtfBlock, buyItem} from '@/pages/api/detail'
+import {getDetailNtfBlock, buyItem, reSellItem} from '@/pages/api/detail'
 import {createFavorite, deleteFavorite} from '@/pages/api/favorite'
 import {useRouter} from 'next/router'
 import { connect } from 'react-redux'
 import avatarUser from '@/public/avatarUser.png'
 import { ToastContainer, toast } from 'react-toastify';
 import Web3 from 'web3'
+import NFT from '@/artifacts/contracts/NFT.sol/NFT.json'
 
 const { Panel } = Collapse;
 const {Option} = Select
@@ -70,11 +71,17 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
     const [isFavorite, setIsFavorite] = useState(item.is_favorite === null ? false : true)
     const [numberFavorite, setNumberFavorite] = useState(item.number_favorites)
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalResell, setIsModalResell] = useState(false);
     const [currentAddress, setCurrentAddress] = useState()
     const [nftBlock, setNftBlock] = useState(null)
+    const [currentPrice, setCurrentPrice] = useState(item.price)
 
     const showModal = () => {
         setIsModalVisible(true);
+    };
+
+    const showModalResell = () => {
+        setIsModalResell(true);
     };
 
     const handleOk = () => {
@@ -83,6 +90,14 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
 
     const handleCancel = () => {
         setIsModalVisible(false);
+    };
+
+    const handleOkResell = () => {
+        setIsModalResell(false);
+    };
+
+    const handleCancelResell = () => {
+        setIsModalResell(false);
     };
 
     useEffect(() => {
@@ -120,10 +135,6 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         const provider = new ethers.providers.Web3Provider(connection)
         const signer = provider.getSigner()
         const contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
-        // var currentGasPrice = await provider.getGasPrice();
-        // let gas_price = ethers.utils.hexlify(parseInt(currentGasPrice));
-        // console.log(`gas_price: ${ gas_price }`);
-        // console.log(`getListingPrice: ${ await contract.getListingPrice() }`);
         /* user will be prompted to pay the asking proces to complete the transaction */
 
         const price = ethers.utils.parseUnits(item.price.toString(), 'ether') 
@@ -144,7 +155,6 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
           });
 
         if(transaction === undefined){
-            console.log('undefined')
             return
         } 
       
@@ -155,6 +165,45 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
         toast.dark('Buy Success!', {position: "top-right", autoClose: 2000,})
         router.push('/assets')
 
+    }
+
+    async function reSell(newPrice) {
+        setLoading(true)
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+        let contract = new ethers.Contract(config.nftaddress, NFT.abi, signer)
+        await contract.userApproval()
+        contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
+        const price = ethers.utils.parseUnits(newPrice, 'ether')
+        const fee = ethers.utils.parseUnits((Number(newPrice)/100).toString(), 'ether')
+        const transaction = await contract.reCreateMarketItem(config.nftaddress, item.block_id, price,{ value: fee })
+                            .catch(function (e) {
+                                console.log(e)
+                                // Transaction rejected or failed
+                                if(e.code == 'INSUFFICIENT_FUNDS' ) {
+                                    toast.error('INSUFFICIENT FUNDS', {position: 'top-right', autoClose: 2000})
+                                    setLoading(false)
+                                    return
+                                } else {
+                                    toast.error(e.message, {position: 'top-right', autoClose: 2000})
+                                    setLoading(false)
+                                    return
+                                }
+                            });
+        if(transaction === undefined){
+            console.log('undefined')
+            return
+        } 
+
+        await transaction.wait()
+
+        setLoading(false)
+        handleOkResell()
+        await reSellItem({id: item.id})
+        toast.dark('Resell Success!', {position: "top-right", autoClose: 2000,})
+        // router.push('/assets')
     }
 
     const handleCreateFavorite = () => {
@@ -208,6 +257,19 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                 </div>
             </div>
         </Modal>
+        <Modal  width={700} title="Resell" centered visible={isModalResell} onOk={handleOkResell} onCancel={handleCancelResell}
+                footer={[
+                    <Button style={{padding: '1.5rem 3rem'}} className={styles.secondaryButton} key="submit" loading={loading} onClick={()=>reSell(currentPrice)}>
+                        Sell
+                    </Button>,
+                    <span key='loading' className={styles.notifyProccess}>{loading &&  `Please wait... The process may take a few minutes`}</span>
+                ]}
+        >
+                <div className={styles.changePrice}>
+                    <label htmlFor="newprice">New Price:</label>
+                    <Input name='newprice' type="number" min="0.01" step="0.01" autoComplete='off' autoCorrect='off' inputMode='decimal' value={currentPrice} onChange={e => setCurrentPrice(e.target.value)}/>
+                </div>
+         </Modal>
         <div className={styles.detailContainer}>
             <div className={styles.detailLeft}>
                 <div className={`${styles.owner} d-block d-md-none mb-5`}>
@@ -334,7 +396,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                         <div className={styles.imgOwner}>
                             <Image  width={24} height={24} src={avatarUser} alt='avatar' />
                             {/* <span>Owner by <Link href={`/address/${item.owner}`}>{item.user_name}</Link></span> */}
-                            <span>Owner by {item.user_name}</span>
+                            <span>Created by {item.user_name}</span>
                         </div>
                     </div>
                     <div className={styles.currentPrice}>
@@ -345,7 +407,10 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                                 <span className={styles.hightlightNumber}>{item.price}</span>
                             </div>
                             <div className={styles.buyNow} >
-                                <Button disabled={currentAddress == item.owner || item.sell == 0 || item.owner !== item.created} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                {currentAddress == item.owner ?  
+                                <Button onClick={showModalResell}><AccountBalanceWalletOutlinedIcon /> Resell</Button> :
+                                <Button disabled={item.sell == 0 && item.owner !== item.created} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                }
                                 <span className={styles.notifyDisable}>{currentAddress == item.owner ? 'This is your item!' : (item.sell == 0 ? 'This item is no longer for sale!' : (item.owner !== item.created ? 'This item has been sold!' : ''))}</span>
                             </div>
                         </div>
@@ -395,7 +460,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
                             <div className={styles.description}>
                                 <div className={styles.descriptionHead}>
                                     <Image width={30} height={30} src={avatarUser} alt='avatar' />
-                                    <span>Created by <Link href={`/address/${item.owner}`}><a>{item.user_name}</a></Link></span>
+                                    <span>Created by {item.user_name}</span>
                                 </div>
                                 <p>{nftBlock?.description}</p>
                             </div>
