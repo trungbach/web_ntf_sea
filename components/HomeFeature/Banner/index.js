@@ -9,8 +9,8 @@ const Banner = ({mostFavoriteItem}) => {
     console.log("mostFavoriteItem", mostFavoriteItem)
     return (
         <div className={styles.banner}>
-            <div className={styles.bannerBackground} style={{backgroundImage: `url(${mostFavoriteItem.image_url})`}}>
-            </div>
+            <div className={styles.bannerBackground} style={{backgroundImage: `url(${mostFavoriteItem?.image_url})`}}></div>
+            {mostFavoriteItem &&
             <div className={styles.bannerContent}>
                 <div className='container h-100'>
                     <div className='row h-100'> 
@@ -48,6 +48,7 @@ const Banner = ({mostFavoriteItem}) => {
                     </div>
                 </div>
             </div>
+            }
         </div>
     );
 }

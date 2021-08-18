@@ -144,6 +144,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn}) => {
           });
 
         if(transaction === undefined){
+            console.log('undefined')
             return
         } 
       

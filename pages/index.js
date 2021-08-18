@@ -49,7 +49,7 @@ export async function getStaticProps({params}) {
   return {
       props: {
          listCategory, 
-         mostFavoriteItem,
+         mostFavoriteItem: mostFavoriteItem || null,
          rankingCollection,
       },
       revalidate: 600
