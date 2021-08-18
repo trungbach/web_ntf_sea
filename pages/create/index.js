@@ -121,7 +121,7 @@ const CreateItem = (props) => {
     contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
     
     const fee = ethers.utils.parseUnits((Number(values.price)/100).toString(), 'ether')
-    transaction = await contract.createMarketItem(nftaddress, tokenId, price, { value: fee })
+    transaction = await contract.createMarketItem(config.nftaddress, tokenId, price, { value: fee })
 
     await transaction.wait()
 
