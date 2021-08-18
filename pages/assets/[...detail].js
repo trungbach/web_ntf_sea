@@ -180,7 +180,6 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
         const fee = ethers.utils.parseUnits((Number(newPrice)/100).toString(), 'ether')
         const transaction = await contract.reCreateMarketItem(config.nftaddress, item.block_id, price,{ value: fee })
                             .catch(function (e) {
-                                console.log(e)
                                 // Transaction rejected or failed
                                 if(e.code == 'INSUFFICIENT_FUNDS' ) {
                                     toast.error('INSUFFICIENT FUNDS', {position: 'top-right', autoClose: 2000})
@@ -193,7 +192,6 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                                 }
                             });
         if(transaction === undefined){
-            console.log('undefined')
             return
         } 
 
@@ -409,9 +407,9 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                             <div className={styles.buyNow} >
                                 {user?.public_address == item.owner ?  
                                 <Button onClick={showModalResell}><AccountBalanceWalletOutlinedIcon /> Resell</Button> :
-                                <Button disabled={item.sell == 0 && item.owner !== item.created} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
+                                <Button disabled={item.sell == 0} onClick={showModal}><AccountBalanceWalletOutlinedIcon /> Buy now</Button>
                                 }
-                                <span className={styles.notifyDisable}>{currentAddress == item.owner ? 'This is your item!' : (item.sell == 0 ? 'This item is no longer for sale!' : (item.owner !== item.created ? 'This item has been sold!' : ''))}</span>
+                                {/* <span className={styles.notifyDisable}>{currentAddress == item.owner ? 'This is your item!' : (item.sell == 0 ? 'This item is no longer for sale!' : (item.owner !== item.created ? 'This item has been sold!' : ''))}</span> */}
                             </div>
                         </div>
                       

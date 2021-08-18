@@ -14,7 +14,7 @@ import { Tabs } from 'antd';
 import { connect } from 'react-redux'
 import styles from './style.module.scss';
 import avatar from '@/public/30.png'
-
+import bannerCollection from '@/public/bannerCollection.png'
 const { TabPane } = Tabs;
 const {Option} = Select;
 
@@ -101,10 +101,10 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user}) => {
         <>
         <div className={styles.collection}>
             <div className={styles.banner}>
-                {coverUrl && <Image layout='fill' objectFit='cover' src={coverUrl} alt="cover" />}
+              <Image layout='fill' objectFit='cover' src={coverUrl || bannerCollection} alt="cover" />
             </div>
             <div onClick={()=>setIsShowSideBar(false)} className={styles.overlay} style={{display: isShowSideBar ? 'block' : 'none'}}></div>
-            <NavBar setPrice={setPrice} isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
+            {/* <NavBar setPrice={setPrice} isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} /> */}
             <div className={styles.content}>
                 <div className="container" style={{marginBottom: '5rem'}}>
                     <div className={styles.heading}>
@@ -112,6 +112,7 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user}) => {
                            <Image layout='fill' style={{objectFit: 'cover'}} src={avatarUrl || avatar} alt="avatar" />
                         </div>
                         <h1>{user?.username}</h1>
+                        <p>{user?.description}</p>
                         <div className={styles.about}>
                             {user?.public_address}
                         </div>
@@ -158,17 +159,17 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user}) => {
                 </div>
                 <Tabs tabPosition='left' activeKey={currentTab} onChange={(activeKey)=>setCurrentTab(activeKey)}>
                     <TabPane tab="Collected" key='collected'>
-                        <div className="row">
+                        <div className={`row ${styles.taList}`}>
                             {listMyAsset}
                         </div>
                     </TabPane>
                     <TabPane tab="Created" key='created'>
-                        <div className="row">
+                        <div className={`row ${styles.taList}`}>
                             {listMyCreated}
                         </div>
                     </TabPane>
                     <TabPane tab="Favorited" key="favorites">
-                        <div className="row">
+                        <div className={`row ${styles.taList}`}>
                             {listMyFavorited}
                         </div>
                     </TabPane>
