@@ -4,9 +4,7 @@ import SideFilter from '@/components/SideFilter';
 import SideFilterMobile from '@/components/SideFilterMobile';
 import {Select, Button} from 'antd'
 import ItemSell from '@/components/ItemSell'
-import LoadingItem from '@/components/LoadingItem'
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import {getListItem} from '@/pages/api/asset'
 import {useAsset} from '@/lib/useAsset';
 import {useFilterCollection} from '@/lib/useCollection';
 import {getListCategory} from '../api/category';
@@ -14,18 +12,18 @@ import {getListCollection} from '../api/collection';
 import {useRouter} from 'next/router';
 import {checkProperties} from '@/utils/index'
 import CloseIcon from '@material-ui/icons/Close';
-
+import Head from 'next/head'
 const {Option} = Select
+import dynamic from 'next/dynamic'
 
+const ListLoading = dynamic(() => import('@/components/ListLoading'))
 export async function getServerSideProps() {
-
-    const listItem = await getListItem();
+    
     const listCategory = await getListCategory();
     const listCollection = await getListCollection();
 
     return {
         props: {
-            listItem,
             listCategory,
             listCollection
         }
@@ -33,7 +31,7 @@ export async function getServerSideProps() {
 }
 
 
-const Assets = ({listItem, listCategory, listCollection}) => {
+const Assets = ({listCategory, listCollection}) => {
     const router = useRouter()
     const [filterObj, setFilterObj] = useState({ key: '', min_price: '', max_price: '', collection: '', category: ''})
     const [collectionName, setCollectionName] = useState('')
@@ -44,11 +42,18 @@ const Assets = ({listItem, listCategory, listCollection}) => {
    
     const {filterCollection} = useFilterCollection(`key=${collectionName}`, listCollection)
 
+    const [collapsed, setCollapsed] = useState(false)
+    const [widthAsset, setWidthAsset] = useState()
     useEffect(() => {
       if(router.query.key === undefined) {
         setFilterObj({...filterObj, key: ''})
       }  else setFilterObj({...filterObj, key: router.query.key })
     },[router.query.key])
+
+    useEffect(() => {
+        const filterWidth = collapsed ? 60 : 300
+        setWidthAsset(window.screen.width - filterWidth)
+    },[collapsed])
 
 
     const setPrice = (minPrice, maxPrice) => {
@@ -84,7 +89,7 @@ const Assets = ({listItem, listCategory, listCollection}) => {
         return (
             <ItemSell item={item} key={index} />
         )
-    }) || []
+    }) || (<ListLoading />)
 
     const removeFilter = () => {
         setFilterObj({ key: '', min_price: '', max_price: '', collection: '', category: '', sort: '' })
@@ -103,11 +108,17 @@ const Assets = ({listItem, listCategory, listCollection}) => {
     return (
         
         <div className={styles.assets}> 
+            <Head>
+                <link rel="preload" href="/items" as="fetch" crossOrigin="anonymous" />
+            </Head>
             <SideFilter collectionName={collectionName} setCollectionName={setCollectionName} 
                         minPrice={filterObj.min_price} maxPrice={filterObj.max_price} setIsResetPrice={setIsResetPrice}
                         setCollection={setCollection} setCategory={setCategory} isResetPrice={isResetPrice}
                         setPrice={setPrice} listCategory={listCategory} listCollection={filterCollection} 
-                        currentCollection={filterObj.collection} currentCategory={filterObj.category} />
+                        currentCollection={filterObj.collection} currentCategory={filterObj.category} 
+                        collapsed={collapsed} setCollapsed={setCollapsed}
+                        
+                        />
                         
             <SideFilterMobile isShowSideBar={isShowSideBar} setIsShowSideBar={setIsShowSideBar} />
             <div className={styles.showFilter}>
@@ -155,14 +166,25 @@ const Assets = ({listItem, listCategory, listCollection}) => {
 
                     {!checkProperties(filterObj) && <li className={styles.removeFilter} onClick={removeFilter}>Clear All</li>}
                 </ul>
-                <div className={styles.assetsList}>
-                    {/* <LoadingItem />  */}
-                    {data?.length ? listItemResponse : (
+                {/* <div className={refAsset?.current?.clientWidth < 960 ? `${styles.assetsList} ${styles.gridThree}` : 
+                                (refAsset?.current?.clientWidth < 1200 ? `${styles.assetsList} ${styles.gridFour}` : 
+                                (refAsset?.current?.clientWidth < 1600 ? `${styles.assetsList} ${styles.gridFive}` :  `${styles.assetsList} ${styles.gridSix}`))
+                                }
+                > */}
+                <div  className={widthAsset < 985 ? `${styles.assetsList} ${styles.gridThree}` : 
+                                (widthAsset < 1250 ? `${styles.assetsList} ${styles.gridFour}` : 
+                                (widthAsset < 1600 ? `${styles.assetsList} ${styles.gridFive}` :  `${styles.assetsList} ${styles.gridSix}`))
+                                }
+                >
+                    {listItemResponse}
+                    {data?.length == 0 &&
+                    (
                         <div className={styles.emptyResponse}>
                             <h1>Not items found for this search</h1>
                             <Button className={styles.secondaryButton} onClick={removeFilter}>Back to all items</Button>
                         </div>
-                    )}
+                    )
+                    }
                 </div>
             </div>
         </div>

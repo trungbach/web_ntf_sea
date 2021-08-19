@@ -29,8 +29,6 @@ import ether from '@/public/ether.png'
 import noTrading from '@/public/noTrading.svg'
 import WebIcon from '@material-ui/icons/Web';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
-import MoreFromCollection from '@/components/MoreFromCollection'
-import Footer from '@/components/Footer'
 import noOffer from '@/public/noOffer.svg'
 import Listing from '@/components/Listing'
 import TradingHistory from '@/components/TradingHistory';
@@ -48,7 +46,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import { getMyCreated } from '@/pages/api/asset'
 
 import NFT from '@/artifacts/contracts/NFT.sol/NFT.json'
+import dynamic from 'next/dynamic'
 
+const Footer = dynamic(() => import('@/components/Footer'))
+const MoreFromCollection = dynamic(() => import('@/components/MoreFromCollection'))
 const { Panel } = Collapse;
 const {Option} = Select
 
@@ -296,7 +297,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                          <span>{numberFavorite}</span>
                     </div>
                     <div style={{position: 'relative', height: '45rem'}} className={styles.imageItem}>
-                        <Image layout='fill' src={item.image_url} alt={item.image_url} />
+                        <Image layout='fill' quality='100'  priority='true' src={item.image_url} alt={item.image_url} />
                     </div> 
                 </div>
                 <div className={`${styles.about} d-none d-md-block`}>
@@ -304,7 +305,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                         <Panel header={<div><SubjectOutlinedIcon /> Description</div>} key="1">
                             <div className={styles.description}>
                                 <div className={styles.descriptionHead}>
-                                    <Image width={30} height={30} src={item.avatar_url || avatarUser} alt='avatar' />
+                                    <Image quality='50' width={30} height={30} src={item.avatar_url || avatarUser} alt='avatar' />
                                     <span>Created by <Link href={`/account?user_id=${item.user_id}`}><a>{item.user_name}</a></Link></span>
                                 </div>
                                 <p>
@@ -389,7 +390,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                 <div className={styles.priceDetail}>
                     <div className='d-flex align-items-center'>
                         <div className={styles.imgOwner}>
-                            <Image  width={24} height={24} src={item.avatar_url || avatarUser} alt='avatar' />
+                            <Image quality='50'  width={24} height={24} src={item.avatar_url || avatarUser} alt='avatar' />
                             {/* <span>Owner by <Link href={`/address/${item.owner}`}>{item.user_name}</Link></span> */}
                             <span>Created by <Link href={`/account?user_id=${item.user_id}`}><a>{item.user_name}</a></Link></span>
                         </div>
@@ -454,7 +455,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                         <Panel header={<div><SubjectOutlinedIcon /> Description</div>} key="1">
                             <div className={styles.description}>
                                 <div className={styles.descriptionHead}>
-                                    <Image width={30} height={30} src={item.avatar_url || avatarUser} alt='avatar' />
+                                    <Image quality='50' width={30} height={30} src={item.avatar_url || avatarUser} alt='avatar' />
                                     <span>Created by <Link href={`/account?user_id=${item.user_id}`}><a>{item.user_name}</a></Link></span>
                                 </div>
                                 <p>{nftBlock?.description}</p>

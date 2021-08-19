@@ -3,7 +3,7 @@ import styles from './style.module.scss'
 import { Button, Form, Input } from 'antd'
 import Image from 'next/image'
 import { ToastContainer, toast } from 'react-toastify';
-import Footer from '@/components/Footer'
+import dynamic from 'next/dynamic'
 import config from '@/config/index'
 import superagent from 'superagent'
 import ImageIcon from '@material-ui/icons/Image';
@@ -14,12 +14,12 @@ import {getProfileById} from '@/pages/api/user'
 import { editProfile } from '@/store/login/action'
 import { bindActionCreators } from 'redux'
 
+const Footer = dynamic(() => import('@/components/Footer'))
 const EditAccount = ({user, isLoggedIn, editProfile}) => {
-
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false)
-    const [avatarUrl, setAvatarUrl] = useState(user && user.avatar_url)
-    const [coverUrl, setCoverUrl] = useState(user && user.cover_url)
+    const [avatarUrl, setAvatarUrl] = useState()
+    const [coverUrl, setCoverUrl] = useState()
     const router = useRouter()
 
     useEffect(() => {
@@ -27,6 +27,14 @@ const EditAccount = ({user, isLoggedIn, editProfile}) => {
            router.push('/login')
       }
       },[isLoggedIn])
+
+      useEffect(() => {
+        user && setAvatarUrl(user.avatar_url)
+    },[user])
+
+    useEffect(() => {
+        user && setCoverUrl(user.cover_url)
+    },[user])
 
     const fileSelectLogo = async (e) => {
         var file = e.target.files[0];
@@ -69,7 +77,7 @@ const EditAccount = ({user, isLoggedIn, editProfile}) => {
             const infoById = await getProfileById({id: user.id})
             editProfile(infoById)
             toast.success('Update profile success', { autoClose: 2000, position: 'top-right'})
-            router.push('/account')
+            router.push(`/account?user_id=${user?.id}`)
        }
     };
 
@@ -83,8 +91,10 @@ const EditAccount = ({user, isLoggedIn, editProfile}) => {
                       <Form.Item className={styles.fileContainer} name='avatar_id' label="Avatar image" rules={[{ required: true, message: "Please upload your avatar !" }]}>
                          
                           <div className={styles.labelForFileLogo}>
-                            { avatarUrl && <Image src={avatarUrl} alt={avatarUrl} layout='fill' />}
-                            <label  className={user?.avatar_url ? styles.labelHidden : ''} htmlFor="fileLogo"><ImageIcon /></label>
+                            { avatarUrl ? (<><Image src={avatarUrl} alt={avatarUrl} layout='fill' />
+                            <label  className={styles.labelHidden} htmlFor="fileLogo"><ImageIcon /></label></>)
+                            :   <label htmlFor="fileLogo"><ImageIcon /></label>
+                            }
                           </div>
   
                           <input type="file" id="fileLogo" accept="image/*" onChange={fileSelectLogo} />
@@ -94,7 +104,8 @@ const EditAccount = ({user, isLoggedIn, editProfile}) => {
                          
                           <div className={styles.labelForFile}>
                             { coverUrl && <Image src={coverUrl} alt={coverUrl} layout='fill' />}
-                            <label  className={user?.avatar_url ? styles.labelHidden : ''}htmlFor="fileBanner">Drag &amp; drop file <br /> or browse media on your device</label>
+                            <label  className={coverUrl ? styles.labelHidden : ''}htmlFor="fileBanner">Drag &amp; drop file <br /> or browse media on your device</label>
+                            {/* <label  className={styles.labelHidden} htmlFor="fileBanner">Drag &amp; drop file <br /> or browse media on your device</label> */}
                           </div>
   
                           <input type="file" id="fileBanner" accept="image/*" onChange={fileSelectBanner} />

@@ -50,17 +50,17 @@ const Header = ({isLoggedIn, user, logoutAccount, toggleWallet}) => {
     const onKeyPress = e => {
         if(e.key === 'Enter') {
             e.preventDefault()
-            console.log(router.pathname)
+            let key = searchText.trim()
             if(router.pathname !== '/assets') {
-                if(searchText !== '') {
-                    router.push(`/assets?key=${searchText}`)
+                if(key !== '') {
+                    router.push(`/assets?key=${key}`)
                 } else {
                     router.push('/assets')
                 }
 
             } else {
-                if(searchText !== '') {
-                    router.push(`/assets?key=${searchText}`, undefined, {shallow: true})
+                if(key !== '') {
+                    router.push(`/assets?key=${key}`, undefined, {shallow: true})
                 } else {
                     router.push('/assets', undefined, {shallow: true})
                 }
@@ -173,7 +173,7 @@ const Header = ({isLoggedIn, user, logoutAccount, toggleWallet}) => {
                 </Link>
             </Menu.Item>
             <Menu.Item key='2'>
-                <Link href='/account?tab=favorites'>
+                <Link href={`/account?user_id=${user?.id}&tab=favorites`}>
                     <a>
                         My Favorites
                     </a>

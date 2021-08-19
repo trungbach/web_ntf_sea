@@ -1,17 +1,19 @@
 import React, {useState} from 'react';
 import Image from 'next/image'
 import {Select, Table} from 'antd';
-const {Option} = Select;
 import styles from './style.module.scss'
 import all from '@/public/allnfts-light.svg';
 import LinkIcon from '@material-ui/icons/Link';
 import {useRouter} from 'next/router'
-import Footer from '@/components/Footer'
 import moment from 'moment'
 import {useRanking} from '@/lib/useRanking'
 import {getRankingCollection} from '@/pages/api/ranking'
 import {getListCategory} from '@/pages/api/category'
 import {DATE_TIME} from '@/config/constants'
+import dynamic from 'next/dynamic'
+
+const Footer = dynamic(() => import('@/components/Footer'))
+const {Option} = Select;
 
 export async function getStaticProps() {
 

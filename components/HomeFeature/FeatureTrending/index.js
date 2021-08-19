@@ -16,6 +16,7 @@ const FeatureTrending = ({rankingCollection, listCategory, setCategoryId}) => {
         dots: true,
         infinite: true,
         speed: 500,
+        lazyLoad: true,
         slidesToShow: 3,
         slidesToScroll: 1,
         initialSlide: 0,
@@ -25,6 +26,7 @@ const FeatureTrending = ({rankingCollection, listCategory, setCategoryId}) => {
             settings: {
               slidesToShow: 2,
               slidesToScroll: 1,
+              lazyLoad: true,
               infinite: true,
               dots: true
             }
@@ -34,6 +36,7 @@ const FeatureTrending = ({rankingCollection, listCategory, setCategoryId}) => {
             settings: {
               slidesToShow: 1,
               slidesToScroll: 1,
+              lazyLoad: true,
               initialSlide: 1
             }
           },
@@ -47,11 +50,11 @@ const FeatureTrending = ({rankingCollection, listCategory, setCategoryId}) => {
                 <a  className={styles.trendingItem}>
                     <Card
                         hoverable
-                        cover={<Image layout='fill' alt={item.cover_thumb_url} src={item.cover_thumb_url} />}
+                        cover={<Image quality='50' layout='fill' alt={item.cover_thumb_url} src={item.cover_thumb_url} />}
                     >
                         <div className={styles.trendingItemContent}>
                             <div className={styles.avatar}>
-                                <Image layout='fill' src={item.logo_thumb_url} alt={item.logo_thumb_url} />
+                                <Image quality='50' layout='fill' src={item.logo_thumb_url} alt={item.logo_thumb_url} />
                             </div>
                             <h3>
                                 {item.name}

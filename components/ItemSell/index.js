@@ -3,7 +3,7 @@ import styles from './style.module.scss';
 import Link from 'next/link'
 import Image from 'next/image'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import eth from '@/public/eth.svg'
+import ether from '@/public/etherSvg.svg'
 import { Card } from 'antd';
 
 const ItemSell = ({item}) => {
@@ -18,7 +18,11 @@ const ItemSell = ({item}) => {
                                 <FavoriteBorderIcon /> <span>{item.number_favorites}</span>
                             </div>
                             <div className={styles.itemImg}>
-                                <Image objectFit='cover' alt={item.image_thumb_url} src={item.image_thumb_url} layout='fill'/>
+                                <Image objectFit='cover' alt={item.image_thumb_url} 
+                                        src={item.image_thumb_url} layout='fill'
+                                        placeholder="blur"
+                                        blurDataURL={`/_next/image?url=${item.image_thumb_url}&w=9&q=1`}
+                                        />
                             </div>
                             <div className={styles.sellItemContent}>
                                 <div>
@@ -28,7 +32,7 @@ const ItemSell = ({item}) => {
                                     </div>
                                     <div className={styles.itemPrice}>
                                         <span>Price</span>
-                                        <div><Image src={eth} alt='eth'></Image> {item.price}</div>
+                                        <div><Image src={ether} alt='ether'></Image> {item.price}</div>
                                     </div>
                                 </div>
                             </div>

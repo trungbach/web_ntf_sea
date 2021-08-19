@@ -47,11 +47,13 @@
             font-weight: bold;
             color: rgb(170, 170, 170);
             cursor: pointer;
+            z-index: 1;
             svg {
                 font-size: 8.5rem;
                 color: rgb(170, 170, 170);
             }
         }
+       
     }
     .labelForFile  {
         padding: 10rem 5rem !important;
@@ -71,7 +73,7 @@
             font-weight: bold;
             color: rgb(170, 170, 170);
             cursor: pointer;
-
+            z-index: 1;
         }
     }
 

@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import loginPage from './loginPage.module.scss';
 import {Button} from 'antd'
 import metamaskLogo from '@/public/metamaskLogo.svg'
 import Image from 'next/image'
-import Footer from '@/components/Footer'
 import {openWallet} from '@/store/login/action'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import {useRouter} from 'next/router'
+import dynamic from 'next/dynamic'
 
+const Footer = dynamic(() => import('@/components/Footer'))
 const LoginPage = ({openWallet, isLoggedIn}) => {
     const router = useRouter()
 

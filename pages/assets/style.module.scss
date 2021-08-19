@@ -2,7 +2,7 @@
 
 .assets {
     display: flex;
-    overflow-y: auto;
+    overflow-y: hidden;
     .showFilter {
         bottom: 20px;
         display: flex;
@@ -70,12 +70,8 @@
             }
         }
         .assetsList {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            @media (max-width: 768px) {
-                justify-content: center;
-            }
+            display: grid;
+            position: relative;
             .emptyResponse {
                 display: flex;
                 flex-direction: column;
@@ -85,6 +81,7 @@
                 width: 100%;
                 padding: 4rem 0;
                 border-radius: 0.7rem;
+                position: absolute;
                 h1 {
                     font-size: 3.5rem;
                 }
@@ -94,7 +91,22 @@
                 }
             }
         }
+        .gridThree {
+            grid-template-columns: repeat(3, 1fr);
+        }   
         
+        .gridFour {
+            grid-template-columns: repeat(4, 1fr);
+        } 
+
+        .gridFive {
+            grid-template-columns: repeat(5, 1fr);
+        } 
+
+        .gridSix {
+            grid-template-columns: repeat(6, 1fr);
+        } 
+
         .listAttributeFilter {
             padding: 0;
             display: flex;

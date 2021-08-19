@@ -6,12 +6,15 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {Input, Select, Button } from 'antd';
 import {SearchOutlined  } from '@ant-design/icons'
-import ItemSell from '@/components/ItemSell'
-import Footer from '@/components/Footer'
 import NavBar from '@/components/SideBar';
 import {getListCategory, getCategoryBySlug} from '@/pages/api/category'
 import { useRouter } from 'next/router'
 import {useCollection} from '@/lib/useCollection'
+import dynamic from 'next/dynamic'
+
+const Footer = dynamic(() => import('@/components/Footer'))
+const ItemSell = dynamic(() => import('@/components/ItemSell'))
+const ListLoading = dynamic(() => import('@/components/ListLoading'))
 const {Option} = Select;
 
 const CategoryName = ({category}) => {
@@ -49,7 +52,7 @@ const CategoryName = ({category}) => {
                 <ItemSell item={item} />
             </div>
        )
-   }) || ''
+   }) || (<ListLoading />)
 
    const setPrice = (minPrice, maxPrice) => {
     setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})

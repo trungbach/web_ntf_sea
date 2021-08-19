@@ -6,17 +6,18 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {Input, Select, Button, Tooltip } from 'antd';
 import {SearchOutlined  } from '@ant-design/icons'
-import Link from 'next/link'
-import ItemSell from '@/components/ItemSell'
-import Footer from '@/components/Footer'
-import NavBar from '@/components/SideBar';
 import etherSvg from '@/public/etherSvg.svg';
 import WebIcon from '@material-ui/icons/Web';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import {getListCollection, getCollectionBySlug} from '@/pages/api/collection'
 import {useCollection} from '@/lib/useCollection';
 import {useRouter} from 'next/router'
+import ListLoading from '@/components/ListLoading';
+import dynamic from 'next/dynamic'
 
+const Footer = dynamic(() => import('@/components/Footer'))
+const NavBar = dynamic(() => import('@/components/SideBar'))
+const ItemSell = dynamic(() => import('@/components/ItemSell'))
 const {Option} = Select;
 
 const CollectionName = ({collection}) => {
@@ -60,7 +61,7 @@ const CollectionName = ({collection}) => {
             <ItemSell item={item}/>
         </div>
       )
-  }) || ''
+  }) || (<ListLoading />)
   
   const onKeyDown = e => {
     if(e.key === "Enter") {

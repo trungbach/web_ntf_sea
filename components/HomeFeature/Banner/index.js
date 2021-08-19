@@ -37,9 +37,9 @@ const Banner = ({mostFavoriteItem}) => {
                                     <a>
                                         <Card
                                             hoverable
-                                            cover={<Image src={mostFavoriteItem.image_url}  width={500} height={420} alt={mostFavoriteItem.image_url}/>}
+                                            cover={<Image loading='eager' priority='true' src={mostFavoriteItem.image_url}  width={500} height={420} alt={mostFavoriteItem.image_url}/>}
                                         >
-                                            <div><Image src={hotItemExtra} alt='avatar' /> <span>{mostFavoriteItem.name}</span></div>
+                                            <div><Image quality='50' src={hotItemExtra} alt='avatar' /> <span>{mostFavoriteItem.name}</span></div>
                                         </Card>
                                     </a>
                                 </Link>

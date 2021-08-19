@@ -10,7 +10,8 @@ const { Panel } = Collapse;
 const { Sider } = Layout;
 
 const SideFilter = ({ setPrice, currentCategory, currentCollection,  listCategory, isResetPrice, setIsResetPrice,
-                      listCollection, setCategory, setCollection, collectionName, setCollectionName
+                      listCollection, setCategory, setCollection, collectionName, setCollectionName,
+                      collapsed, setCollapsed
                     }) => {
 
     const sideRef = useRef()
@@ -35,10 +36,9 @@ const SideFilter = ({ setPrice, currentCategory, currentCollection,  listCategor
         }
     },[isResetPrice])
 
-    const [collapsed, setCollapsed] = useState(false)
+    // const [collapsed, setCollapsed] = useState(false)
 
     const onCollapse = collapsed => {
-         sideRef.current.style.height = collapsed ? '100vh' : 'auto';
          document.getElementsByClassName('ant-layout-sider-children')[0].style.overflowY = collapsed ? 'hidden !important' : 'auto !important'; 
          document.getElementById('collapseDiv').style.display = collapsed ? 'none' : 'block'; 
         setCollapsed(collapsed);
@@ -57,7 +57,7 @@ const SideFilter = ({ setPrice, currentCategory, currentCollection,  listCategor
     const listCategoryUI = listCategory.map((item, index) => {
         return (
             <li key={index} onClick={()=>handleSetCategory(item)}>
-                <Image width={24} height={24} src={currentCategory?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_thumb_url} alt={item.logo_thumb_url} />
+                <Image quality='50' width={24} height={24} src={currentCategory?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_thumb_url} alt={item.logo_thumb_url} />
                     {item.name}
             </li>
         )
@@ -66,7 +66,7 @@ const SideFilter = ({ setPrice, currentCategory, currentCollection,  listCategor
     const listCollectionUI = listCollection.map((item, index) => {
         return (
             <li key={index} onClick={()=>handleSetCollection(item)}>
-                 <Image width={24} height={24} src={currentCollection?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_thumb_url} alt={item.logo_thumb_url} /> 
+                 <Image quality='50' width={24} height={24} src={currentCollection?.id == item.id ? 'https://opensea.io/static/images/checkmark.svg' : item.logo_thumb_url} alt={item.logo_thumb_url} /> 
                  {item.name}
             </li>
         )

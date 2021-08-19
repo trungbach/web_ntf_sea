@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import styles from './style.module.scss';
 import { Button, Select, Form, Input } from 'antd'
 import { useRouter } from 'next/router'
-import { create as ipfsHttpClient } from 'ipfs-http-client';
 import Image from 'next/image'
 import {getListCategory} from '@/pages/api/category'
 import config from '@/config/index'
@@ -50,7 +49,7 @@ const EditCollection = ({collection, listCategory, isLoggedIn}) => {
                 .attach('file', file)
                 .end((err, res) => {
                     if (!err) {
-                        form.setFieldsValue({logo_url: res.body.data.logo_id})
+                        form.setFieldsValue({logo_id: res.body.data.id})
                         setLogoUrl(res.body.data.original_url)
                     }
                 });
@@ -65,7 +64,7 @@ const EditCollection = ({collection, listCategory, isLoggedIn}) => {
                 .attach('file', file)
                 .end((err, res) => {
                     if (!err) {
-                        form.setFieldsValue({banner_url: res.body.data.logo_id})
+                        form.setFieldsValue({cover_id: res.body.data.id})
                         setBannerUrl(res.body.data.original_url)
                     }
                 });

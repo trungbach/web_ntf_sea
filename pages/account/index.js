@@ -3,9 +3,6 @@ import Image from 'next/image'
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {Input, Select, Button, Tooltip } from 'antd';
 import {SearchOutlined  } from '@ant-design/icons'
-import Link from 'next/link'
-import ItemSell from '@/components/ItemSell'
-import Footer from '@/components/Footer'
 import NavBar from '@/components/SideBar';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 import {getMyAsset, getMyCreated, getMyFavorited} from '@/pages/api/asset'
@@ -18,6 +15,10 @@ import bannerCollection from '@/public/bannerCollection.png'
 const { TabPane } = Tabs;
 const {Option} = Select;
 import { getProfileById} from '@/pages/api/user'
+import dynamic from 'next/dynamic'
+
+const Footer = dynamic(() => import('@/components/Footer'))
+const ItemSell = dynamic(() => import('@/components/ItemSell'))
 
 export async function getServerSideProps({ req, res, query }) {
     const myAsset = await getMyAsset({ user_id: query.user_id })
@@ -101,7 +102,9 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user, infoUser}) 
                 <div className="container" style={{marginBottom: '5rem'}}>
                     <div className={styles.heading}>
                         <div className={styles.avatar}>
-                           <Image layout='fill' style={{objectFit: 'cover'}} src={infoUser.avatar_url || avatar} alt="avatar" />
+                           <Image layout='fill' style={{objectFit: 'cover'}} 
+                           priority='true'
+                            src={infoUser.avatar_url || avatar} alt="avatar" />
                         </div>
                         <h1>{infoUser.username}</h1>
                         <p>{infoUser.description}</p>
