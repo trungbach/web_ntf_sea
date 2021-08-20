@@ -7,7 +7,7 @@ import {handleExprireToken, getTokenFromServer} from '@/utils/index'
 const request = {
   get: (url, data = {}) => 
     superagent
-      .get(config.API_DOMAIN + url)                                              
+      .get(config.NEXT_PUBLIC_API_DOMAIN + url)                                              
       .query(data)
       .set('Accept', 'application/json')    
       .use((req) =>                                      
@@ -19,7 +19,7 @@ const request = {
 
   getWithAccessToken: (url, data = {}, req, res) => 
     superagent
-      .get(config.API_DOMAIN + url)                                              
+      .get(config.NEXT_PUBLIC_API_DOMAIN + url)                                              
       .query(data)
       .set('Accept', 'application/json')    
       .set('x-access-token', getTokenFromServer(req, res))
@@ -31,7 +31,7 @@ const request = {
       
   post: (url, data = {}, params = null) => 
     superagent
-      .post(config.API_DOMAIN + url)
+      .post(config.NEXT_PUBLIC_API_DOMAIN + url)
       .query(params)
       .send(data)
       .set('x-access-token', Cookies.get('token'))
@@ -46,7 +46,7 @@ const request = {
 
   put: (url, data = {}) =>
     superagent
-      .put(config.API_DOMAIN + url)
+      .put(config.NEXT_PUBLIC_API_DOMAIN + url)
       .send(data)
       .set('x-access-token', Cookies.get('token'))
       .set('Accept', 'application/json, multipart/form-data')
@@ -60,7 +60,7 @@ const request = {
 
   delete: (url, data = {}) =>
     superagent
-      .delete(config.API_DOMAIN + url)
+      .delete(config.NEXT_PUBLIC_API_DOMAIN + url)
       .send(data)
       .set('Accept', 'application/json')
       .use((req) =>

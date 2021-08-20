@@ -111,7 +111,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
 
     useEffect(() => {
         const checkCreated = async()=> {
-            const myCreated = await getMyCreated({user_id: item.user_id})
+            const myCreated = await getMyCreated({user_id: user.id})
             setIsCreated(myCreated.length > 0 ? true : false)
         }
         checkCreated()
@@ -216,7 +216,9 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
 
     return (
     <>
-    <div className={`${styles.detail} container-xl`}>
+    <div className={styles.detail}>
+        <div className="container-xl">
+       
         <Modal  width={700} centered title="Complete checkout" visible={isModalVisible} 
                 onOk={handleOk} onCancel={handleCancel}
                 footer={[
@@ -297,7 +299,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                          <span>{numberFavorite}</span>
                     </div>
                     <div style={{position: 'relative', height: '45rem'}} className={styles.imageItem}>
-                        <Image layout='fill' quality='100'  priority='true' src={item.image_url} alt={item.image_url} />
+                        <Image layout='fill' objectFit='contain' unoptimized='true' quality='100'  priority='true' src={item.image_url} alt={item.image_url} />
                     </div> 
                 </div>
                 <div className={`${styles.about} d-none d-md-block`}>
@@ -321,7 +323,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                                     <span>{item.collection_description}</span>
                                 </div>
                                 
-                                <div className={styles.social}>
+                                {/* <div className={styles.social}>
                                     <Tooltip title='Activity'>
                                         <span><PlaylistPlayIcon /></span>
                                     </Tooltip>
@@ -334,7 +336,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                                     <Tooltip title='Twitter'>
                                         <span><i className="fab fa-twitter"></i></span>
                                     </Tooltip>
-                                </div>
+                                </div> */}
                             </div>
                         </Panel>
                         <Panel header={<div><BallotRoundedIcon /> Details</div>}  key="3">
@@ -469,7 +471,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                                     <span>{item.collection_description}</span>
                                 </div>
                                 
-                                <div className={styles.social}>
+                                {/* <div className={styles.social}>
                                     <Link href='/'><a>
                                         <Tooltip title='Activity'>
                                             <span><PlaylistPlayIcon /></span>
@@ -490,7 +492,7 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
                                             <span><PlaylistPlayIcon /></span>
                                         </Tooltip>
                                 </a></Link>
-                                </div>
+                                </div> */}
                             </div>
                         </Panel>
                         <Panel header={<div><BallotRoundedIcon /> Details</div>}  key="3">
@@ -523,9 +525,9 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
         </div>
         <div className={styles.history}>
             <Collapse  expandIconPosition="right" defaultActiveKey={['1', '2']} >
-                <Panel header={<div><SwapVertRoundedIcon /> Trading History</div>} key="1">
+                {/* <Panel header={<div><SwapVertRoundedIcon /> Trading History</div>} key="1">
                     <TradingHistory />
-                </Panel>
+                </Panel> */}
                 <Panel header={<div><ViewModuleRoundedIcon /> More from this collection</div>} key="2">
                     <MoreFromCollection moreFromCollection={moreFromCollection.filter(c => c.id !== item.id)} />
                 </Panel>
@@ -534,10 +536,11 @@ const DetailItem = ({item, moreFromCollection, isLoggedIn, user}) => {
         <div className={styles.viewCollection}>
             <Link href={`/collection/${item.collection_id}`}>
                 <a className={styles.primaryButton}>
-                View Collection
+                    View Collection
                 </a>
             </Link>
         </div>
+    </div>
     </div>
     <ToastContainer
         position="top-right"

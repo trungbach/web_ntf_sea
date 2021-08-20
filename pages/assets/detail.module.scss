@@ -42,6 +42,11 @@
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
             overflow: hidden;
+            background: transparent;
+            .ant-collapse-header {
+                border: 1px solid var(--lighten-background);
+                border-radius: 10px 10px 0 0;
+            }
         }
         .ant-table-container {
             max-height: 500px;
@@ -76,7 +81,7 @@
         .detailLeft {
             flex: 0.45;
             .imgDetail {
-                border: 1px solid #ccc;
+                background: var(--lighten-background);
                 border-radius: 5px;
                 margin-bottom: 2rem;
                 .favorite {
@@ -185,8 +190,7 @@
                         padding: 2rem;
                         margin-bottom: 2rem;
                         border-radius: 5px;
-                        border: 1px solid rgb(229, 232, 235);
-                        background-color: var(--background-color);
+                        background: var(--lighten-background);
                         .numberPrice {
                             & > div {
                                 width: 1rem;
@@ -267,7 +271,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
     }
 }
 
@@ -296,15 +300,12 @@
             }
         }
         .total {
-            & > div {
-                img {
-                    margin-right: 0.3rem !important;
-                }
-            }
             .totalPrice {
                 font-size: 1.8rem;
                 font-weight: 600;
                 color: rgb(32, 129, 226);
+                margin-left: 0.3rem;
+
             }
         }
     }

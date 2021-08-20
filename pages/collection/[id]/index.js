@@ -137,28 +137,20 @@ const CollectionName = ({collection}) => {
                         (!isSeeMore ? <div  type='button' className={styles.seeMoreBtn} onClick={seeMore}><ExpandMoreIcon /></div>
                         : <div type='button' className={styles.seeMoreBtn} onClick={seeLess}> <ExpandLessIcon /></div>)}
                 </div>
-                <div className={styles.social}>
-                        {/* <Link href='/'><a> */}
+                {/* <div className={styles.social}>
                             <Tooltip title='Activity'>
                                 <span><PlaylistPlayIcon /></span>
                             </Tooltip>
-                        {/* </a></Link> */}
-                        {/* <Link href='/'><a> */}
                             <Tooltip title='Website'>
                                 <span><WebIcon /></span>
                             </Tooltip>
-                        {/* </a></Link> */}
-                        {/* <Link href='/'><a> */}
                             <Tooltip title='Discord'>
                             <span><i className="fab fa-discord"></i></span>
                             </Tooltip>
-                        {/* </a></Link> */}
-                        {/* <Link href='/'><a> */}
                             <Tooltip title='Activity'>
                                 <span><PlaylistPlayIcon /></span>
                             </Tooltip>
-                        {/* </a></Link> */}
-                </div>
+                </div> */}
                 <div className={styles.filter}>
                     <div>
                         <Input prefix={<SearchOutlined />} placeholder="Search" onChange={e => setSearchText(e.target.value)}  onKeyPress={onKeyDown} />

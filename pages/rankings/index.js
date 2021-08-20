@@ -47,8 +47,9 @@ const Rankings = ({ rankingCollection, listCategory }) => {
                     props: {
                       style: {
                         fontWeight: "600",
-                        fontSize: "1.6rem",
-                        color: 'rgb(4, 17, 29)'}
+                        fontSize: "1.5rem",
+                        color: '#fff'
+                      }
                     },
                     children: text,
               };
@@ -61,7 +62,10 @@ const Rankings = ({ rankingCollection, listCategory }) => {
           render: text => {
               return {
                     props: {
-                        className: "textRanking"
+                      style: {
+                        fontSize: "1.5rem",
+                        color: '#fff'
+                      }
                     },
                     children: text,
               };
@@ -111,7 +115,6 @@ const Rankings = ({ rankingCollection, listCategory }) => {
             render: text => {
               return {
                     props: {
-                        className: "textRanking"
                     },
                     children: text,
               };
@@ -124,7 +127,6 @@ const Rankings = ({ rankingCollection, listCategory }) => {
             render: text => {
               return {
                     props: {
-                        className: "textRanking"
                     },
                     children: text,
               };
@@ -137,7 +139,6 @@ const Rankings = ({ rankingCollection, listCategory }) => {
             render: text => {
               return {
                     props: {
-                        className: "textRanking"
                     },
                     children: text,
               };

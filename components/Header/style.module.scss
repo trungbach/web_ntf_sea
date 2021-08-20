@@ -1,18 +1,22 @@
 .nav {
+    background-color: rgb(4, 17, 29);
     padding: 0 1.6rem !important;
     height: 7.2rem;
     box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
     z-index: 100;
-    background-color: rgb(255, 255, 255);
     @media (max-width: 768px) {
         & {
             display: none !important;
         }
     }
+  
     .logo {
         display: flex;
         align-items: center;
         padding-right: 2.4rem;
+        svg {
+            fill: #fff;
+        }
         & > div {
             margin-right: 1rem;
         }
@@ -34,21 +38,22 @@
         display: flex;
         align-items: center;
         margin-left: 1.6rem;
+       
         a, .walletBtn {
             height: 7.2rem;
             display: flex;
             align-items: center;
-            color: rgba(4, 17, 29, 0.75) !important;
             font-size: 1.6rem;
             font-weight: 600;
             padding: 0 2rem !important;
             border-bottom: 2px solid transparent;
+            color: rgba(255, 255, 255, 0.75) !important;
             svg {
                 font-size: 3rem;
             }
             &:hover {
                 border-bottom: 2px solid var(--primary-color);
-                color: rgb(4, 17, 29) !important;
+                color: #fff !important;
             }
         }
     }
@@ -84,10 +89,11 @@
 
 .menuMarket, .menuStats, .menuResource, .menuUser {
     :global {
+        background-color: var(--background-color) !important;
         .ant-dropdown-menu-item {
             transition: all 0.2s ease 0s;
             box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
-            background-color: rgb(251, 253, 255);
+            background-color: var(--background-color);
             opacity: 1;
             color: rgb(53, 56, 64) !important;
             width: 100%;
@@ -98,13 +104,16 @@
                 display: flex;
                 align-items: center;
                 font-size: 1.6rem;
-                img {
-                    margin-right: 1rem !important;
+                span {
+                    margin-left: 1rem;
                 }
+            }
+            &:hover {
+                background-color: lighten(#0D2048, 10);
             }
         }
         .ant-dropdown-menu-item:not(:last-child) {
-            border-bottom: 1px solid rgb(229, 232, 235);
+            border-bottom: 1px solid #263a4d;
         }
         .ant-dropdown-menu-title-content {
             display: flex;

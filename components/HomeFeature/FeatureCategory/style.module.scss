@@ -6,9 +6,20 @@
         margin-bottom: 5rem;
         .categoryItem {
             :global {
+                .ant-card {
+                    border: none;
+                    background-color:transparent !important;
+                }
                 .ant-card-cover {
                     position: relative;
                     height: 16rem;
+                    img {
+                        border-radius: 10px 10px 0 0;
+                    }
+                }
+                .ant-card-body {
+                    background-color: var(--secondary-color);
+                    border-radius: 0 0 1rem 1rem;
                 }
             }
             h3 {

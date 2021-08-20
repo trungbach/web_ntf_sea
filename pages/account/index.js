@@ -41,6 +41,7 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user, infoUser}) 
     const [searchText, setSearchText] = useState('');
     const [isShowSideBar, setIsShowSideBar] = useState(false);
     const [currentTab, setCurrentTab] = useState('collected')
+    const [widthList, setWidthList] = useState()
     const setPrice = (minPrice, maxPrice) => {
         setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})
     }
@@ -54,6 +55,11 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user, infoUser}) 
            router.push('/login')
       }
     },[isLoggedIn])
+
+    useEffect(() => {
+        setWidthList(window.innerWidth - 120)
+        console.log(window.innerWidth - 120)
+    },[])
 
     const handleChange = () => {}
 
@@ -87,9 +93,6 @@ const Account = ({myAsset, myCreated, myFavorited, isLoggedIn, user, infoUser}) 
         }
     }
 
-    if (router.isFallback) {
-        return <div>Loading...</div>
-    }
     return (
         <>
         <div className={styles.collection}>

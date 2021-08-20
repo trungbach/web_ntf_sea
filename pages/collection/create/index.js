@@ -47,7 +47,7 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
         var file = e.target.files[0];
         if (file) {
             superagent
-                .post(config.API_DOMAIN + '/upload-file')
+                .post(config.PUBLIC_NEXT_API_DOMAIN + '/upload-file')
                 .attach('file', file)
                 .end((err, res) => {
                     if (!err) {
@@ -62,7 +62,7 @@ const CreateCollection = ({listCategory, isLoggedIn}) => {
         var file = e.target.files[0];
         if (file) {
             superagent
-                .post(config.API_DOMAIN + '/upload-file')
+                .post(config.PUBLIC_NEXT_API_DOMAIN + '/upload-file')
                 .attach('file', file)
                 .end((err, res) => {
                     if (!err) {

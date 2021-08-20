@@ -1,9 +1,6 @@
 const path = require('path')
 
 module.exports = {
-  env: {
-    API_DOMAIN: 'http://139.177.188.72:3333',
-  },
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
   },

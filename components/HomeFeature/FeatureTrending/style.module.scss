@@ -76,7 +76,7 @@
             z-index: 1;
             svg {
                 font-size: 3.3rem;
-                fill: #222;
+                fill: rgba(255, 255, 255, 0.75);
             }
         }
         .arrowBtn:last-child {
@@ -89,13 +89,23 @@
        display: block;
        padding:0 1rem;
        :global {
+           .ant-card {
+                border-radius: 1rem;
+                border: none;
+                background-color:transparent !important;
+           }
            .ant-card-cover {
                 position: relative;
                 height: 30rem;
+                img {
+                    border-radius: 10px 10px 0 0;
+                }
            }
           .ant-card-body {
               padding: 0;
               position: relative;
+              background-color: var(--secondary-color);
+              border-radius: 0 0 1rem 1rem;
           }
        }
     }
@@ -129,4 +139,5 @@
     max-height: 35rem;
     overflow-y: scroll;
 }
+
 

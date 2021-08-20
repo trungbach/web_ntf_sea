@@ -82,7 +82,7 @@ const Header = ({isLoggedIn, user, logoutAccount, toggleWallet}) => {
                  <Link href={`/category/${item.id}`}>
                     <a>
                         <Image width={24} height={24} src={item.logo_url} alt={item.logo_url} />
-                        {item.name}
+                        <span>{item.name}</span>
                     </a>
                 </Link>
             </Menu.Item>
@@ -96,7 +96,9 @@ const Header = ({isLoggedIn, user, logoutAccount, toggleWallet}) => {
                 <Link href="/assets">
                     <a>
                         <Image width={24} height={24} src={all} alt='all'></Image>
-                        All NTFs
+                        <span>
+                            All NTFs
+                        </span>
                     </a>
                 </Link>
             </Menu.Item>
@@ -194,7 +196,7 @@ const Header = ({isLoggedIn, user, logoutAccount, toggleWallet}) => {
 
     return (
 
-        <nav className={` ${styles.nav} navbar navbar-expand-lg fixed-top`}>
+        <nav className={` ${styles.nav} navbar navbar-expand-lg fixed-top navbar-dark `}>
             <div className="container-fluid">
                 <Link href='/'>
                     <a className={`navbar-brand ${styles.logo}`} >

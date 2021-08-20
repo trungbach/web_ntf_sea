@@ -8,9 +8,16 @@ body {
 
 :root {
   --primary-color: rgb(32, 129, 226);
-  --background-color: #FBFDFF;
-  --text-color: rgba(4, 17, 29, 0.75);
-  --hover-text: rgb(4, 17, 29);
+  --background-color: #0D2048;
+  --lighten-background: #122D66;
+  --secondary-color: #212529;
+  --text-color: #fff;
+  --paragraph-color: #cfdae4;
+  --hover-text: #fff;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  color: var(--text-color);
 }
 
 html {
@@ -20,6 +27,11 @@ html {
 
 body {
   font-size: 1.4rem;
+  color: var(--text-color);
+}
+
+span, p, label {
+  color: var(--text-color);
 }
 
 #__next {
@@ -47,36 +59,53 @@ ul {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     padding: 1.6rem;
+    background: var(--lighten-background);
+    border-radius: 0;
+
+}
+
+.ant-select-dropdown {
+  background-color: var(--background-color);
 }
 
 .ant-select-item:hover {
     transition: all 0.2s ease 0s;
     box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
-    background-color: rgb(251, 253, 255);
+    background-color:var(--background-color);
     opacity: 1;
-}
-
-.ant-select-item:not(:last-child) {
-  border-bottom: 1px solid rgb(229, 232, 235);
 }
 
 .ant-select-item-option-content  {
   font-weight: 600;
   font-size: 14px;
-  color: rgb(4, 17, 29);
+  color: var(--text-color);
   
 }
+
+.ant-select-item-option-active  {
+  background-color:var(--background-color);
+  color: var(--text-color);
+  
+}
+
+.ant-select-item-option-selected {
+  background-color:var(--background-color) !important;
+  color: var(--text-color) !important;
+}
+
 .ant-select:hover .ant-select-selector {
   border-color: #d9d9d9 !important;
 }
-.ant-select-selector {
+.ant-select .ant-select-selector {
   display: flex;
   align-items: center;
   height: auto !important;
   padding: 11px !important;
   font-weight: 600;
   font-size: 14px;
-  color: rgb(4, 17, 29);
+  color: var(--text-color);
+  background: var(--lighten-background) !important;
+  border: 1px solid var(--background-color) !important;
 }
 .ant-select-selector img{
   padding-right: 2rem !important;
@@ -85,26 +114,31 @@ ul {
 .ant-select-selection-item {
   display: flex;
   align-items: center;
+  background-color: var(--lighten-background);
 }
 
 .ant-collapse-header {
   font-size: 1.6rem;
   font-weight: 600;
-  background-color: #fff;
+  background-color: var(--background-color);
   padding: 20px !important;
   user-select: none;
+  color: var(--text-color) !important;
 }
 
 .ant-collapse-content {
-    border-top: 1px solid rgb(229, 232, 235);
-    color: rgb(53, 56, 64);
-    background-color: rgb(251, 253, 255);
+    border-top: 1px solid var(--secondary-color);
+    color: var(--text-color);
+    background: var(--lighten-background);
     padding: 20px;
-    border-radius: 0px 0px 5px 5px;
 }
 
 .ant-collapse-content .ant-collapse-content-box {
   padding: 0;
+}
+
+.ant-collapse .ant-collapse-item {
+  border-bottom: 1px solid var(--lighten-background);
 }
 
 .ant-select {
@@ -147,6 +181,30 @@ ul {
   align-items: center;
 }
 
+.ant-select-arrow {
+  color: var(--text-color);
+}
+
 .ant-btn[disabled] {
   opacity: 0.6;
+}
+
+.slick-arrow {
+  display: none !important;
+}
+
+.ant-collapse {
+  border: none;
+}
+.ant-table-wrapper, .ant-table-container {
+  background-color: var(--lighten-background);
+  color: #fff;
+}
+.ant-table-thead > tr > th {
+  background: var(--lighten-background);
+  color: #fff;
+}
+
+.ant-form-item-label label {
+  color: var(--text-color);
 }

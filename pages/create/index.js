@@ -58,15 +58,18 @@ const CreateItem = (props) => {
 
     const fileSelect = async (e) => {
       var file = e.target.files[0];
+      console.log(e.target.files[0])
       if (file) {
           superagent
-              .post(config.API_DOMAIN + '/upload-file')
+              .post(config.PUBLIC_NEXT_API_DOMAIN + '/upload-file')
               .attach('file', file)
               .end((err, res) => {
+
                   if (!err) {
+                    console.log(res)
                       form.setFieldsValue({image_id: res.body.data.id})
                       setFileUrl(res.body.data.original_url)
-                  }
+                  } else console.log(err)
               })
       }
    }
@@ -143,20 +146,6 @@ const CreateItem = (props) => {
     toast.dark('Add item Success!', {position: "top-right",})
   }
 
-  async function reSell(nft, newPrice) {
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()
-    let contract = new ethers.Contract(config.nftaddress, NFT.abi, signer)
-    await contract.userApproval()
-    contract = new ethers.Contract(config.nftmarketaddress, Market.abi, signer)
-    const price = ethers.utils.parseUnits(newPrice, 'ether')
-    const fee = ethers.utils.parseUnits((Number(newPrice)/100).toString(), 'ether')
-    const transaction = await contract.reCreateMarketItem(nftaddress, nft.itemId, price, { value: fee })
-    await transaction.wait()
-  }
-
   const collections = listCollection?.map((item, index) => {
     return (
       <Option key={index} value={`${item.id},${item.category_id}`}>
@@ -182,7 +171,9 @@ const CreateItem = (props) => {
 
   return (
 
-    <div className={`container ${styles.create}`}>
+    <div className={styles.create}>
+      <div className="container">
+
       <h1>Create new item {listCollection.length == 0 && <Link href='/collection/create?from=/create' style={{marginLeft: '3rem'}}><a>
                                 (You don&apos;t have any collections yet, click to create a new one first!)</a>
                            </Link>}
@@ -230,6 +221,7 @@ const CreateItem = (props) => {
       <ToastContainer
         position="top-right"
       />
+      </div>
     </div>
   )
 

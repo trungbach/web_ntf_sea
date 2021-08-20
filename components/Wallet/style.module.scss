@@ -15,7 +15,7 @@
     }
     .sideCollapse {
       height: 100%;
-      background: #fff;
+      background-color: var(--background-color);
       overflow-y: auto;
       .publicAddress {
           margin-top: 1rem;
@@ -67,7 +67,6 @@
       font-weight: 600;
       padding: 20px !important;
       user-select: none;
-      background-color: rgb(255, 255, 255);
       border-bottom: 1px solid #ccc;
       display: flex;
       align-items: center;
@@ -81,7 +80,7 @@
       p {
         font-weight: 400;
         font-size: 1.6rem;
-        color: rgb(112, 122, 131);
+        color: var(--paragraph-color);
         span {
             color: rgb(24, 104, 183);
             font-weight: 600;
@@ -108,12 +107,17 @@
                 span {
                         font-weight: 700;
                         font-size: 14px;
-                        color: rgb(4, 17, 29);
                 } 
             }
             li:first-of-type {
                 border-top-left-radius: 5px;
                 border-top-right-radius: 5px;
+                background: var(--lighten-background);
+                border: none;
+                transition: all 0.2s ease 0s;
+                &:hover {
+                    box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+                }
             }
         }
   }

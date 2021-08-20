@@ -19,17 +19,16 @@ const FeatureSell = dynamic(() => import('@/components/HomeFeature/FeatureSell')
 export default function Home({listCategory, mostFavoriteItem, rankingCollection}) {
   const rangeTime= [ moment().subtract(7, 'day').format(DATE_TIME), moment().format(DATE_TIME) ]
   const [categoryId, setCategoryId] = useState('')
-
   const { data } = useRanking(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}&category_id=${categoryId}`, rankingCollection)
 
   return (
     <>
-      <NextHead>
+      {/* <NextHead>
       <link rel="preload" as='style' type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" /> 
       <link rel="preload" as='style' type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />  
         <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" /> 
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
-      </NextHead>
+      </NextHead> */}
       <div className={styles.content}>
         <Banner mostFavoriteItem={mostFavoriteItem} />
         {/* <FeatureExclusive /> */}
@@ -51,7 +50,6 @@ export async function getStaticProps() {
 
   const rangeTime= [ moment().subtract(7, 'day').format(DATE_TIME), moment().format(DATE_TIME) ]
   const rankingCollection = await getRankingCollection(`start_time=${rangeTime[0]}&end_time=${rangeTime[1]}`);
- 
   return {
       props: {
          listCategory, 

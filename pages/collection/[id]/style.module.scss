@@ -1,7 +1,7 @@
 @import '@/styles/base.scss';
 
 .collection {
-    margin-bottom: 6rem;
+    padding-bottom: 6rem;
     .banner {
         position: relative;
         height: 22rem;
@@ -52,6 +52,7 @@
                     text-align: center;
                     color: rgb(138, 147, 155);
                     cursor: pointer;
+                    background: var(--lighten-background);
                     &:hover {
                         transition: all 0.2s ease 0s;
                         box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
@@ -59,7 +60,6 @@
                     h3 {
                         font-weight: 600;
                         font-size: 24px;
-                        color: #04111d;
                         margin-bottom: 0.3rem;
                         margin-top:0.8rem;
                     }
@@ -70,7 +70,6 @@
                 font-weight: 600;
                 font-size: 4rem;
                 letter-spacing: 0px;
-                color: rgb(4, 17, 29);
                 max-width: 600px;
                 margin: 6.5rem auto 4rem;
                 text-align: center;
@@ -83,7 +82,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: normal;
-                color: rgb(112, 122, 131);
+                color: var(--paragraph-color);
                 font-size: 1.6rem;
                 transition: all 0.5s linear;
             }
@@ -156,14 +155,16 @@
             .buttonShowFilter {
                 display: flex;
                 align-items: center;
+                background: var(--lighten-background);
+                border: none;
                 &:hover {
                     color: inherit;
                     transition: all 0.2s ease 0s;
                     box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
-                    border-color: #d9d9d9;
                 }
                 svg {
                     font-size: 2.5rem;
+                    color: var(--text-color);
                 }
             }
             & > div:first-child {

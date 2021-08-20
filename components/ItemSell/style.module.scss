@@ -9,9 +9,9 @@
     :global {
         .ant-card {
             border-radius: 0.7rem;
-        }
-        .ant-card-bordered {
-            border: 1px solid rgb(229, 232, 235);
+            background: var(--lighten-background);
+            border: none;
+            color: var(--text-color);
         }
         .ant-card-body {
             padding: 1rem;
@@ -29,7 +29,6 @@
         justify-content: center;
         position: relative;
         height: 22rem;
-        /* min-width: 23rem; */
         & > div {
             border-radius: 0.7rem;
             img {
@@ -52,6 +51,7 @@
                 font-weight: 500;
                 & > div > div{
                     width: 1rem;
+                    margin-right: 0.4rem !important;
                 }
             }
             .itemType > div {
@@ -63,11 +63,6 @@
                     width: 0.7rem;
                 }
             } 
-            .itemPrice, .itemCoin {
-                span {
-                    color: rgb(53, 56, 64);
-                }
-            }
             .ownerName {
                 font-weight: 500;
                 font-size: 1.2rem;

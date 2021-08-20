@@ -52,9 +52,20 @@ const Assets = ({listCategory, listCollection}) => {
 
     useEffect(() => {
         const filterWidth = collapsed ? 60 : 300
-        setWidthAsset(window.screen.width - filterWidth)
-    },[collapsed])
+        setWidthAsset(window.innerWidth - filterWidth)
+        console.log(window.innerWidth)
+    },[collapsed, ])
 
+    const onresize = function(e) {
+        //note i need to pass the event as an argument to the function
+       const width = e.target.outerWidth;
+       const height = e.target.outerHeight;
+        console.log(width, height)
+     }
+
+    //  if (typeof window === "undefined")  {
+    //     window.addEventListener("resize", onresize);
+    //  }
 
     const setPrice = (minPrice, maxPrice) => {
         setFilterObj({...filterObj, min_price: minPrice, max_price: maxPrice})

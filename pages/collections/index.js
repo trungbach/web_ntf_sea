@@ -57,10 +57,7 @@ const MyCollections = ({myCollection, isLoggedIn}) => {
                                 <h3>
                                     {item.name}
                                 </h3>
-                                <p>
-                                    by <Link href='/'>{item.owner}</Link>
-                                </p>
-                                <p>Explore the {item.name} collection</p>
+                                <p>{item.description}</p>
                             </div>
                         </Card>
                     </a>

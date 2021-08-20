@@ -1,7 +1,6 @@
 .titleHome {
     font-weight: 600;
     font-size: 2.4rem;
-    color: rgb(4, 17, 29);
     margin-bottom: 4rem;
     text-align: center;
 }
@@ -26,15 +25,15 @@
     font-size: 16px;
     font-weight: 600;
     padding: 12px 20px;
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(32, 129, 226);
-    color: rgb(32, 129, 226);
+    background: var(--background-color);
+    border: 1px solid var(--lighten-background);
+    color: var(--text-color);
     height: auto;
 }
 .primaryButton:hover {
-    border: 1px solid rgb(24, 104, 183);
-    color: rgb(24, 104, 183);
-    box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+    background: var(--lighten-background);
+    color: var(--text-color);
+    box-shadow: rgb(4 17 29 / 25%) 0px 16px 11px 0px;
 }
 .secondaryButton {
    display: inline-flex;
